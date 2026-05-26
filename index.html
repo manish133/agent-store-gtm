@@ -157,33 +157,6 @@
   .ind-panel a:hover{text-decoration:underline}
   @media(max-width:680px){.ind-panel.active{grid-template-columns:1fr;text-align:center}.ind-panel-uses li{justify-content:center}.ind-panel{padding:28px}}
 
-  /* ============ CASE STUDY ============ */
-  .case-card{max-width:960px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:18px;padding:48px;display:grid;grid-template-columns:200px 1fr;gap:36px;align-items:center;box-shadow:var(--shadow)}
-  .case-logo{font-family:'Source Serif 4';font-weight:700;font-size:24px;color:var(--ink-2);letter-spacing:-.02em;text-align:center;padding:24px;background:var(--bg);border-radius:12px}
-  .case-quote{font-family:'Source Serif 4';font-size:22px;line-height:1.4;color:var(--ink);margin:0 0 18px;font-weight:400}
-  .case-attr{color:var(--muted);font-size:13.5px;margin-bottom:18px}
-  .case-attr strong{color:var(--ink-2);font-weight:600;display:block}
-  .case-link{color:var(--red);font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:5px}
-  .case-link:hover{text-decoration:underline}
-  @media(max-width:680px){.case-card{grid-template-columns:1fr;padding:28px}.case-quote{font-size:18px}}
-
-  /* ============ PRICING ============ */
-  .pricing{background:var(--bg)}
-  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1080px;margin:0 auto}
-  .price-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:32px;display:flex;flex-direction:column;position:relative;transition:.2s}
-  .price-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-  .price-card.featured{border:2px solid var(--red);box-shadow:var(--shadow-lg)}
-  .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:.08em}
-  .price-name{font-family:'Source Serif 4';font-weight:700;font-size:20px;color:var(--ink);margin:0 0 6px}
-  .price-tag{font-family:'Source Serif 4';font-weight:700;font-size:36px;color:var(--red-dark);margin:8px 0 4px;line-height:1.1}
-  .price-tag .unit{font-size:14px;font-weight:500;color:var(--muted);font-family:'Inter'}
-  .price-desc{font-size:13px;color:var(--muted);margin:0 0 24px;min-height:36px}
-  .price-features{list-style:none;padding:0;margin:0 0 26px;flex-grow:1}
-  .price-features li{font-size:13.5px;color:var(--ink-2);padding:7px 0;display:flex;gap:9px;line-height:1.45}
-  .price-features li::before{content:"";display:inline-block;width:14px;height:14px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C8102E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");background-repeat:no-repeat;flex-shrink:0;margin-top:3px}
-  .price-card .btn{width:100%}
-  @media(max-width:760px){.price-grid{grid-template-columns:1fr;max-width:420px}}
-
   /* ============ SECURITY ============ */
   .security{background:linear-gradient(180deg,var(--ink) 0%,#0e0e12 100%);color:#fff;padding:64px 0}
   .security .container{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
@@ -212,7 +185,7 @@
 
   /* ============ FOOTER ============ */
   footer{background:#0e0e12;color:rgba(255,255,255,.7);padding:56px 0 32px;font-size:13.5px}
-  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
   .foot-brand{display:flex;align-items:center;gap:10px;color:#fff;font-family:'Source Serif 4';font-weight:700;font-size:18px;margin-bottom:14px}
   .foot-brand .nav-logo-mark{width:30px;height:30px}
   .foot-tag{color:rgba(255,255,255,.5);font-size:13px;line-height:1.55;max-width:260px}
@@ -268,19 +241,8 @@
           <a href="#industries" data-ind="pharma">Pharma<small>Therapy-area intelligence</small></a>
         </div>
       </div>
-      <a class="nav-link" href="#pricing">Pricing</a>
-      <a class="nav-link" href="#customers">Customers</a>
-      <div class="nav-item">
-        <button class="nav-link">Resources
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="nav-dropdown">
-          <a href="#">Blog<small>Posts on AI for analytics teams</small></a>
-          <a href="#">Documentation<small>API + integrations reference</small></a>
-          <a href="#">Changelog<small>Latest releases</small></a>
-          <a href="#">Security<small>Trust center &amp; compliance</small></a>
-        </div>
-      </div>
+      <a class="nav-link" href="#how">How it works</a>
+      <a class="nav-link" href="#security">Security</a>
     </nav>
     <div class="nav-cta">
       <a class="btn btn-ghost" href="#">Sign in</a>
@@ -391,79 +353,6 @@
   </div>
 </section>
 
-<!-- ============ CASE STUDY ============ -->
-<section id="customers">
-  <div class="container">
-    <div class="section-head">
-      <div class="section-eyebrow">Customer proof</div>
-      <h2>Real teams, real outcomes</h2>
-    </div>
-    <div class="case-card">
-      <div class="case-logo">Northwind<br/>Brands</div>
-      <div>
-        <p class="case-quote">"We replaced three vendors with Agent Store and shipped our QSR market report in a quarter of the time. The team's no longer copy-pasting from PDFs."</p>
-        <div class="case-attr">
-          <strong>VP Strategy</strong>
-          Fortune 500 Restaurant Co.
-        </div>
-        <a class="case-link" href="#">Read the full case study →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PRICING ============ -->
-<section class="pricing" id="pricing">
-  <div class="container">
-    <div class="section-head">
-      <div class="section-eyebrow">Pricing</div>
-      <h2>Simple, transparent pricing</h2>
-      <p>Start free. Upgrade when your team is ready. Enterprise security at every tier.</p>
-    </div>
-    <div class="price-grid">
-      <div class="price-card">
-        <div class="price-name">Starter</div>
-        <div class="price-tag">$99<span class="unit"> / user / mo</span></div>
-        <p class="price-desc">For analysts evaluating one workflow.</p>
-        <ul class="price-features">
-          <li>1 agent</li>
-          <li>100 queries / month</li>
-          <li>Standard data connectors</li>
-          <li>Email support</li>
-        </ul>
-        <a class="btn btn-secondary" href="#book-demo">Start free trial</a>
-      </div>
-      <div class="price-card featured">
-        <div class="price-badge">Most popular</div>
-        <div class="price-name">Team</div>
-        <div class="price-tag">$299<span class="unit"> / user / mo</span></div>
-        <p class="price-desc">For analytics teams shipping work weekly.</p>
-        <ul class="price-features">
-          <li>All agents included</li>
-          <li>Unlimited queries</li>
-          <li>Slack &amp; Teams integration</li>
-          <li>Custom peer sets &amp; templates</li>
-          <li>Priority support</li>
-        </ul>
-        <a class="btn btn-primary" href="#book-demo">Book demo</a>
-      </div>
-      <div class="price-card">
-        <div class="price-name">Enterprise</div>
-        <div class="price-tag">Custom<span class="unit"></span></div>
-        <p class="price-desc">For regulated teams with bespoke data.</p>
-        <ul class="price-features">
-          <li>SSO + SCIM</li>
-          <li>Deploy in your VPC</li>
-          <li>Dedicated CSM</li>
-          <li>Custom agents &amp; private models</li>
-          <li>Audit logs + DPA</li>
-        </ul>
-        <a class="btn btn-secondary" href="#book-demo">Contact sales</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ SECURITY ============ -->
 <section class="security" id="security">
   <div class="container">
@@ -527,29 +416,20 @@
         <h4>Product</h4>
         <a href="#agents">Agents</a>
         <a href="#how">How it works</a>
-        <a href="#pricing">Pricing</a>
+        <a href="#industries">Industries</a>
         <a href="#security">Security</a>
       </div>
       <div class="foot-col">
         <h4>Company</h4>
-        <a href="#customers">Customers</a>
         <a href="#">About</a>
         <a href="#">Careers</a>
-        <a href="#">Contact</a>
-      </div>
-      <div class="foot-col">
-        <h4>Resources</h4>
-        <a href="#">Blog</a>
-        <a href="#">Documentation</a>
-        <a href="#">Changelog</a>
-        <a href="#">Trust center</a>
+        <a href="#book-demo">Contact</a>
       </div>
       <div class="foot-col">
         <h4>Legal</h4>
         <a href="#">Privacy</a>
         <a href="#">Terms</a>
         <a href="#">DPA</a>
-        <a href="#">Security</a>
       </div>
     </div>
     <div class="foot-bottom">
