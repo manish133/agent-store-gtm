@@ -246,7 +246,7 @@
     </nav>
     <div class="nav-cta">
       <a class="btn btn-ghost" href="#">Sign in</a>
-      <a class="btn btn-primary" href="#book-demo">Book a demo</a>
+      <a class="btn btn-primary" href="#agents">See in Action</a>
     </div>
   </div>
 </header>
@@ -261,11 +261,10 @@
     <h1>AI agents that cut research time by<br/><span class="accent">70% for finance and QSR teams</span></h1>
     <p class="hero-sub">Purpose-built copilots for earnings analysis, market intelligence, and strategic decisions — deployed in days, not quarters.</p>
     <div class="hero-cta">
-      <a class="btn btn-primary btn-lg" href="#book-demo">
-        Book a 20-min demo
+      <a class="btn btn-primary btn-lg" href="#agents">
+        See in Action
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
-      <a class="btn btn-secondary btn-lg" href="#agents">See agents in action</a>
     </div>
     <div class="hero-trust">
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> SOC 2 Type II</span>
@@ -383,13 +382,12 @@
 </section>
 
 <!-- ============ FINAL CTA ============ -->
-<section class="final" id="book-demo">
+<section class="final">
   <div class="container">
     <h2>Ready to see it on your data?</h2>
-    <p>30-minute demo. No slides. We'll run your last earnings season through Agent Store live — or load your sales data into the QSR Simulator and stress-test a real decision.</p>
+    <p>Pick an agent and try it live. No setup, no slides — open one in a new tab and start exploring.</p>
     <div class="final-cta">
-      <a class="btn btn-primary btn-lg" href="mailto:demo@agentstore.ai?subject=Book%20a%20demo">Book a demo</a>
-      <a class="btn btn-secondary btn-lg" href="mailto:pilot@agentstore.ai?subject=Start%20a%20pilot">Start a 14-day pilot</a>
+      <a class="btn btn-primary btn-lg" href="#agents">See in Action</a>
     </div>
   </div>
 </section>
@@ -423,7 +421,7 @@
         <h4>Company</h4>
         <a href="#">About</a>
         <a href="#">Careers</a>
-        <a href="#book-demo">Contact</a>
+        <a href="#">Contact</a>
       </div>
       <div class="foot-col">
         <h4>Legal</h4>
@@ -512,25 +510,25 @@
     finance: {
       title: "For finance teams",
       uses: ["Earnings season prep & call summaries", "Competitive intelligence briefs", "Risk committee & IC summaries", "Peer benchmarking on demand"],
-      cta: "See finance case study",
+      cta: "See agents in action",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>`
     },
     qsr: {
       title: "For QSR & restaurant operators",
       uses: ["Unit economics & cohort performance", "Market share & white-space analysis", "Pricing & menu mix simulation", "Field reporting & store-level diagnostics"],
-      cta: "See QSR case study",
+      cta: "See agents in action",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>`
     },
     retail: {
       title: "For retail & brand teams",
       uses: ["Category share & SKU performance", "Promotional ROI modeling", "Consumer sentiment from reviews", "Competitive shelf & assortment analysis"],
-      cta: "Talk to retail team",
+      cta: "See agents in action",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M3 9v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9"/><path d="M8 13h8"/></svg>`
     },
     pharma: {
       title: "For pharma & life sciences",
       uses: ["Therapy-area competitive intel", "KOL &amp; trial landscape monitoring", "Earnings &amp; pipeline read-throughs", "Payer policy summaries"],
-      cta: "Talk to pharma team",
+      cta: "See agents in action",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5L4 14a4.95 4.95 0 0 1 7-7l6.5 6.5a4.95 4.95 0 0 1-7 7z"/><path d="M8.5 8.5l7 7"/></svg>`
     }
   };
@@ -552,7 +550,6 @@
         </div>
         <div class="agent-actions">
           <a class="btn btn-primary" href="${encodeURI(a.url)}" target="_blank" rel="noopener noreferrer">See it in action</a>
-          <a class="btn btn-secondary" href="#book-demo">Book demo</a>
         </div>
       </article>
     `).join('');
@@ -569,7 +566,7 @@
           <ul class="ind-panel-uses">
             ${ind.uses.map(u => `<li>${u}</li>`).join('')}
           </ul>
-          <a href="#book-demo">${escapeHtml(ind.cta)} →</a>
+          <a href="#agents">${escapeHtml(ind.cta)} →</a>
         </div>
       </div>
     `).join('');
