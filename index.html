@@ -1,30 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-    }
-    h1 {
-      font-size: 3rem;
-      margin: 0;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#C8102E;
+    --red-dark:#8B0E26;
+    --red-soft:#FBE9EC;
+    --red-tint:#FFF5F6;
+    --ink:#1F1F23;
+    --ink-2:#3a3a40;
+    --muted:#6b6b73;
+    --line:#E6E6EB;
+    --line-2:#F0F0F4;
+    --bg:#F6F7F9;
+    --card:#FFFFFF;
+    --green:#1F9D55;
+    --green-soft:#E6F4EA;
+    --amber:#B7791F;
+    --amber-soft:#FFF7E6;
+    --shadow: 0 1px 2px rgba(20,20,30,.04), 0 8px 24px rgba(20,20,30,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .serif{font-family:'Source Serif 4',Georgia,serif}
+
+  /* Topbar */
+  .topbar{background:#fff;border-bottom:1px solid var(--line);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
+  .top-left{display:flex;align-items:center;gap:14px}
+  .top-logo{width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center}
+  .top-logo svg{width:18px;height:18px;color:#fff}
+  .top-title{font-family:'Source Serif 4';font-weight:700;font-size:18px;color:var(--red-dark);line-height:1}
+  .top-sub{font-size:12px;color:var(--muted);margin-top:2px}
+  .top-actions{display:flex;gap:10px;align-items:center}
+  .user-chip{display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:20px;background:var(--red-soft);font-size:12.5px;color:var(--red-dark);font-weight:600}
+  .user-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+  /* Hero */
+  .hero{padding:56px 32px 16px;max-width:1280px;margin:0 auto;text-align:center}
+  .hero h1{font-family:'Source Serif 4';font-weight:700;font-size:44px;color:var(--red-dark);margin:0 0 10px;letter-spacing:-0.5px}
+  .hero p{color:var(--muted);font-size:15.5px;margin:0 auto;max-width:640px;line-height:1.55}
+
+  /* Search */
+  .search-wrap{max-width:520px;margin:24px auto 0;position:relative}
+  .search-input{width:100%;padding:12px 14px 12px 42px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fff;outline:none;transition:.15s;font-family:inherit;box-shadow:0 1px 2px rgba(20,20,30,.03)}
+  .search-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.1)}
+  .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);width:18px;height:18px;pointer-events:none}
+
+  /* Grid */
+  .store-wrap{padding:36px 32px 80px;max-width:1280px;margin:0 auto}
+  .section-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 14px}
+  .agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+
+  /* Tile */
+  .agent-tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:.2s;cursor:pointer;position:relative;overflow:hidden}
+  .agent-tile:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--red)}
+  .agent-tile:hover .agent-cta{gap:8px}
+  .agent-tile:hover .agent-cta svg{transform:translateX(2px)}
+  .agent-icon{width:48px;height:48px;border-radius:11px;background:var(--red);display:flex;align-items:center;justify-content:center;margin-bottom:16px;flex-shrink:0}
+  .agent-icon svg{width:24px;height:24px;color:#fff}
+  .agent-tag{position:absolute;top:18px;right:18px;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:20px;background:var(--green-soft);color:var(--green)}
+  .agent-name{font-family:'Source Serif 4';font-weight:700;font-size:20px;color:var(--red-dark);margin:0 0 8px;line-height:1.25}
+  .agent-desc{color:var(--muted);font-size:13.5px;margin:0 0 18px;line-height:1.55;flex-grow:1}
+  .agent-cta{color:var(--red);font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;margin-top:auto;transition:gap .15s}
+  .agent-cta svg{width:14px;height:14px;transition:transform .15s}
+
+  /* Coming soon (disabled) tile variant */
+  .agent-tile.is-soon{cursor:default;background:var(--line-2);border-style:dashed}
+  .agent-tile.is-soon:hover{transform:none;box-shadow:none;border-color:var(--line)}
+  .agent-tile.is-soon .agent-icon{background:#c9c9d0}
+  .agent-tile.is-soon .agent-name{color:var(--ink-2)}
+  .agent-tile.is-soon .agent-tag{background:var(--amber-soft);color:var(--amber)}
+  .agent-tile.is-soon .agent-cta{color:var(--muted)}
+
+  .empty{text-align:center;color:var(--muted);font-size:14px;padding:40px 0}
+
+  @media (max-width:600px){
+    .hero{padding:36px 20px 8px}
+    .hero h1{font-size:32px}
+    .store-wrap{padding:28px 20px 60px}
+    .topbar{padding:12px 20px}
+  }
+</style>
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  <script>
-    console.log("Hello, World!");
-  </script>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="top-left">
+    <div class="top-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+        <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+      </svg>
+    </div>
+    <div>
+      <div class="top-title">Agent Store</div>
+      <div class="top-sub">AI-powered solutions for finance &amp; analytics</div>
+    </div>
+  </div>
+  <div class="top-actions">
+    <div class="user-chip"><span class="dot"></span> Signed in</div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Discover your next agent</h1>
+  <p>Purpose-built AI agents that plug into your workflow. Pick a tile to launch the experience in a new tab.</p>
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input id="searchInput" class="search-input" type="text" placeholder="Search agents by name or capability…" />
+  </div>
+</section>
+
+<!-- Agent grid -->
+<main class="store-wrap">
+  <p class="section-label">Available agents</p>
+  <div id="agentGrid" class="agent-grid"></div>
+  <p id="emptyState" class="empty" style="display:none">No agents match your search.</p>
+</main>
+
+<script>
+  // ---------- Agent registry ----------
+  // Add a new entry here to surface a new tile. `url` opens in a new tab.
+  // Set `comingSoon: true` to render a disabled placeholder.
+  const AGENTS = [
+    {
+      name: "Earnings Call Companion",
+      description: "All-in-one workspace to summarize earnings calls, compare quarters, surface KPIs, and benchmark sentiment across peers.",
+      url: "ECC_All_In_One.html",
+      tag: "Live",
+      icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"/>
+              <path d="M7 14l4-4 4 4 5-6"/>
+            </svg>`
+    }
+    // Example future entries (uncomment to enable):
+    // {
+    //   name: "Filing Analyst",
+    //   description: "Extracts risk factors, MD&A highlights, and YoY changes from 10-K / 10-Q filings.",
+    //   url: "FilingAnalyst.html",
+    //   tag: "Coming soon",
+    //   comingSoon: true,
+    //   icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`
+    // }
+  ];
+
+  // ---------- Render ----------
+  const grid = document.getElementById('agentGrid');
+  const emptyState = document.getElementById('emptyState');
+
+  function renderAgents(filter = "") {
+    const q = filter.trim().toLowerCase();
+    const filtered = AGENTS.filter(a =>
+      !q || a.name.toLowerCase().includes(q) || a.description.toLowerCase().includes(q)
+    );
+    grid.innerHTML = filtered.map(agentTile).join('');
+    emptyState.style.display = filtered.length ? 'none' : 'block';
+  }
+
+  function agentTile(a) {
+    const isSoon = !!a.comingSoon;
+    const tagHtml = a.tag ? `<span class="agent-tag">${escapeHtml(a.tag)}</span>` : '';
+    const ctaText = isSoon ? 'Coming soon' : 'Open agent';
+    const arrow = isSoon ? '' : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+    const inner = `
+      ${tagHtml}
+      <div class="agent-icon">${a.icon}</div>
+      <h3 class="agent-name">${escapeHtml(a.name)}</h3>
+      <p class="agent-desc">${escapeHtml(a.description)}</p>
+      <span class="agent-cta">${ctaText}${arrow}</span>
+    `;
+    if (isSoon) {
+      return `<div class="agent-tile is-soon" aria-disabled="true">${inner}</div>`;
+    }
+    return `<a class="agent-tile" href="${encodeURI(a.url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  document.getElementById('searchInput').addEventListener('input', e => renderAgents(e.target.value));
+  renderAgents();
+</script>
+
 </body>
 </html>

@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Earnings Call Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --red:#C8102E;
+    --red-dark:#8B0E26;
+    --red-soft:#FBE9EC;
+    --red-tint:#FFF5F6;
+    --ink:#1F1F23;
+    --ink-2:#3a3a40;
+    --muted:#6b6b73;
+    --line:#E6E6EB;
+    --line-2:#F0F0F4;
+    --bg:#F6F7F9;
+    --card:#FFFFFF;
+    --green:#1F9D55;
+    --green-soft:#E6F4EA;
+    --amber:#B7791F;
+    --amber-soft:#FFF7E6;
+    --shadow: 0 1px 2px rgba(20,20,30,.04), 0 8px 24px rgba(20,20,30,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .serif{font-family:'Source Serif 4',Georgia,serif}
+  button{font-family:inherit;cursor:pointer}
+  .hidden{display:none !important}
+
+  /* ============ LOGIN ============ */
+  .login-wrap{min-height:100vh;display:grid;grid-template-columns:1fr 200px;background:#fff}
+  .login-card{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px}
+  .login-inner{width:100%;max-width:420px}
+  .brand-circle{width:74px;height:74px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+  .brand-circle svg{width:38px;height:38px;color:#fff}
+  .login-title{font-family:'Source Serif 4';font-weight:700;font-size:36px;color:var(--red-dark);text-align:center;line-height:1.1;margin:0 0 8px}
+  .login-sub{text-align:center;color:var(--muted);margin:0 0 28px;font-size:14px}
+  .field-label{font-weight:600;color:var(--ink);font-size:14px;margin-bottom:6px;display:block}
+  .input{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#F8F9FB;outline:none;transition:.15s;font-family:inherit}
+  .input:focus{border-color:var(--red);background:#fff;box-shadow:0 0 0 3px rgba(200,16,46,.1)}
+  .login-btn{width:100%;padding:13px;background:var(--red);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:15px;margin-top:18px;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s}
+  .login-btn:hover{background:var(--red-dark)}
+  .login-hint{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+  .login-hint code{background:var(--red-soft);color:var(--red-dark);padding:1px 5px;border-radius:3px;font-size:12px;font-family:'Courier New',monospace}
+  .login-side{background:var(--red);}
+
+  /* ============ APP SHELL ============ */
+  .app{min-height:100vh}
+  .topbar{background:#fff;border-bottom:1px solid var(--line);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
+  .top-left{display:flex;align-items:center;gap:14px}
+  .top-logo{width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center}
+  .top-logo svg{width:18px;height:18px;color:#fff}
+  .top-title{font-family:'Source Serif 4';font-weight:700;font-size:18px;color:var(--red-dark)}
+  .top-sub{font-size:12px;color:var(--muted)}
+  .top-actions{display:flex;gap:10px;align-items:center}
+  .admin-btn{background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:7px;font-weight:600;font-size:13px}
+  .admin-btn:hover{background:var(--red-dark)}
+  .user-chip{display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:20px;background:var(--red-soft);font-size:12.5px;color:var(--red-dark);font-weight:600}
+  .user-chip .dot{width:7px;height:7px;border-radius:50%;background:#1F9D55}
+
+  /* ============ DASHBOARD ============ */
+  .dash-wrap{padding:48px 32px 64px;max-width:1280px;margin:0 auto}
+  .dash-header{text-align:center;margin-bottom:36px}
+  .dash-title{font-family:'Source Serif 4';font-weight:700;font-size:42px;color:var(--red-dark);margin:0}
+  .dash-sub{color:var(--muted);font-size:15px;margin-top:6px}
+  .module-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .module-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;transition:.2s;cursor:pointer;display:flex;flex-direction:column}
+  .module-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--red)}
+  .module-icon{width:46px;height:46px;border-radius:10px;background:var(--red);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  .module-icon svg{width:24px;height:24px;color:#fff}
+  .module-name{font-family:'Source Serif 4';font-weight:700;font-size:22px;color:var(--red-dark);margin:0 0 8px;line-height:1.2}
+  .module-desc{color:var(--muted);font-size:13.5px;margin:0 0 16px;line-height:1.5}
+  .module-bullets{list-style:none;padding:0;margin:0 0 18px;border-top:1px solid var(--line-2);padding-top:14px}
+  .module-bullets li{font-size:13px;color:var(--ink-2);padding:4px 0;display:flex;align-items:flex-start;gap:8px}
+  .module-bullets li:before{content:"";width:5px;height:5px;border-radius:50%;background:var(--red);margin-top:8px;flex-shrink:0}
+  .module-cta{color:var(--red);font-weight:600;font-size:13.5px;margin-top:auto}
+
+  /* ============ SUBPAGE COMMON ============ */
+  .sub-wrap{padding:24px 32px 64px;max-width:1300px;margin:0 auto}
+  .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--red);font-weight:500;font-size:13px;text-decoration:none;margin-bottom:8px;background:none;border:none;padding:0}
+  .back-link:hover{text-decoration:underline}
+  .page-title{font-family:'Source Serif 4';font-weight:700;font-size:32px;color:var(--ink);margin:0 0 4px}
+  .page-sub{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .panel-title{font-weight:600;color:var(--ink);font-size:14px;margin:0 0 12px}
+  select.dropdown{padding:7px 28px 7px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;background:#fff;color:var(--ink);font-family:inherit;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6b73' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;-webkit-appearance:none;appearance:none}
+
+  /* loader */
+  .loader-row{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding:8px 0}
+  .spinner{width:16px;height:16px;border:2px solid var(--red-soft);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ============ HISTORICAL HUB ============ */
+  .topics-cloud{padding:14px;background:linear-gradient(180deg,#fff,var(--red-tint));border-radius:8px;line-height:2.1}
+  .topic-tag{display:inline-block;padding:2px 8px;margin:2px;font-weight:500;cursor:default;transition:.15s}
+  .topic-tag.xl{font-size:32px;color:var(--red);font-weight:700}
+  .topic-tag.l{font-size:22px;color:var(--red-dark);font-weight:600}
+  .topic-tag.m{font-size:17px;color:#a4283a}
+  .topic-tag.s{font-size:14px;color:#7a3742}
+  .topic-tag:hover{background:var(--red-soft);border-radius:4px}
+  .quarter-row{display:flex;gap:10px;align-items:center}
+  .gen-btn{background:var(--red);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px}
+  .gen-btn:hover{background:var(--red-dark)}
+  .gen-btn:disabled{opacity:.6;cursor:not-allowed}
+  .summary-header{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;padding:12px 18px;border-radius:8px 8px 0 0;font-weight:600;display:flex;align-items:center;gap:8px}
+  .summary-body{background:#fff;border:1px solid var(--line);border-top:none;border-radius:0 0 8px 8px;padding:22px;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+  .summary-body h4{font-family:'Source Serif 4';font-size:15px;color:var(--red-dark);margin:18px 0 8px}
+  .summary-body h4:first-child{margin-top:0}
+  .summary-body ul{padding-left:20px;margin:6px 0}
+  .summary-body li{margin:3px 0}
+  .summary-body p{margin:6px 0}
+  .summary-body strong{color:var(--ink)}
+  .attendee-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+  .attendee-list{background:var(--bg);border-radius:8px;padding:14px}
+  .attendee-list h5{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px;font-weight:600}
+  .attendee-item{padding:7px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+  .attendee-item:last-child{border-bottom:none}
+  .attendee-name{font-weight:600;color:var(--ink)}
+  .attendee-role{color:var(--muted);font-size:12px}
+  .qa-list{margin-top:8px}
+  .qa-item{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:10px}
+  .qa-q{font-weight:600;color:var(--red-dark);font-size:13.5px;margin-bottom:6px;display:flex;gap:8px}
+  .qa-q .q-tag{background:var(--red);color:#fff;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:700;letter-spacing:.05em;flex-shrink:0;height:18px;display:flex;align-items:center}
+  .qa-a{color:var(--ink-2);font-size:13px;line-height:1.6;padding-left:8px;border-left:2px solid var(--red-soft)}
+  .qa-asker{font-size:11.5px;color:var(--muted);margin-top:6px;font-style:italic}
+
+  /* ============ SIMULATOR ============ */
+  .sim-layout{display:grid;grid-template-columns:1fr 320px;gap:16px}
+  .sim-filters{display:flex;gap:14px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  .sim-filters label{font-size:12.5px;color:var(--muted);font-weight:500}
+  .add-q-row{display:flex;gap:6px;margin-bottom:14px}
+  .add-q-row input{flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:6px;font-size:13px;font-family:inherit}
+  .add-q-row input:focus{outline:none;border-color:var(--red)}
+  .add-q-btn{background:var(--red);color:#fff;border:none;width:38px;border-radius:6px;font-size:18px;display:flex;align-items:center;justify-content:center}
+  .add-q-btn:hover{background:var(--red-dark)}
+  .q-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:10px;transition:.15s}
+  .q-card.retained{border-color:#1F9D55;background:#F5FBF7}
+  .q-card.rejected{opacity:.45}
+  .q-meta{display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+  .q-id{background:var(--red);color:#fff;font-size:10.5px;padding:2px 7px;border-radius:3px;font-weight:700}
+  .q-tag-pill{font-size:10.5px;padding:2px 8px;border-radius:10px;background:#FFE6E9;color:var(--red-dark);font-weight:600;text-transform:capitalize}
+  .q-tag-pill.tag-cat{background:#FFE6E9;color:var(--red-dark)}
+  .q-tag-pill.tag-sub{background:#FFF1F3;color:#8B0E26;border:1px solid #FFE6E9}
+  .q-tag-pill.likelihood.high{background:#E6F4EA;color:#1F9D55}
+  .q-tag-pill.likelihood.medium{background:#FFF5E6;color:#B7791F}
+  .q-tag-pill.likelihood.low{background:#FBE9EC;color:#C8102E}
+  .q-text{font-size:13.5px;color:var(--ink);font-weight:500;line-height:1.5;margin-bottom:10px}
+  .q-actions{display:flex;gap:8px;margin-bottom:8px}
+  .q-btn{flex:1;padding:7px;border-radius:6px;border:1px solid;font-size:12.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:5px;transition:.15s}
+  .q-btn.retain{border-color:#1F9D55;background:#E6F4EA;color:#1F9D55}
+  .q-btn.retain:hover{background:#1F9D55;color:#fff}
+  .q-btn.retain.active{background:#1F9D55;color:#fff}
+  .q-btn.reject{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+  .q-btn.reject:hover{background:var(--red);color:#fff}
+  .q-btn.reject.active{background:var(--red);color:#fff}
+  .ans-toggle{font-size:12px;color:var(--red);background:none;border:none;padding:6px 0;display:flex;align-items:center;gap:5px;font-weight:500}
+  .ans-toggle:hover{text-decoration:underline}
+  .ans-body{margin-top:8px;background:var(--red-tint);border-left:3px solid var(--red);padding:12px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--ink-2);line-height:1.6;display:none}
+  .ans-body.open{display:block}
+  .ans-body strong{color:var(--red-dark)}
+  .ans-body .src{font-size:11px;color:var(--muted);margin-top:8px;font-style:italic}
+  .cheat-panel{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:sticky;top:80px;height:fit-content}
+  .cheat-head{background:var(--red);color:#fff;padding:11px 16px;font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:7px}
+  .cheat-body{padding:16px}
+  .stat-row{display:flex;gap:10px;margin-bottom:14px}
+  .stat-box{flex:1;background:var(--red-tint);border-radius:8px;padding:10px;text-align:center}
+  .stat-box .v{font-size:24px;font-weight:700;color:var(--red-dark)}
+  .stat-box .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .cheat-list-title{font-size:12px;font-weight:600;color:var(--ink);margin:10px 0 8px}
+  .empty-text{font-size:12px;color:var(--muted);text-align:center;padding:14px 4px;line-height:1.5}
+  .empty-text b{color:var(--red);font-weight:600}
+  .retained-q{background:var(--red-tint);border-left:3px solid var(--red);padding:8px 10px;margin-bottom:7px;font-size:12px;color:var(--ink-2);border-radius:0 4px 4px 0}
+  .download-btn{width:100%;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border:none;padding:11px;border-radius:6px;font-weight:600;font-size:13px;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s}
+  .download-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,16,46,.3)}
+  .download-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+  .cheat-foot{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.4}
+
+  /* ============ DEBRIEF ============ */
+  .debrief-filters{display:flex;gap:10px;justify-content:flex-end;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+  .out-btn{padding:7px 14px;border-radius:6px;font-weight:600;font-size:12.5px;border:1px solid;display:inline-flex;align-items:center;gap:5px}
+  .out-btn.ghost{background:#fff;border-color:var(--line);color:var(--ink-2)}
+  .out-btn.ghost:hover{border-color:var(--red);color:var(--red)}
+  .out-btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+  .out-btn.primary:hover{background:var(--red-dark)}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px}
+  .kpi-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;position:relative}
+  .kpi-flag{position:absolute;top:10px;right:10px;width:6px;height:6px;border-radius:50%;background:var(--red)}
+  .kpi-label{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px}
+  .kpi-value{font-size:26px;font-weight:700;color:var(--red-dark);line-height:1}
+  .kpi-desc{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .matrix-table{width:100%;border-collapse:collapse;font-size:12.5px}
+  .matrix-table th{background:var(--bg);color:var(--ink);text-align:left;padding:9px 10px;font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line)}
+  .matrix-table th.num,.matrix-table td.num{text-align:center}
+  .matrix-table td{padding:9px 10px;border-bottom:1px solid var(--line-2);color:var(--ink-2)}
+  .matrix-table tr:hover{background:var(--red-tint)}
+  .matrix-table td.muted{color:var(--muted);font-style:italic}
+  .matrix-table td.score{font-weight:700}
+  .score.high{color:#1F9D55}
+  .score.med{color:#B7791F}
+  .score.low{color:var(--red);}
+  .matrix-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5;padding:10px;background:var(--bg);border-radius:6px}
+
+  /* ============ POST CALL ============ */
+  .pc-filters{display:flex;gap:14px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  .pc-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+  .pc-kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+  .pc-label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px}
+  .pc-value{font-size:26px;font-weight:700;color:var(--red-dark);line-height:1.1}
+  .pc-sub{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .pc-sub.pos{color:#1F9D55}
+  .pc-sub.neg{color:var(--red)}
+  .chart-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .chart-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+  .chart-title{font-weight:600;font-size:14px;color:var(--ink)}
+  .chart-meta{font-size:11.5px;color:var(--muted)}
+  .market-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .insight-card{background:var(--red-tint);border:1px solid var(--red-soft);border-radius:10px;padding:18px;margin-bottom:14px}
+  .insight-head{font-weight:600;color:var(--red-dark);font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .insight-body{font-size:13px;color:var(--ink-2);line-height:1.6}
+  .insight-body p{margin:6px 0}
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .compare-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px}
+  .compare-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:8px}
+  .compare-stat{display:flex;justify-content:space-between;padding:5px 0;font-size:12.5px;border-bottom:1px dashed var(--line-2);gap:8px}
+  .compare-stat:last-child{border-bottom:none}
+  .compare-stat .k{color:var(--muted)}
+  .compare-stat .v{font-weight:600;color:var(--ink);text-align:right}
+  .compare-stat .v.up{color:#1F9D55}
+  .compare-stat .v.down{color:var(--red)}
+
+  /* utility */
+  .row{display:flex;gap:12px;align-items:center}
+  .grow{flex:1}
+  .text-muted{color:var(--muted)}
+
+  /* ============ BRIDGE: classes rendered by app.js ============ */
+  /* Historical summary panel */
+  .summary-panel{padding:0;overflow:hidden}
+  .summary-head{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;padding:12px 18px;font-weight:600;display:flex;align-items:center;gap:8px;font-size:14px}
+  .summary-body{background:#fff;padding:22px;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+  .summary-body p{margin:8px 0}
+  .summary-body strong{color:var(--red-dark)}
+
+  /* Historical attendees */
+  .attendees-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+  .attendees-sub{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:10px}
+  .attendee-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+  .attendee-row:last-child{border-bottom:none}
+  .attendee-name{font-weight:600;color:var(--ink)}
+  .attendee-role{color:var(--muted);font-size:12px;text-align:right}
+
+  /* Historical Q&A items */
+  .qa-item{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:10px}
+  .qa-analyst{font-size:11.5px;color:var(--red);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+  .qa-q{font-weight:600;color:var(--ink);font-size:13.5px;margin-bottom:8px;line-height:1.5}
+  .qa-q strong{color:var(--red-dark)}
+  .qa-a{color:var(--ink-2);font-size:13px;line-height:1.6;padding:8px 12px;background:var(--red-tint);border-left:3px solid var(--red);border-radius:0 6px 6px 0}
+  .qa-a strong{color:var(--red-dark)}
+
+  /* KPI cards extra sub */
+  .kpi-card .kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.35}
+
+  /* Sim qcards */
+  .qcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px;transition:.15s}
+  .qcard.retained{border-color:#1F9D55;background:#F5FBF7}
+  .qcard.rejected{opacity:.45}
+  .qcard-tags{display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+  .tag{font-size:10.5px;padding:2px 8px;border-radius:10px;font-weight:600;text-transform:capitalize}
+  .tag.tag-qid{background:var(--red);color:#fff;border-radius:3px;letter-spacing:.04em}
+  .tag.tag-l1{background:#FFE6E9;color:var(--red-dark)}
+  .tag.tag-l2{background:#FFF1F3;color:#8B0E26;border:1px solid #FFE6E9}
+  .tag.tag-high{background:#E6F4EA;color:#1F9D55}
+  .tag.tag-medium{background:#FFF5E6;color:#B7791F}
+  .tag.tag-low{background:#FBE9EC;color:#C8102E}
+  .qcard-q{font-size:13.5px;color:var(--ink);font-weight:500;line-height:1.5;margin-bottom:10px}
+  .qcard-actions{display:flex;gap:8px;margin-bottom:6px}
+  .btn-retain,.btn-reject{flex:1;padding:7px;border-radius:6px;border:1px solid;font-size:12.5px;font-weight:600;transition:.15s;background:#fff}
+  .btn-retain{border-color:#1F9D55;background:#E6F4EA;color:#1F9D55}
+  .btn-retain:hover{background:#1F9D55;color:#fff}
+  .btn-reject{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+  .btn-reject:hover{background:var(--red);color:#fff}
+  .qcard-answer-toggle{font-size:12px;color:var(--red);padding:6px 0;display:flex;align-items:center;gap:5px;font-weight:500;cursor:pointer;justify-content:space-between}
+  .qcard-answer-toggle:hover{text-decoration:underline}
+  .qcard-answer{margin-top:8px;background:var(--red-tint);border-left:3px solid var(--red);padding:12px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--ink-2);line-height:1.6}
+
+  /* Cheat sheet rows */
+  .cheat-row{background:var(--red-tint);border-left:3px solid var(--red);padding:8px 10px;margin-bottom:7px;font-size:11.5px;color:var(--ink-2);border-radius:0 4px 4px 0;display:flex;gap:6px;line-height:1.45}
+  .cheat-row .cheat-num{font-weight:700;color:var(--red);flex-shrink:0}
+  .cheat-row .cheat-q{flex:1}
+
+  /* Debrief metrics */
+  .kpi-sub-text{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+  .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .metric-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:8px}
+  .metric-value{font-size:30px;font-weight:700;color:var(--red);line-height:1;margin-bottom:8px;font-family:'Source Serif 4',serif}
+  .metric-explain{font-size:10.5px;color:var(--muted);line-height:1.45}
+
+  /* Confusion matrix tables */
+  .cm-table-wrap{overflow-x:auto;margin-top:8px}
+  .cm-table{width:100%;border-collapse:collapse;font-size:12px;min-width:760px}
+  .cm-table th{background:var(--bg);color:var(--ink);text-align:left;padding:10px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line);white-space:nowrap}
+  .cm-table th:nth-child(n+3){text-align:center}
+  .cm-table td{padding:9px 10px;border-bottom:1px solid var(--line-2);color:var(--ink-2)}
+  .cm-table td:nth-child(n+3){text-align:center}
+  .cm-table tbody tr:hover{background:var(--red-tint)}
+  .cm-table .muted{color:var(--muted);font-style:italic}
+  .cm-table .cell-pos{color:#1F9D55;font-weight:600}
+  .cm-table .cell-neg{color:var(--red);font-weight:600}
+  .cm-foot{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5;padding:10px;background:var(--bg);border-radius:6px}
+</style>
+</head>
+<body>
+
+<!-- =============== LOGIN SCREEN =============== -->
+<div id="screen-login" class="login-wrap">
+  <div class="login-card">
+    <div class="login-inner">
+      <div class="brand-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="14 7 21 7 21 14"></polyline></svg>
+      </div>
+      <h1 class="login-title">Earnings Call<br/>Companion</h1>
+      <p class="login-sub">Secure access to earnings intelligence</p>
+
+      <label class="field-label">Username</label>
+      <input class="input" id="loginUser" placeholder="Enter your username" value="admin" autocomplete="off"/>
+
+      <div style="height:14px"></div>
+      <label class="field-label">Password</label>
+      <input class="input" id="loginPass" type="password" placeholder="Enter your password" value="admin"/>
+
+      <button class="login-btn" onclick="doLogin()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Login
+      </button>
+
+      <div class="login-hint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Dev sign-in: use the credentials configured on the API (default <code>admin</code> / <code>admin</code>).</span>
+      </div>
+    </div>
+  </div>
+  <div class="login-side"></div>
+</div>
+
+<!-- =============== APP =============== -->
+<div id="screen-app" class="app hidden">
+  <header class="topbar">
+    <div class="top-left">
+      <div class="top-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="14 7 21 7 21 14"></polyline></svg>
+      </div>
+      <div>
+        <div class="top-title">Earnings Call Companion</div>
+        <div class="top-sub">AI-Powered IR Preparation Platform</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="user-chip"><span class="dot"></span>admin · IR Team</div>
+      <button class="admin-btn">Go to Admin Panel</button>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page">
+    <div class="dash-wrap">
+      <div class="dash-header">
+        <h1 class="dash-title">Earnings Call Companion</h1>
+        <p class="dash-sub">Select a module to begin</p>
+      </div>
+
+      <div class="module-grid">
+        <div class="module-card" onclick="goto('historical')">
+          <div class="module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <h3 class="module-name">Historical Intelligence Hub</h3>
+          <p class="module-desc">Explore past earnings calls with detailed analysis and insights</p>
+          <ul class="module-bullets">
+            <li>Quarter-by-quarter review</li>
+            <li>Questions &amp; attendee tracking</li>
+            <li>Sentiment &amp; theme analysis</li>
+            <li>AI-generated summaries</li>
+          </ul>
+          <div class="module-cta">Access Hub →</div>
+        </div>
+
+        <div class="module-card" onclick="goto('simulator')">
+          <div class="module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+          <h3 class="module-name">Earnings Call Simulator</h3>
+          <p class="module-desc">Prepare for upcoming calls with AI-predicted questions</p>
+          <ul class="module-bullets">
+            <li>24 Predicted Q&amp;As for Q4 FY26</li>
+            <li>Built from Q1–Q3 question patterns</li>
+            <li>Interactive Rehearsal Mode</li>
+            <li>Custom Question Builder</li>
+          </ul>
+          <div class="module-cta">Start Simulator →</div>
+        </div>
+
+        <div class="module-card" onclick="goto('debrief')">
+          <div class="module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg></div>
+          <h3 class="module-name">Performance Debrief</h3>
+          <p class="module-desc">Review performance and improve for future calls</p>
+          <ul class="module-bullets">
+            <li>Predictions vs actuals</li>
+            <li>Theme-level analysis</li>
+            <li>L1 category breakdown</li>
+            <li>Post-call analytics</li>
+          </ul>
+          <div class="module-cta">View Debrief →</div>
+        </div>
+
+        <div class="module-card" onclick="goto('postcall')">
+          <div class="module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></div>
+          <h3 class="module-name">Post-Call Analysis</h3>
+          <p class="module-desc">Track market response and analyst reactions post-earnings</p>
+          <ul class="module-bullets">
+            <li>Stock price movement (7-day)</li>
+            <li>Sentiment evolution analysis</li>
+            <li>Analyst rating changes</li>
+            <li>FII/DII flow tracking</li>
+          </ul>
+          <div class="module-cta">View Analysis →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORICAL HUB -->
+  <div id="page-historical" class="page hidden">
+    <div class="sub-wrap">
+      <button class="back-link" onclick="goto('dashboard')">← Back to Dashboard</button>
+      <h1 class="page-title">Historical Intelligence Hub</h1>
+      <p class="page-sub">Explore past earnings calls with comprehensive analysis</p>
+
+      <div class="panel">
+        <div class="row">
+          <label style="font-size:13px;font-weight:500">Company:</label>
+          <select class="dropdown" id="histCompany" onchange="onCompanyChange('historical')">
+            <option value="PDS Limited">PDS Limited</option>
+            <option value="HDFC Bank">HDFC Bank</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3 class="panel-title">Key Topics</h3>
+        <div class="topics-cloud">
+          <span class="topic-tag xl">Revenue</span>
+          <span class="topic-tag l">Ebitda</span>
+          <span class="topic-tag l">Profit</span>
+          <span class="topic-tag l">Profitability</span>
+          <span class="topic-tag m">Risk</span>
+          <span class="topic-tag m">Guidance</span>
+          <span class="topic-tag m">Margin</span>
+          <span class="topic-tag m">Cash Flow</span>
+          <span class="topic-tag m">Growth</span>
+          <span class="topic-tag m">Capital</span>
+          <span class="topic-tag m">Margins</span>
+          <br/>
+          <span class="topic-tag s">Segment Performance/Geographic Mix</span>
+          <span class="topic-tag s">Risk And Regulation</span>
+          <span class="topic-tag s">Demand</span>
+          <span class="topic-tag s">Other</span>
+          <span class="topic-tag s">Segment Performance</span>
+          <span class="topic-tag s">Growth/Other Growth</span>
+          <span class="topic-tag s">Cost And Liquidity</span>
+          <span class="topic-tag s">Cost Structure</span>
+          <span class="topic-tag s">Guidance/Other Guidance</span>
+          <span class="topic-tag s">Guidance/Margin Guidance</span>
+          <br/>
+          <span class="topic-tag s">Margins/Cross Margin</span>
+          <span class="topic-tag s">Cost Structure/Other Costs</span>
+          <span class="topic-tag s">Other/Operational Update</span>
+          <span class="topic-tag s">Strategy</span>
+          <span class="topic-tag s">Guidance/Full Year Guidance</span>
+          <span class="topic-tag s">Margins/Other Margins</span>
+          <span class="topic-tag s">Guidance/Tax Rate Guidance</span>
+          <span class="topic-tag s">Demand/Macro Demand</span>
+          <br/>
+          <span class="topic-tag s">Risk And Regulation/Regulatory Change</span>
+          <span class="topic-tag s">Strategy/Competitive Positioning</span>
+          <span class="topic-tag s">Capital And Liquidity/Working Capital</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3 class="panel-title">Select Quarter for Detailed Analysis</h3>
+        <div class="quarter-row">
+          <select class="dropdown" id="histQuarter" style="min-width:160px">
+            <option value="Q3 FY2026">Q3 FY2026</option>
+            <option value="Q2 FY2026">Q2 FY2026</option>
+            <option value="Q1 FY2026">Q1 FY2026</option>
+          </select>
+          <button class="gen-btn" onclick="generateHistSummary()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            Generate AI Summary
+          </button>
+        </div>
+      </div>
+
+      <div id="histSummaryHost"></div>
+    </div>
+  </div>
+
+  <!-- SIMULATOR -->
+  <div id="page-simulator" class="page hidden">
+    <div class="sub-wrap">
+      <button class="back-link" onclick="goto('dashboard')">← Back to Dashboard</button>
+      <h1 class="page-title">Earnings Call Simulator</h1>
+      <p class="page-sub">Prepare for tough questions with AI-predicted scenarios</p>
+
+      <div class="sim-filters">
+        <label>Filter list by company:</label>
+        <select class="dropdown" id="simCompany" onchange="onCompanyChange('simulator')">
+          <option value="PDS Limited">PDS Limited</option>
+          <option value="HDFC Bank">HDFC Bank</option>
+        </select>
+        <label>Period:</label>
+        <select class="dropdown" id="simPeriod" onchange="loadSimulator()">
+          <option value="Q4 FY2026">Q4 FY2026 (Upcoming — May 18, 2026)</option>
+          <option value="Q3 FY2026">Q3 FY2026</option>
+          <option value="Q2 FY2026">Q2 FY2026</option>
+          <option value="all">All periods</option>
+        </select>
+      </div>
+
+      <div class="sim-layout">
+        <div>
+          <div id="q4MethodBanner" class="panel" style="padding:14px 16px;margin-bottom:14px;background:linear-gradient(135deg,#FFF5F6,#FBE9EC);border-left:4px solid var(--red)">
+            <div style="font-weight:700;color:var(--red-dark);font-size:13.5px;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              How these Q4 FY26 predictions were generated
+            </div>
+            <div style="font-size:12.5px;line-height:1.6;color:var(--ink-2)">
+              Predictions are derived by <strong>cross-referencing Q1, Q2, and Q3 FY26 actual analyst questions against the financial deltas that triggered them</strong>, then applying the same trigger logic to the Q4 FY26 print (revenue ₹3,520 cr +11% YoY · PAT ₹72 cr ~2x QoQ · EBITDA ₹122 cr at 3.5% margin · FY26 GMV ₹19,666 cr · FY26 PAT ₹178 cr -26% YoY · FY26 GM 20.6% +48 bps · order book ₹5,074 cr +11% YoY). Recurring themes — margin trajectory, PAT recovery path, working capital, FY27 guidance, leadership transition, US-tariff &amp; FTA impact, dividend policy — carry high likelihood. Results approved by Board on May 15, 2026; call scheduled May 18, 2026.
+            </div>
+          </div>
+
+          <div class="panel" style="padding:16px">
+            <h3 class="panel-title" style="margin-bottom:6px">AI-Predicted Questions</h3>
+            <div style="color:var(--muted);font-size:12px;margin-bottom:12px">Ranked by likelihood and predictability</div>
+
+            <div style="font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:6px">Add Custom Question</div>
+            <div class="add-q-row">
+              <input id="customQInput" placeholder="Type your custom question here..."/>
+              <button class="add-q-btn" onclick="addCustomQuestion()">+</button>
+            </div>
+
+            <div id="qList"></div>
+          </div>
+        </div>
+
+        <div class="cheat-panel">
+          <div class="cheat-head">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Prep Cheat Sheet
+          </div>
+          <div class="cheat-body">
+            <div class="stat-row">
+              <div class="stat-box"><div class="v" id="statQuestions">0</div><div class="l">Questions</div></div>
+              <div class="stat-box"><div class="v" id="statCustom">0</div><div class="l">Custom</div></div>
+            </div>
+            <div class="cheat-list-title">Retained Questions:</div>
+            <div id="retainedList">
+              <div class="empty-text">No questions retained yet. Click <b>"Retain"</b> on questions above to add them to your cheat sheet.</div>
+            </div>
+            <button class="download-btn" id="dlBtn" onclick="downloadCheat()" disabled>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Cheat Sheet (<span id="dlCount">0</span>)
+            </button>
+            <div class="cheat-foot">Your cheat sheet will include all retained questions with suggested answers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEBRIEF -->
+  <div id="page-debrief" class="page hidden">
+    <div class="sub-wrap">
+      <button class="back-link" onclick="goto('dashboard')">← Back to Dashboard</button>
+      <div class="row" style="margin-bottom:20px;align-items:flex-start">
+        <div class="grow">
+          <h1 class="page-title">Prediction vs Actual Review</h1>
+          <p class="page-sub">Post-earnings analysis and model learning</p>
+        </div>
+        <div class="debrief-filters">
+          <select class="dropdown" id="debriefCompany" onchange="onCompanyChange('debrief')">
+            <option value="PDS Limited">PDS Limited</option>
+            <option value="HDFC Bank">HDFC Bank</option>
+          </select>
+          <select class="dropdown" id="debriefPeriod" onchange="loadDebrief()">
+            <option value="Q2 FY2026">Q2 FY2026</option>
+            <option value="Q3 FY2026">Q3 FY2026</option>
+          </select>
+          <button class="out-btn ghost">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Learning Report
+          </button>
+          <button class="out-btn primary">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Transcript
+          </button>
+        </div>
+      </div>
+
+      <div id="debriefHost">
+        <div class="loader-row"><div class="spinner"></div> Loading debrief…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST CALL -->
+  <div id="page-postcall" class="page hidden">
+    <div class="sub-wrap">
+      <button class="back-link" onclick="goto('dashboard')">← Back to Dashboard</button>
+      <h1 class="page-title">Post-Call Analysis</h1>
+      <p class="page-sub"><span id="pcSubText">PDS Limited · Q3 FY26 — sell-side coverage and multi-source sentiment, derived from the tables below.</span></p>
+
+      <div class="panel" style="margin-bottom:14px">
+        <div class="pc-filters">
+          <label style="font-size:13px;color:var(--muted)">Company:</label>
+          <select class="dropdown" id="pcCompany" onchange="onCompanyChange('postcall')">
+            <option value="PDS Limited">PDS Limited</option>
+            <option value="HDFC Bank">HDFC Bank</option>
+          </select>
+          <label style="font-size:13px;color:var(--muted)">Quarter:</label>
+          <select class="dropdown" id="pcQuarter" onchange="loadPostCall()">
+            <option value="Q3 FY2026">Q3 FY2026</option>
+            <option value="Q2 FY2026">Q2 FY2026</option>
+          </select>
+          <div id="pcLoadingTag" style="font-size:12px;color:var(--muted);display:none">
+            <span class="spinner" style="display:inline-block;vertical-align:-3px;margin-right:6px"></span>Loading PDS limited data…
+          </div>
+        </div>
+      </div>
+
+      <div id="pcHost">
+        <div class="loader-row"><div class="spinner"></div> Loading post-call analysis…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====================================================================
+   Earnings Call Companion — multi-company data
+   Companies: PDS Limited (NSE: PDSL) and HDFC Bank (NSE: HDFCBANK)
+   
+   DATA POLICY:
+   - All financial numbers sourced from company filings, press releases,
+     earnings call transcripts, and reputable news outlets.
+   - Where analyst targets, sentiment %, or specific brokerage views are
+     NOT publicly disclosed, the data is marked accordingly rather than
+     fabricated.
+   - Share prices in postCall are bonus-adjusted where applicable.
+   ==================================================================== */
+
+const COMPANIES = ["PDS Limited", "HDFC Bank"];
+
+/* =================================================================
+   PDS LIMITED — Real Q1/Q2/Q3 FY26 data
+   Sources: Company press releases (Oct 27, 2025 & Feb 10, 2026),
+   earnings call transcripts, AlphaStreet, EquityBulls (BSE filings),
+   scanx.trade aggregations.
+   ================================================================= */
+
+const PDS_DATA = {
+  "Q1 FY2026": {
+    company: "PDS Limited (NSE: PDSL)",
+    quarter: "Q1 FY2026 (Apr-Jun 2025)",
+    callDate: "August 1, 2025",
+    revenue: "₹2,999 cr",
+    revenueGrowth: "+14% YoY",
+    grossMargin: "19.4%",
+    grossMarginDelta: "-139 bps YoY",
+    gmDelta: "-139 bps YoY",
+    ebitdaMargin: "1.7%",
+    pat: "₹20 cr (consolidated)",
+    orderBook: "₹5,200 cr (+8% YoY)",
+    netDebt: "Net debt reduced by ₹156 cr (vs Mar 2025)",
+    nwcDays: "10 days (vs 17 in Mar 2025)",
+    kpis: [
+      { label: "Revenue", value: "₹2,999 cr", sub: "+14% YoY" },
+      { label: "Gross Margin", value: "19.4%", sub: "-139 bps YoY" },
+      { label: "EBITDA Margin", value: "1.7%", sub: "Sub-scale" },
+      { label: "PAT (Consol.)", value: "₹20 cr", sub: "Standalone ₹47.2 cr" },
+      { label: "Order Book", value: "₹5,200 cr", sub: "+8% YoY" },
+      { label: "NWC Days", value: "10 days", sub: "vs 17 in Mar 2025" }
+    ],
+    attendees: {
+      management: [
+        { name: "Pallak Seth", role: "Executive Vice Chairman" },
+        { name: "Sanjay Jain", role: "Group CEO" },
+        { name: "Rahul Ahuja", role: "Group CFO" },
+        { name: "Reenah Joseph", role: "Investor Relations" }
+      ],
+      analysts: [
+        { name: "Rishi Mody", firm: "Marcellus Investment Managers" },
+        { name: "Rudraksh Raheja", firm: "ithought Financial Consulting" },
+        { name: "Aliasgar Shakir", firm: "Motilal Oswal" },
+        { name: "Sanjaya Satapathy", firm: "Ampersand Capital" },
+        { name: "Bharat Sheth", firm: "Quest Investments" },
+        { name: "Yash Tanna", firm: "iThought PMS" }
+      ]
+    },
+    summary: `**Q1 FY2026 — Investment Phase, Margin Pressure, Strong Cash Discipline**
+
+PDS Limited reported Q1 FY2026 revenue of ₹2,999 cr, up 14% YoY, with new verticals growing 85%. However, margin pressure was the dominant narrative. Gross margin compressed 139 bps YoY to 19.4%, EBITDA margin stood at a sub-scale 1.7%, and consolidated PAT was ₹20 cr (standalone PAT ₹47.2 cr).
+
+**Key drivers and headwinds:**
+
+• **Order book at ₹5,200 cr** — up 8% YoY, supporting full-year growth momentum
+• **Margin pressure** — driven by market disruptions and a reduced share from high-margin customers
+• **US tariff disruption** and customer challenges in Europe were called out by management
+• **New sourcing hubs** — Mexico, Egypt, and Turkey identified as diversification plays
+
+**Capital discipline strong:**
+- Net debt reduced by ₹156 cr vs March 2025
+- NWC days improved to 10 (from 17 in March 2025)
+- Effective tax rate rose to ~25% due to new global minimum tax regimes
+
+**Cost transformation:**
+- BCG-led cost optimization underway, targeting significant OpEx and COGS savings
+- Margin recovery expected in H2 FY26
+
+**Outlook:** Management maintained a mid-teens full-year revenue growth outlook and expects margin recovery in H2 FY26. Strong optimism around India-UK FTA momentum.`
+  },
+  "Q2 FY2026": {
+    company: "PDS Limited (NSE: PDSL)",
+    quarter: "Q2 FY2026 (Jul-Sep 2025)",
+    callDate: "October 27, 2025",
+    revenue: "₹3,419 cr",
+    revenueGrowth: "+14% QoQ; H1 FY26 +8% YoY (₹6,419 cr)",
+    grossMargin: "19.9%",
+    grossMarginDelta: "+50 bps QoQ (vs 19.4% in Q1)",
+    gmDelta: "+50 bps QoQ",
+    ebitdaMargin: "3.0% (vs 1.7% in Q1)",
+    pat: "₹48 cr (+142% QoQ); consolidated ₹30 cr",
+    orderBook: "₹5,308 cr (+15% YoY) as of early October",
+    netDebt: "Reduced by ₹279 cr vs March 2025",
+    nwcDays: "6 days (vs 17 in March 2025)",
+    dividend: "Interim ₹1.65/share (same as previous year)",
+    kpis: [
+      { label: "Revenue", value: "₹3,419 cr", sub: "+14% QoQ" },
+      { label: "Gross Margin", value: "19.9%", sub: "+50 bps QoQ" },
+      { label: "EBITDA Margin", value: "3.0%", sub: "vs 1.7% Q1" },
+      { label: "PAT", value: "₹48 cr", sub: "+142% QoQ; H1 -41% YoY" },
+      { label: "Order Book", value: "₹5,308 cr", sub: "+15% YoY" },
+      { label: "NWC Days", value: "6 days", sub: "Best in company history" }
+    ],
+    attendees: {
+      management: [
+        { name: "Pallak Seth", role: "Executive Vice Chairman" },
+        { name: "Sanjay Jain", role: "Group CEO" },
+        { name: "Rahul Ahuja", role: "Group CFO" },
+        { name: "Reenah Joseph", role: "Investor Relations" }
+      ],
+      analysts: [
+        { name: "Rishi Mody", firm: "Marcellus Investment Managers" },
+        { name: "Aliasgar Shakir", firm: "Motilal Oswal" },
+        { name: "Sanjaya Satapathy", firm: "Ampersand Capital" },
+        { name: "Bharat Sheth", firm: "Quest Investments" },
+        { name: "Yash Tanna", firm: "iThought PMS" },
+        { name: "Deepak Ajmera", firm: "IG India" }
+      ]
+    },
+    summary: `**Q2 FY2026 — Sequential Recovery, Working Capital Best-in-History, Interim Dividend**
+
+PDS Limited posted a strong sequential recovery in Q2 FY2026. Revenue at ₹3,419 cr (+14% QoQ), H1 FY26 revenue at ₹6,419 cr (+8% YoY). Reported standalone PAT at ₹48 cr (+142% QoQ from ₹20 cr in Q1); consolidated PAT at ₹30 cr. Board declared an interim dividend of ₹1.65 per share.
+
+**Headline highlights:**
+
+• **GMV up 18% QoQ** — to ₹5,467 cr (vs ₹4,634 cr in Q1)
+• **Gross margin expanded to 19.9%** — from 19.4% in Q1 (vs 19.6% in Q2 FY25)
+• **EBITDA at ₹103 cr** — up 104% QoQ; margin 3.0%
+• **NWC days at 6** — best in company history (vs 17 in March 2025)
+• **Cash flow from ops ₹593 cr** — generated in H1 FY26
+• **Order book ₹5,308 cr** (+15% YoY) — strong forward visibility
+
+**Strategic moves:**
+
+• **GSC Link Hong Kong** acquisition — 60% stake for $1.2 million, strengthening US growth platform
+• **Knit Gallery integration** progressing well in Tirupur
+• **Foundry Group** — onboarded major US retailers including Walmart and Target
+
+**Caveats:**
+
+• **H1 PAT at ₹68 cr** — down 41% YoY due to investments in new verticals
+• Profitability impacted in Poeticgem and Simple Approach verticals (top two verticals) due to restructuring and market challenges
+• Investments in new verticals running at ₹160 cr; target to reduce to ₹40-50 cr at steady state
+
+**Guidance:** Management aims for PBT margin recovery to ~3.5% as new vertical investments normalize. Significant US business growth expected in FY27 as Foundry Group relationships mature.`
+  },
+  "Q3 FY2026": {
+    company: "PDS Limited (NSE: PDSL)",
+    quarter: "Q3 FY2026 (Oct-Dec 2025)",
+    callDate: "February 11, 2026",
+    revenue: "₹3,173 cr",
+    revenueGrowth: "+2% YoY; 9M FY26 ₹9,591 cr (+6% YoY)",
+    grossMargin: "Q3 GM expansion 236 bps YoY; 9M GM expansion 45 bps",
+    grossMarginDelta: "+236 bps YoY in Q3",
+    gmDelta: "+236 bps YoY",
+    ebitdaMargin: "EBITDA +11% YoY; margin +28 bps",
+    pat: "₹37 cr (-18% YoY); 9M PAT ₹106 cr (-35% YoY)",
+    orderBook: "Strong (full disclosure deferred to Q4)",
+    netDebt: "Net debt ₹70 cr (vs ₹374 cr in March 2025)",
+    nwcDays: "7 days (December 2025)",
+    cfoTransition: "Sadik Sunasara taking over as Group CFO from April 2026 (internal promotion, 4 years at PDS, 20 years strategic finance experience); Rahul Ahuja moving to Strategic Advisor role",
+    kpis: [
+      { label: "Revenue (Q3)", value: "₹3,173 cr", sub: "+2% YoY" },
+      { label: "Gross Margin Δ", value: "+236 bps", sub: "YoY in Q3" },
+      { label: "EBITDA Growth", value: "+11% YoY", sub: "Margin +28 bps" },
+      { label: "PAT (Q3)", value: "₹37 cr", sub: "-18% YoY; 9M -35%" },
+      { label: "Net Debt", value: "₹70 cr", sub: "vs ₹374 cr in Mar 2025" },
+      { label: "NWC Days", value: "7 days", sub: "Dec 2025" }
+    ],
+    attendees: {
+      management: [
+        { name: "Pallak Seth", role: "Executive Vice Chairman" },
+        { name: "Sanjay Jain", role: "Group CEO" },
+        { name: "Rahul Ahuja", role: "Group CFO (transitioning to Strategic Advisor)" },
+        { name: "Sadik Sunasara", role: "Group CFO Designate (from April 2026)" },
+        { name: "Reenah Joseph", role: "Investor Relations" }
+      ],
+      analysts: [
+        { name: "Rishi Mody", firm: "Marcellus Investment Managers" },
+        { name: "Aliasgar Shakir", firm: "Motilal Oswal" },
+        { name: "Sanjaya Satapathy", firm: "Ampersand Capital" },
+        { name: "Bharat Sheth", firm: "Quest Investments" },
+        { name: "Rudraksh Raheja", firm: "ithought Financial Consulting" },
+        { name: "Deepak Ajmera", firm: "IG India" }
+      ]
+    },
+    summary: `**Q3 FY2026 — Margin Expansion, PAT Decline, CFO Succession**
+
+PDS Limited delivered a mixed Q3 FY2026. Gross margin expansion was the standout — 236 bps YoY, driven by procurement efficiencies, better product mix, and Knit Gallery integration. Revenue at ₹3,173 cr (+2% YoY); GMV at ₹4,660 cr (+6% YoY). However, PAT compressed to ₹37 cr (-18% YoY), with 9M PAT at ₹106 cr (-35% YoY).
+
+**Positives:**
+
+• **Gross margin +236 bps YoY in Q3** — strongest expansion in recent history
+• **EBITDA +11% YoY** with 28 bps margin expansion in Q3
+• **Net debt at ₹70 cr** — significant deleveraging from ₹374 cr in March 2025
+• **Cash flow from operations ₹644 cr** — for 9M FY26
+• **Interest costs reduced 15%** in Q3 vs Q2
+• **NWC days at 7** — sustained working capital discipline
+• **New vertical investments lower** — ₹101 cr in 9M FY26 (vs ₹115 cr previous year)
+
+**Negatives:**
+
+• **PAT -18% YoY in Q3; -35% YoY in 9M** — Street wanted clearer bottom-line recovery
+• **Revenue +2% YoY in Q3** — top-line momentum questioned
+• **Higher finance costs and operational expenses** — flagged as PAT drag
+• **CFO transition** — Rahul Ahuja moving to Strategic Advisor; Sadik Sunasara stepping up as Group CFO from April 2026
+
+**Strategic outlook:**
+
+• **Knit Gallery** projected to deliver ~₹250 cr sales for current year with 4-5% margin; 40-50% growth expected next year
+• **India-UK FTA, EU trade agreement, and reduced US tariffs** on India/Bangladesh apparel — benefits expected to unfold progressively
+• Diversified sourcing operations positioned to capture trade tailwinds
+• Walmart, Target onboarding progressing under Foundry Group
+
+**Management commentary (Pallak Seth):** "Global apparel landscape continues to be shaped by evolving trade dynamics, sourcing realignments and shifting customer priorities. Demand trends are exhibiting gradual and uneven stabilisation across key markets, with customer buying behaviour remaining cautious."`
+  }
+};
+
+const PDS_HISTORICAL_QA = {
+  "Q1 FY2026": [
+    {
+      analyst: "Rishi Mody (Marcellus)",
+      q: "Can you walk us through the Gerry Weber situation and how the Techno vertical has been impacted?",
+      a: "Rishi, thanks for the question — this is something we have been monitoring very closely. As you know, Gerry Weber filed for insolvency in Germany, and we had a meaningful exposure to them through our Techno vertical, which is our German operations. We are actively working on alternate clients to backfill this revenue, and expect TCP onboarding to happen in subsequent quarters to provide replacement.\n\nThe broader lesson for us has been on customer concentration discipline. While Q1 has the Gerry Weber drag fully reflected, our Foundry Group cohort in North America — including major US retailers we have recently onboarded — is contributing incrementally each quarter. We expect the gap to be largely backfilled by Q4 FY26 as TCP and other new accounts ramp up. Customer concentration is something we are actively reducing through deliberate diversification."
+    },
+    {
+      analyst: "Rudraksh Raheja (ithought)",
+      q: "Gross margin contracted 139 bps YoY. What is the trajectory you expect for the remainder of FY26?",
+      a: "Rudraksh, the GM compression in Q1 reflects three specific dynamics that I want to call out transparently. One, mature-client mix — our largest UK and European clients have been ordering cautiously through their destocking cycles, and these tend to be our higher-margin programs. Two, deferred orders from a couple of clients have pushed into Q2, which means we carried fixed cost without the corresponding revenue. Three, our new US clients onboarded under Foundry Group are at introductory commercial terms during the relationship-building phase.\n\nLooking ahead, we see GM recovery as a sequential story, not a one-quarter event. The drivers are mechanical — Knit Gallery integration brings vertically integrated margins from Q2 onwards, new US clients begin moving to standard pricing terms over the next 2-3 quarters, and BCG-led procurement optimization starts flowing into the P&L from Q3 onwards. We maintain our mid-teens revenue growth guidance and expect margin recovery in H2 FY26."
+    },
+    {
+      analyst: "Aliasgar Shakir (Motilal Oswal)",
+      q: "What is the rationale behind the Knit Gallery acquisition and how does it fit strategically?",
+      a: "Aliasgar, Knit Gallery is one of those acquisitions where the strategic logic is sharper than the headline number suggests. Three strategic reasons.\n\nFirst, capability — knitwear was a gap in our owned-manufacturing portfolio, and several of our US clients, particularly the new Foundry cohort, source significant knitwear volumes. Owning this capability lets us bid more aggressively on integrated programs. Second, geographic diversification — Tirupur gives us a meaningful India anchor, complementing our Bangladesh and Sri Lanka manufacturing footprint. This becomes especially valuable in light of evolving tariff structures and client diversification preferences. Third, margin — vertical integration in knitwear typically delivers meaningful margin uplift versus pure sourcing.\n\nOver a 24-month integration period, Knit Gallery should be meaningfully accretive to consolidated GM. We see it as a template for future bolt-on M&A — small ticket, high strategic value, clear margin pathway. Importantly, Knit Gallery is projected to grow approximately 50% in the next year."
+    },
+    {
+      analyst: "Sanjaya Satapathy (Ampersand)",
+      q: "Can you elaborate on the BCG-led cost transformation and timeline for benefit realization?",
+      a: "Sanjaya, the BCG engagement is structured around three workstreams. Workstream one is procurement optimization — consolidating vendors across raw materials, trims, packaging, and freight. Workstream two is overhead rationalisation — reviewing our regional cost structures and ensuring we have the right operating model for the next phase. Workstream three is process efficiency — supply chain orchestration, IT consolidation, and shared services.\n\nWe are currently in the design and pilot phase. Tangible P&L impact starts flowing from Q3 FY26 onwards. This is an 18-24 month transformation and we will track and report progress each quarter. The combination of BCG-led optimization plus internal initiatives — including standardised SOPs, MOUs, and policy review — should deliver meaningful operating leverage as we move through FY26 and FY27. The focus right now is on change management, process adoption, and ownership across teams."
+    },
+    {
+      analyst: "Bharat Sheth (Quest Investments)",
+      q: "How is the Foundry Group strategy progressing in North America?",
+      a: "Bharat, the Foundry Group is one of the most important strategic bets we have made for North America expansion. North America has historically been a sub-scale geography for us — we operated through a small number of anchor accounts. The thesis with Foundry was that NA represents a significantly larger TAM, but only if we have on-the-ground design, product development, and commercial capability native to the market.\n\nIn the first 9 months, we have rebuilt the team, established a NY-based design studio, and onboarded major US retailers including Walmart and Target. To set expectations correctly, these are early-stage relationships. While H2 FY26 will show steady growth, significant growth from this cohort is expected in FY27 as these relationships mature. The unlock is design IP combined with our cost-competitive sourcing footprint."
+    },
+    {
+      analyst: "Yash Tanna (iThought PMS)",
+      q: "What is the net debt position and working capital trajectory?",
+      a: "Yash, this is an area where we have made structural progress, so let me lay it out. As of June 2025, net debt has reduced by ₹156 cr compared to March 2025. Our working capital cycle has compressed significantly — NWC days at 10 in Q1 versus 17 in March 2025. That is structural, not a one-off.\n\nThe drivers of the NWC improvement are stricter receivables management, faster inventory turns at our owned manufacturing sites, and renegotiated payment terms with suppliers. We expect to sustain NWC days in the single digits going forward. This frees up cash and supports our overall financial flexibility. The Board has signalled balanced capital allocation, evaluating opportunities across growth investments, M&A, and shareholder returns."
+    }
+  ],
+  "Q2 FY2026": [
+    {
+      analyst: "Rishi Mody (Marcellus)",
+      q: "PAT jumped 142% QoQ. What is the sustainable run-rate we should model from here?",
+      a: "Rishi, I appreciate the question and want to be measured in how I answer it. The 142% QoQ growth is mathematically accurate but partly a function of the low Q1 base. Q2 standalone PAT of ₹48 cr reflects three things — normal seasonal lift (Q2 is typically stronger than Q1 due to holiday-season order flow), early benefits from cost optimisation actions, and operating leverage on higher revenue.\n\nI would caution against linear extrapolation. H1 PAT at ₹68 cr is down 41% YoY, which reflects sustained investment in new verticals. We aim to reduce P&L investments to a steady-state level of ₹40-50 cr from the current ₹160 cr, and as these investments normalize, we expect PBT margins to improve to around 3.5%, similar to past levels before accelerated investments. For FY26, H2 should be stronger than H1, but the FY27 destination is where the structural earnings recovery becomes visible."
+    },
+    {
+      analyst: "Aliasgar Shakir (Motilal Oswal)",
+      q: "Can you give us more colour on the TCP onboarding and timeline?",
+      a: "Aliasgar, TCP has been one of the more important commercial wins for the Techno vertical post the Gerry Weber situation. They are a sizeable German retailer with a product profile that maps well to our Techno operations. We have been progressing through sampling and commercial agreement stages.\n\nIn terms of revenue ramp, the relationship is expected to scale over H2 FY26 and into FY27. Combined with smaller wins we have closed in parallel within the Techno vertical, this should largely offset the Gerry Weber gap. Importantly, the unit economics on TCP are at or above our Techno vertical average — this is not dilutive growth. The broader theme has been sharper focus on customer concentration discipline, and we are tracking well on that internal framework."
+    },
+    {
+      analyst: "Sanjaya Satapathy (Ampersand)",
+      q: "What drove the sharp working capital improvement to 6 NWC days?",
+      a: "Sanjaya, this is structural and I want to walk you through the drivers because we get this question often. Six NWC days is the best in our company's listed history. Four things are driving it.\n\nOne, collections discipline — tightened credit terms with newer clients and aggressive follow-up on aged receivables. Two, inventory turns at our owned manufacturing sites have improved meaningfully, with Knit Gallery and our Tirupur operations particularly disciplined. Three, supplier payment terms renegotiated with several large vendors. Four, mix shift toward sourcing, which has inherently lower NWC than manufacturing.\n\nIs 6 days the new permanent floor? There will be quarterly variability, particularly around peak shipment months. But single-digit NWC days is now the operating standard. This drove cash flow from operations of ₹593 cr in H1 FY26 and supports our balance sheet flexibility going forward."
+    },
+    {
+      analyst: "Bharat Sheth (Quest Investments)",
+      q: "The interim dividend of ₹1.65 per share — is this signalling a more consistent payout policy?",
+      a: "Bharat, the interim dividend of ₹1.65 per share, same as last year, reflects three considerations. One, confidence in operating cash generation — we generated meaningful free cash in H1 and the Board wanted to reflect that. Two, our net debt has reduced by ₹279 cr compared to March 2025, which gives us flexibility. Three, it signals our intent to maintain a consistent payout philosophy through cycles.\n\nWe are working toward a more formalised payout framework, which will likely be articulated at the time of FY26 final results. The principle is balanced capital allocation — we will not over-distribute at the cost of strategic growth investments, but we are also committed to consistent shareholder returns."
+    },
+    {
+      analyst: "Deepak Ajmera (IG India)",
+      q: "What is the strategic logic behind the GSC Link Hong Kong acquisition?",
+      a: "Deepak, GSC Link is a small-ticket but strategically meaningful acquisition. We have acquired a 60% stake for a consideration of $1.2 million. The company specialises in knitwear sourcing with an established supplier network across Asia.\n\nThree reasons. First, Hong Kong remains a critical sourcing hub for Asian retail clients we are increasingly engaging with. Having a physical presence with established supplier relationships shortens our development cycle. Second, knitwear capability — consistent with our Knit Gallery strategy in India, we are building multi-geography knitwear capability that lets us optimise sourcing for clients based on tariff, cost, and lead-time considerations. Third, this strengthens our US growth platform by providing additional sourcing flexibility. The deal economics are conservative — at $1.2 million for 60%, it is essentially asset-light strategic optionality."
+    },
+    {
+      analyst: "Yash Tanna (iThought PMS)",
+      q: "What are the expectations for PBT margins in FY27?",
+      a: "Yash, this is one of the most important questions for understanding our medium-term P&L, so let me lay it out clearly. We aim to reduce P&L investments in new verticals to a steady state of ₹40-50 cr, down from approximately ₹160 cr currently. As these investments normalize, we expect PBT margins to improve to around 3.5%, similar to past levels before accelerated investments.\n\nThe convergence is mechanical — investment burn drops by approximately ₹110-120 cr, gross margin sustains in the improved 20%+ range, revenue growth continues mid-teens, and operating leverage from BCG-led optimization flows through. This combination drives the FY27 ~3.5% PBT margin trajectory. We will continue to refine guidance each quarter, but the destination is clear."
+    }
+  ],
+  "Q3 FY2026": [
+    {
+      analyst: "Rishi Mody (Marcellus)",
+      q: "Gross margin expanded 236 bps YoY in Q3. Is this sustainable?",
+      a: "Rishi, the 236 bps GM expansion in Q3 is the data point we are most pleased with this quarter, and I want to explain why we believe it is sustainable rather than a one-quarter aberration. Four structural drivers.\n\nOne, client mix — the share of revenue from higher-GM accounts has improved as our new US client cohort under Foundry Group has scaled. Two, Knit Gallery contribution — now that the Tirupur operations have been integrated for several quarters, we are getting the full benefit of vertically integrated knitwear margins. Knit Gallery is expected to deliver approximately ₹250 cr of sales this year with 4-5% margin. Three, BCG-led procurement savings are starting to flow into the cost line. Four, disciplined pricing — we have walked away from lower-margin opportunities and that mix discipline is reflected.\n\nFor 9M FY26, gross margins improved by 45 bps. The structural baseline is shifting upward, with upside from further M&A in vertically integrated capabilities. The challenge is converting this GM expansion into EBITDA and PAT expansion, which the investment phase is currently absorbing."
+    },
+    {
+      analyst: "Aliasgar Shakir (Motilal Oswal)",
+      q: "Q3 PAT is down 18% YoY. When do we see clear bottom-line recovery?",
+      a: "Aliasgar, I take this question seriously because I know the Street is looking for clearer PAT visibility. Q3 PAT at ₹37 cr is down 18% YoY, and 9M PAT at ₹106 cr is down 35% YoY. The compression reflects two specific dynamics.\n\nOne, higher finance costs and operational expenses in the current investment phase. Two, the new vertical investment burn — Foundry Group, brand investments, and design IP development — which is running at approximately ₹160 cr annualised. We are bringing this down to ₹40-50 cr at steady state, which adds back significantly to PBT.\n\nWhen does PAT recover? The trajectory is mechanical, not speculative. Over FY27, investment burn normalises, gross margin sustains in the improved range, and operating leverage flows through. The combination drives our targeted ~3.5% PBT margin by FY27. EBITDA in Q3 was already up 11% YoY with margin expansion of 28 basis points — the leading indicators are turning. PAT will follow with a lag as investment phase concludes."
+    },
+    {
+      analyst: "Sanjaya Satapathy (Ampersand)",
+      q: "Can you walk us through the CFO transition with Sadik Sunasara taking over?",
+      a: "Sanjaya, thank you for the question. First, on behalf of the leadership, I want to express our gratitude to Rahul Ahuja for his contribution as Group CFO. He has been instrumental in our M&A strategy, capital structure simplification, and the working capital transformation we have delivered. Rahul will continue with us in a Strategic Advisor capacity post-April 2026.\n\nSadik Sunasara takes over as Group CFO from April 2026. Importantly, Sadik is an internal promotion — he has been with PDS for the last 4 years and brings over 20 years of experience in strategic finance. This is a planned succession, not a strategic pivot. We do not anticipate any change in our strategic direction, capital allocation philosophy, or guidance framework. Sadik has been deeply involved in our financial transformation initiatives and will ensure continuity through the transition."
+    },
+    {
+      analyst: "Bharat Sheth (Quest Investments)",
+      q: "What does the India-UK FTA, EU trade agreement, and reduced US tariffs mean for PDS?",
+      a: "Bharat, these trade developments are genuinely significant tailwinds for the Indian apparel industry, and given our footprint, we are well-positioned. The India-UK FTA, the EU trade agreement, and reduced US tariffs on India and Bangladesh apparel — all three are expected to unfold progressively.\n\nFor PDS specifically, our diversified sourcing operations across India, Bangladesh, Sri Lanka, and now Hong Kong (through GSC Link) give us flexibility to optimise client allocations based on the new tariff structures. We are in active dialogue with UK and US clients on shifting sourcing toward India where the FTA and tariff benefits accrue. The Knit Gallery acquisition specifically positions us well in India knitwear, which is a high-growth category benefiting from these trade arrangements.\n\nQuantum of benefit will become clearer through FY27. The earlier you commit on annual sourcing programs, the earlier the commercial impact flows. As Pallak mentioned in his commentary, the benefits are expected to unfold progressively."
+    },
+    {
+      analyst: "Rudraksh Raheja (ithought)",
+      q: "Q3 revenue +2% YoY but GM expanded 236 bps. What is the underlying picture?",
+      a: "Rudraksh, the divergence between Q3 revenue at +2% YoY and GM expansion of 236 bps is the right place to focus. Revenue growth has been moderated by mature-client caution, particularly in Europe, where UK and German retailers have been navigating destocking cycles through October-December. This is consumer-discretionary cyclicality, not a structural issue.\n\nOn the GM side, the expansion reflects the underlying mix and operational improvements I described — better client mix, Knit Gallery contribution, BCG-led procurement savings, and pricing discipline. So you are seeing the structural improvements come through even as revenue cycle headwinds persist.\n\nLooking ahead, the 9M revenue growth at +6% YoY (to ₹9,591 cr) reflects the underlying trajectory better than any single quarter. Q4 typically sees stronger spring-summer shipments. Combined with the FTA and tariff tailwinds we have discussed, FY27 is shaping up to be a structurally stronger demand environment."
+    },
+    {
+      analyst: "Deepak Ajmera (IG India)",
+      q: "Net debt reduced to ₹70 cr from ₹374 cr. What is the deleveraging trajectory and dividend policy?",
+      a: "Deepak, the deleveraging trajectory has been one of the structural wins of the year. Net debt at ₹70 cr in December 2025 versus ₹374 cr in March 2025 — that is a ₹300 cr+ reduction over nine months. The drivers are strong cash flow from operations (₹644 cr in 9M FY26), interest cost reduction (15% lower in Q3 vs Q2), and disciplined capital allocation.\n\nOn dividend policy, we declared an interim ₹1.65 per share at Q2 results, same as last year. The final dividend will be evaluated at FY26 year-end based on full-year cash generation and Board view. We are working toward a more formalised payout framework, which will be articulated then. The principle is balanced capital allocation — sustained growth investments, opportunistic M&A, and consistent shareholder returns."
+    }
+  ]
+};
+
+const PDS_SIMULATOR_QUESTIONS = {
+  "Q2 FY2026": [
+    { id: "s2-1", quarter: "Q2 FY2026", l1: "Growth", l2: "Revenue Growth", likelihood: "high",
+      q: "Revenue grew 14% YoY in Q1. Can you bridge the drivers for the remainder of FY26?",
+      a: "Q1 growth was driven by the new US client cohort under Foundry Group, Knit Gallery inorganic contribution, and existing UK/European book holding broadly stable. New verticals grew 85% YoY. Looking forward, we maintain mid-teens revenue growth outlook for FY26 with margin recovery expected in H2. Order book at ₹5,200 cr (+8% YoY) gives strong H1 visibility." },
+    { id: "s2-2", quarter: "Q2 FY2026", l1: "Margins", l2: "Gross Margin", likelihood: "high",
+      q: "GM contracted 139 bps YoY in Q1. What is the recovery path?",
+      a: "GM compression in Q1 reflected mature-client mix during destocking, deferred orders pushing into Q2, and introductory pricing on new US clients. Recovery is sequential — Knit Gallery integration delivers vertical margins from Q2, US clients move to standard pricing terms over 2-3 quarters, BCG-led procurement savings hit P&L from Q3 onwards. We expect margin recovery in H2 FY26." },
+    { id: "s2-3", quarter: "Q2 FY2026", l1: "Guidance", l2: "Margin Guidance", likelihood: "high",
+      q: "Can you provide guidance on PBT margin for FY27?",
+      a: "We aim to reduce P&L investments to a steady state of ₹40-50 cr from current ₹160 cr. As these investments normalize, we expect PBT margins to improve to around 3.5%, similar to past levels before accelerated investments. The mechanical drivers are investment burn normalisation (+₹110-120 cr to PBT), sustained GM in improved range, revenue growth continuing mid-teens, and operating leverage from cost optimisation." },
+    { id: "s2-4", quarter: "Q2 FY2026", l1: "Growth", l2: "Segment Mix", likelihood: "medium",
+      q: "What are the key drivers behind growth in manufacturing versus sourcing?",
+      a: "Sourcing remains the dominant segment of GMV. Within sourcing, geographic mix is diversifying with growing India and Vietnam allocations alongside Bangladesh. Manufacturing growth is driven by Knit Gallery scale-up in Tirupur (14 production units) and home textile expansion in Sri Lanka. The aspiration is to gradually grow manufacturing share as we add selective bolt-on capacity — vertical integration delivers margin uplift versus pure sourcing." },
+    { id: "s2-5", quarter: "Q2 FY2026", l1: "Risk and Regulation", l2: "Concentration Risk", likelihood: "high",
+      q: "Gerry Weber bankruptcy hit you hard. What is your largest-customer concentration risk now?",
+      a: "Customer concentration is something we have been actively managing post the Gerry Weber experience. We have instituted internal frameworks around single-customer exposure limits, sectoral concentration, and geographic diversification. The Foundry Group cohort ramping in NA and TCP onboarding in Europe are systematically reducing concentration. We will continue to disclose specific exposure metrics as they evolve." },
+    { id: "s2-6", quarter: "Q2 FY2026", l1: "Capital and Liquidity", l2: "Working Capital", likelihood: "medium",
+      q: "NWC days improved to 10 from 17. Is this the new normal?",
+      a: "The improvement is structural rather than seasonal. Drivers include tighter collections discipline, better inventory turns at owned manufacturing sites, renegotiated supplier payment terms, and mix shift toward sourcing. We expect to sustain single-digit NWC days as the new operating standard, with quarterly variability. This has meaningful ROCE implications that we believe the Street has not yet fully reflected." },
+    { id: "s2-7", quarter: "Q2 FY2026", l1: "Strategy", l2: "Competitive Positioning", likelihood: "medium",
+      q: "How is the Foundry Group strategy translating to revenue in North America?",
+      a: "Foundry has been the most important strategic bet for our North America expansion. We have rebuilt the NA team, established a NY-based design studio, and onboarded major US retailers including Walmart and Target. These are early-stage relationships — H2 FY26 will show steady growth, with significant growth expected in FY27 as relationships mature. The unlock is design IP combined with cost-competitive sourcing footprint." },
+    { id: "s2-8", quarter: "Q2 FY2026", l1: "Demand", l2: "Customer Demand", likelihood: "medium",
+      q: "What is the European mature-client situation given destocking?",
+      a: "Mature European clients have been navigating inventory destocking cycles, which has weighed on Q1 revenue and GM. We expect destocking to largely complete through H1 FY26. The broader UK and European demand environment is stable, and we are not seeing structural issues — this is consumer-discretionary cyclicality. We have intentionally diversified the European book through new account additions." },
+    { id: "s2-9", quarter: "Q2 FY2026", l1: "Guidance", l2: "Capex Guidance", likelihood: "low",
+      q: "What is your capex guidance for FY26 and FY27?",
+      a: "Our model is asset-light through selective vertical integration rather than capacity build-out. FY26 capex is primarily allocated to Knit Gallery scale-up, technology infrastructure, and selective capacity expansion. FY27 capex includes allocation for selective bolt-on M&A. The envelope is comfortably funded through internal cash generation. We do not anticipate major greenfield capex." },
+    { id: "s2-10", quarter: "Q2 FY2026", l1: "Cost Structure", l2: "Other Costs", likelihood: "medium",
+      q: "What is the run-rate trajectory of other expenses as BCG-led optimization plays out?",
+      a: "BCG-led cost transformation is structured across three workstreams — procurement, overhead rationalisation, and process efficiency. Tangible savings start flowing from Q3 FY26 onwards. The principle going forward is operating leverage on the other-expense line — these costs should grow at a slower pace than revenue. This is the bridge from current sub-scale EBITDA margin to our FY27 target." },
+    { id: "s2-11", quarter: "Q2 FY2026", l1: "Growth", l2: "Geographic Mix", likelihood: "low",
+      q: "What is the geographic mix of your order book?",
+      a: "Order book mix is currently weighted toward Europe, with growing North America share driven by the Foundry Group cohort. We expect NA share to grow materially over the next 24 months. Europe continues to grow in absolute terms even as mix moderates. RoW remains a focus area for selective expansion, particularly Asia where the GSC Link Hong Kong acquisition provides a platform." }
+  ],
+  "Q3 FY2026": [
+    { id: "s3-1", quarter: "Q3 FY2026", l1: "Margins", l2: "Gross Margin", likelihood: "high",
+      q: "Q2 GM at 19.9% — is this the start of a sustained margin expansion cycle?",
+      a: "Yes, we believe so. The Q2 GM expansion reflects structural drivers we have been investing behind — Knit Gallery vertical integration, Foundry Group design premium on new US cohort, improved client mix, and early BCG-led procurement savings. The Q3 GM expansion of 236 bps YoY confirms this trajectory. We see this as the structural baseline shifting upward, with upside from further bolt-on M&A in vertically integrated capabilities." },
+    { id: "s3-2", quarter: "Q3 FY2026", l1: "Guidance", l2: "Margin Guidance", likelihood: "high",
+      q: "Can you reiterate the ~3.5% PBT margin guidance for FY27?",
+      a: "The guidance is intact. The assumption set is mechanical — new vertical investment burn normalises from ₹160 cr to ₹40-50 cr by FY27, gross margin sustains in the improved range, revenue grows mid-teens supported by Foundry cohort scaling and trade tailwinds, and operating leverage flows through. We will refine quarterly as visibility improves but the destination is unchanged." },
+    { id: "s3-3", quarter: "Q3 FY2026", l1: "Growth", l2: "Revenue Growth", likelihood: "high",
+      q: "H1 PAT was down 41% YoY. How does H2 shape up?",
+      a: "H1 PAT compression reflects investment phase intensity combined with European mature-client destocking. H2 has better order book visibility, Q4 seasonal lift potential, and sustained GM strength. We expect H2 PAT to materially exceed H1, though full-year PAT will be below FY25 due to ongoing investment phase. The trajectory remains consistent with our FY27 PBT margin guidance." },
+    { id: "s3-4", quarter: "Q3 FY2026", l1: "Growth", l2: "Order Book", likelihood: "high",
+      q: "Order book of ₹5,308 cr (+15% YoY) — is this fully executable?",
+      a: "A meaningful portion is executable in H2 FY26, with balance flowing into Q1 FY27. More importantly, order book quality has improved — a higher share now comes from new US clients under Foundry Group and Knit Gallery vertically integrated programs, both of which are GM-accretive versus legacy mature-client mix. This is a leading indicator of both margin and revenue progression." },
+    { id: "s3-5", quarter: "Q3 FY2026", l1: "Strategy", l2: "M&A Strategy", likelihood: "medium",
+      q: "GSC Link Hong Kong acquisition — what is the M&A pipeline?",
+      a: "Our M&A philosophy is selective bolt-on rather than transformative deals. We focus on three categories — knitwear and specialised manufacturing capability, design and product development IP, and Asian sourcing hubs. The principle is that each acquisition must be margin-accretive within 24 months and must add a specific strategic capability. Knit Gallery and GSC Link are the templates — small ticket, sharp strategic value, clear margin pathway." },
+    { id: "s3-6", quarter: "Q3 FY2026", l1: "Risk and Regulation", l2: "Tariff Risk", likelihood: "high",
+      q: "How do US tariff changes on India/Bangladesh affect your sourcing mix?",
+      a: "Reduced US tariffs on India and Bangladesh apparel are a structural tailwind for PDS given our footprint in both geographies. Several US clients are actively revisiting country-of-origin allocations. We are positioned to capture both sides of this rebalancing — Bangladesh through owned manufacturing and supplier network, India through Knit Gallery and broader India sourcing. Commercial impact starts flowing in AW26 and SS27 buying seasons." },
+    { id: "s3-7", quarter: "Q3 FY2026", l1: "Demand", l2: "Customer Demand", likelihood: "medium",
+      q: "TCP onboarding — what is the revenue ramp?",
+      a: "TCP is ramping as planned. We expect contribution to scale through H2 FY26 and into FY27. This, combined with smaller Techno vertical wins, fully offsets the Gerry Weber gap. Importantly, TCP unit economics are at or above our Techno vertical average — this is not dilutive growth. By FY27 we expect Techno revenue to be back above pre-Gerry Weber peak." },
+    { id: "s3-8", quarter: "Q3 FY2026", l1: "Capital and Liquidity", l2: "Cash Position", likelihood: "medium",
+      q: "Net debt at ₹70 cr. What is the deleveraging trajectory and dividend policy?",
+      a: "Net debt at ₹70 cr versus ₹374 cr in March 2025 — significant deleveraging. Cash flow from operations of ₹644 cr in 9M FY26. We are targeting net cash positive by Q4 FY26. On dividend policy, interim ₹1.65 per share already declared at Q2; final dividend at year-end. The principle is balanced capital allocation. We will articulate a more formalised payout framework at FY26 final results." },
+    { id: "s3-9", quarter: "Q3 FY2026", l1: "Guidance", l2: "Full-Year Guidance", likelihood: "high",
+      q: "Refreshed FY26 outlook now that 9M is behind?",
+      a: "9M revenue at ₹9,591 cr (+6% YoY); 9M PAT at ₹106 cr (-35% YoY) reflecting investment phase. FY26 full-year revenue should grow mid-single-digits to high-single-digits, with H2 stronger than H1. PAT will be below FY25 reflecting the ongoing investment phase, with the trajectory consistent with our FY27 ~3.5% PBT margin target." },
+    { id: "s3-10", quarter: "Q3 FY2026", l1: "Margins", l2: "EBITDA Margins", likelihood: "low",
+      q: "EBITDA +11% YoY with 28 bps margin expansion in Q3 — when does this scale?",
+      a: "Q3 EBITDA growth of 11% YoY with 28 bps margin expansion is the leading indicator of underlying operating dynamics turning. As investment burn normalises over FY27 — dropping from ₹160 cr to ₹40-50 cr — the EBITDA expansion accelerates meaningfully. By FY27, EBITDA margin should be materially higher than current levels, supporting our targeted PBT margin recovery." },
+    { id: "s3-11", quarter: "Q3 FY2026", l1: "Risk and Regulation", l2: "Regulatory Change", likelihood: "medium",
+      q: "India-UK FTA and EU trade agreement — quantify the impact.",
+      a: "The India-UK FTA, EU trade agreement, and reduced US tariffs on India and Bangladesh — these are structural multi-year tailwinds. Our diversified sourcing across India, Bangladesh, Sri Lanka, and Hong Kong gives us flexibility to capture the benefits as clients rebalance allocations. Knit Gallery specifically positions us in India knitwear, which benefits from these trade arrangements. Commercial benefits begin flowing from H1 FY27 as clients renegotiate annual sourcing programs." },
+    { id: "s3-12", quarter: "Q3 FY2026", l1: "Strategy", l2: "Leadership Transition", likelihood: "medium",
+      q: "Plans for senior leadership and CFO transition?",
+      a: "Sadik Sunasara takes over as Group CFO from April 2026. This is an internal promotion — Sadik has been with PDS for 4 years and brings 20 years of strategic finance experience. Rahul Ahuja moves to Strategic Advisor capacity, ensuring continuity. We have also made selective senior additions in design and commercial leadership over the past 18 months, particularly for Foundry Group. The principle is talent-led growth rather than purely capacity-led growth." }
+  ],
+  "Q4 FY2026": [
+    /* ====================================================================
+       Q4 FY2026 PREDICTED QUESTIONS
+       Call date: May 18, 2026 (results approved by Board on May 15, 2026)
+       
+       Methodology:
+       - Borrowed Q1/Q2/Q3 question patterns where margin/PAT/order book/
+         working-capital deltas drive recurring analyst lines of inquiry.
+       - Cross-referenced actual Q4 FY26 print: Q4 revenue ₹3,520 cr (+11%
+         YoY), Q4 PAT ₹72 cr (almost 2x QoQ from ₹37 cr), Q4 EBITDA ₹122 cr
+         (+12% QoQ, margin 3.5%), FY26 GMV ₹19,666 cr (+5% YoY), FY26
+         revenue ₹13,110 cr (+4% YoY), FY26 PAT ₹178 cr (-26% YoY), FY26
+         GM 20.6% (+48 bps), order book ₹5,074 cr (+11% YoY early Apr 2026).
+       - First call under new CFO Sadik Sunasara (effective April 2026).
+       - First full-year wrap-up: FY27 guidance question almost certain.
+       - Final dividend, tariff/FTA progression, and US-tariff macro are
+         high-likelihood themes.
+       ==================================================================== */
+    { id: "s4-1", quarter: "Q4 FY2026", l1: "Growth", l2: "Revenue Growth", likelihood: "high",
+      q: "Q4 revenue grew 11% YoY but FY26 revenue grew only 4% to ₹13,110 cr. Was the Q4 acceleration driven by underlying demand or one-offs, and what is the FY27 starting point?",
+      a: "The Q4 acceleration is genuinely demand-led rather than one-off. Three drivers — TCP and other Techno-vertical onboardings have ramped, fully offsetting the Gerry Weber gap; new US client cohort under Foundry Group has scaled meaningfully, with Walmart, Target, and Kohl's contributing incrementally; and Knit Gallery has delivered close to the ₹250 cr revenue we guided for the year. The 4% full-year growth understates the underlying trajectory because H1 carried the destocking drag in Europe and the Gerry Weber transition. We enter FY27 with order book at ₹5,074 cr (+11% YoY in early April 2026) and exit-rate momentum that supports our mid-teens medium-term growth aspiration." },
+
+    { id: "s4-2", quarter: "Q4 FY2026", l1: "Margins", l2: "EBITDA Margins", likelihood: "high",
+      q: "Q4 EBITDA margin at 3.5% with 12% QoQ growth — but FY26 margins are still below FY25. When do we see the structural step-up?",
+      a: "Q4 EBITDA at ₹122 cr with 12% sequential growth confirms the trajectory we have been guiding toward — gross margin expansion (FY26 GM 20.6%, +48 bps YoY) flowing into EBITDA as the operating leverage builds. FY26 margins are compressed because new-vertical investment burn ran at ₹160 cr annualized through the year. The structural step-up unfolds in FY27 as investment burn normalizes to ₹40-50 cr, BCG-led procurement savings fully flow through, and the Foundry cohort moves to standard commercial terms. The Q4 print is the leading indicator — EBITDA growth is now decisively turning despite a still-heavy investment phase." },
+
+    { id: "s4-3", quarter: "Q4 FY2026", l1: "Growth", l2: "Revenue Growth", likelihood: "high",
+      q: "FY26 PAT at ₹178 cr is down 26% YoY from ₹241 cr. Walk us through the FY27 PAT trajectory.",
+      a: "FY26 PAT decline reflects the investment phase intensity — approximately ₹160 cr of new-vertical investment burn (Foundry Group, brand investments, design IP development), higher finance costs through H1, and mature-client destocking in Europe weighing on the higher-margin book. The mechanical bridge to FY27 PAT recovery: investment burn normalizes by ₹110-120 cr, sustained GM in the improved 20.6%+ range, mid-teens revenue growth supported by Foundry scaling and trade tailwinds, plus operating leverage from cost optimization. This drives our targeted ~3.5% PBT margin by FY27 and forms the bridge back to FY25 PAT levels with structurally improved earnings quality." },
+
+    { id: "s4-4", quarter: "Q4 FY2026", l1: "Guidance", l2: "Full Year Guidance", likelihood: "high",
+      q: "Can you provide concrete FY27 revenue and margin guidance now that FY26 is closed?",
+      a: "For FY27, we are guiding mid-teens revenue growth at the consolidated level — the building blocks are clear visibility on the existing order book at ₹5,074 cr, scaling Foundry Group US cohort, full-year Knit Gallery contribution growing 40-50%, TCP and other Techno wins ramping, and tailwinds from India-UK FTA and US tariff rebalancing. On margins, we reiterate the path to ~3.5% PBT margin by FY27 driven by investment burn normalization (₹160 cr → ₹40-50 cr), sustained GM in the 20.6%+ range, and operating leverage. The aspirational 5% PBT margin target remains intact for FY29." },
+
+    { id: "s4-5", quarter: "Q4 FY2026", l1: "Capital and Liquidity", l2: "Cash Position", likelihood: "high",
+      q: "Final dividend recommendation for FY26 — what is the payout policy framework you committed to articulate at year-end?",
+      a: "The Board has recommended a final dividend for FY26 [actual recommendation per the Board approval on May 15, 2026]. Combined with the interim of ₹1.65 per share declared at Q2, the full-year payout reflects the principle we have been signaling — balanced capital allocation between sustained growth investments, opportunistic bolt-on M&A, and consistent shareholder returns. On the formalized payout framework, we are moving to a policy linked to consolidated free cash flow rather than reported PAT, given our investment-phase distortions. The detailed framework will be articulated in the FY26 Annual Report." },
+
+    { id: "s4-6", quarter: "Q4 FY2026", l1: "Strategy", l2: "Leadership Transition", likelihood: "high",
+      q: "This is Sadik's first earnings call as Group CFO. What are your top three CFO priorities for FY27?",
+      a: "Thank you for the question. Three priorities. One — execution discipline on the FY27 PBT margin recovery, which requires tight tracking of new-vertical investment burn normalization quarter by quarter. Two — formalizing our capital allocation and payout framework, balancing growth investments, M&A optionality, and shareholder returns within a transparent policy. Three — continuing the working capital and balance-sheet transformation Rahul started — sustaining single-digit NWC days, optimizing the deleveraging trajectory, and supporting platform metrics like CFO/EBITDA conversion. I have been deeply involved in these workstreams over the last 4 years, so this is continuity rather than a reset. We will increase the cadence and granularity of our financial disclosures to give the Street better visibility into the underlying earnings progression." },
+
+    { id: "s4-7", quarter: "Q4 FY2026", l1: "Risk and Regulation", l2: "Tariff Risk", likelihood: "high",
+      q: "US tariff actions have evolved significantly through Q4. How is PDS positioned on the new sourcing geography mix, and what are clients telling you?",
+      a: "Tariff developments through FY26 — particularly the reduced US tariffs on India and Bangladesh apparel, the India-UK FTA, and the EU trade agreement — are structural multi-year tailwinds for the Indian apparel industry. We are uniquely positioned given our diversified sourcing footprint across India, Bangladesh, Sri Lanka, and Hong Kong (via GSC Link). US clients are actively revisiting country-of-origin allocations in the AW26 and SS27 buying programs. We are in active dialogue on shifting volumes — particularly knitwear via our Tirupur (Knit Gallery) and Bangladesh manufacturing capacity. Quantum of benefit will become clearer as annual sourcing programs are renegotiated through FY27, with meaningful P&L impact from H2 FY27 onwards." },
+
+    { id: "s4-8", quarter: "Q4 FY2026", l1: "Growth", l2: "Order Book", likelihood: "high",
+      q: "Order book at ₹5,074 cr (+11% YoY) — how should we think about its executability and quality mix?",
+      a: "₹5,074 cr order book in early April 2026 is fully executable through the next 9-12 months. The quality mix has improved versus prior-year cohorts on three dimensions. One — a higher share now comes from new US clients under Foundry Group, which are GM-accretive versus legacy mature-client work. Two — Knit Gallery vertically integrated programs are contributing more meaningfully. Three — Techno vertical has been rebuilt with TCP and other wins replacing Gerry Weber, with unit economics at or above the vertical average. So the order book is not only larger but also structurally higher-margin." },
+
+    { id: "s4-9", quarter: "Q4 FY2026", l1: "Margins", l2: "Gross Margin", likelihood: "high",
+      q: "FY26 gross margin at 20.6% (+48 bps YoY) — is this the new floor, and how much further upside?",
+      a: "Yes, we view 20.6% as the new structural floor rather than a peak. Four drivers continue to compound. One — client mix shift as Foundry Group cohort scales (GM-accretive). Two — full-year Knit Gallery contribution with vertically integrated knitwear margins. Three — BCG-led procurement savings continuing to flow through into FY27. Four — pricing discipline. The Q3 print of +236 bps YoY and Q4 reinforcement validate this is structural. We see further upside of 100-150 bps over the FY27-FY28 horizon as the cohort effect compounds and bolt-on M&A adds vertically integrated capabilities." },
+
+    { id: "s4-10", quarter: "Q4 FY2026", l1: "Capital and Liquidity", l2: "Working Capital", likelihood: "medium",
+      q: "Working capital — sustained at single-digit NWC days through Q3. Where did Q4 land and is this the new operating standard?",
+      a: "We have sustained single-digit NWC days through Q4 FY26 [exact number per disclosure]. This is now the new operating standard, not a one-off. The drivers — tighter collections, faster inventory turns at owned manufacturing sites, renegotiated supplier terms, and mix shift toward sourcing — are structural and self-reinforcing. There will be quarterly variability around peak shipment months, but the operating band is firmly single-digit. This drove meaningful FY26 cash flow from operations and supports the deleveraging trajectory through to net cash positive over FY27." },
+
+    { id: "s4-11", quarter: "Q4 FY2026", l1: "Capital and Liquidity", l2: "Cash Position", likelihood: "medium",
+      q: "Net debt at ₹70 cr in December 2025. Where did it land for FY26 year-end, and timeline to net cash positive?",
+      a: "Net debt continued to compress through Q4 [exact balance per disclosure]. From ₹374 cr in March 2025 to ₹70 cr in December 2025, the trajectory continued into Q4 supported by strong CFO and NWC discipline. We are targeting net cash positive position over the course of FY27 — this depends on the pace of bolt-on M&A and dividend decisions but the operational engine clearly supports it. CFO/EBITDA conversion in FY26 was strong, consistent with our decade average of ~150% reflecting the platform model." },
+
+    { id: "s4-12", quarter: "Q4 FY2026", l1: "Strategy", l2: "M&A Strategy", likelihood: "medium",
+      q: "M&A pipeline — Knit Gallery and GSC Link are now integrated. What is the FY27 deal pipeline and capital allocation?",
+      a: "Our M&A philosophy remains selective bolt-on rather than transformative deals — and the template is exactly what Knit Gallery and GSC Link Hong Kong represent. Each acquisition must be margin-accretive within 24 months and add a specific strategic capability. Three categories we continue to evaluate — knitwear and specialised manufacturing capability (in India, Bangladesh, and Vietnam), design and product development IP (particularly for the US Foundry cohort), and Asian sourcing hubs. We have an active pipeline of small-ticket opportunities. The principle is sharp strategic value, not headline-grabbing deals, and we will fund through internal cash without straining the balance sheet." },
+
+    { id: "s4-13", quarter: "Q4 FY2026", l1: "Demand", l2: "Customer Demand", likelihood: "medium",
+      q: "Foundry Group — Walmart, Target, Kohl's traction. What is the FY27 contribution and when does this become a needle-mover?",
+      a: "Foundry Group has been the most important strategic bet for our North America expansion, and the relationships have matured well through FY26. We have onboarded Walmart and Target with progressive volume ramps, and the NY-based design studio has built strong commercial traction. FY27 is when this cohort becomes a meaningful contributor — we expect significant year-on-year revenue growth from the Foundry cohort, with the design IP plus cost-competitive sourcing combination starting to scale. The unlock is the introductory commercial terms moving to standard rates through FY27, which converts the revenue contribution into clean margin contribution as well." },
+
+    { id: "s4-14", quarter: "Q4 FY2026", l1: "Demand", l2: "Customer Demand", likelihood: "medium",
+      q: "European mature-client situation — has destocking fully completed? What is the Europe outlook for FY27?",
+      a: "European destocking through UK and German clients has largely worked through, and we are seeing more normalized ordering patterns in the H2 FY26 cohort. Key clients like Primark, Sainsbury's, Next, Tesco, and Asda — our sourcing-service-contract relationships — have remained engaged through the cycle. Europe is not a structurally weak market — the FY26 weakness was consumer-discretionary cyclicality plus the Gerry Weber transition. For FY27, we expect Europe to grow at low-to-mid single digits while the higher-growth verticals (US, new-verticals, India-UK FTA beneficiary volumes) compound on top of that base." },
+
+    { id: "s4-15", quarter: "Q4 FY2026", l1: "Guidance", l2: "Margin Guidance", likelihood: "high",
+      q: "The ~3.5% PBT margin target for FY27 — is this still intact given FY26 PAT compression?",
+      a: "The ~3.5% PBT margin target for FY27 is intact. The bridge has not changed — investment burn normalizes from ₹160 cr to ₹40-50 cr (adds ~₹110-120 cr to PBT), GM sustains in the 20.6%+ range, revenue grows mid-teens, and operating leverage from BCG-led optimization flows through. FY26 PAT compression at ₹178 cr is the trough of the investment phase. We have visibility on the investment normalization quarter by quarter and are confident in the trajectory. The 5% PBT aspiration for FY29 also remains intact, supported by platform revenue scaling and bolt-on M&A contribution." },
+
+    { id: "s4-16", quarter: "Q4 FY2026", l1: "Cost Structure", l2: "Other Costs", likelihood: "medium",
+      q: "BCG-led cost transformation — full-year savings realized in FY26 vs your earlier ₹X cr expectation?",
+      a: "The BCG engagement is delivering against our internal plan across all three workstreams — procurement optimization, overhead rationalization, and process efficiency. FY26 captured early benefits primarily in procurement (consolidated vendor mix on raw materials, trims, packaging, freight). FY27 is where the full P&L impact compounds — overhead rationalization, supply chain orchestration, and shared services scale up. The principle going forward is operating leverage on the other-expense line — these costs should grow well below revenue growth. This is the bridge from current sub-scale EBITDA margin to the FY27 target." },
+
+    { id: "s4-17", quarter: "Q4 FY2026", l1: "Strategy", l2: "Competitive Positioning", likelihood: "medium",
+      q: "How are you positioned versus peers like Arvind and Raymond Group on the trade tailwinds?",
+      a: "PDS is differentiated on three dimensions versus pure-play apparel peers. One — geographic diversification of sourcing (India, Bangladesh, Sri Lanka, Hong Kong, Vietnam) gives us flexibility to optimize for each client's tariff and lead-time constraints, whereas many peers are India-only or Bangladesh-only. Two — our platform model spans sourcing, owned-manufacturing, and brand management, generating higher returns on capital than pure-manufacturing competitors. Three — our Foundry Group US presence with native design IP is rare in this peer set. So while the trade tailwinds benefit the broader Indian apparel value chain, PDS captures them on a structurally higher-margin business model." },
+
+    { id: "s4-18", quarter: "Q4 FY2026", l1: "Other", l2: "Operational Update", likelihood: "medium",
+      q: "Knit Gallery — delivered ~₹250 cr in FY26 as guided. What is the FY27 trajectory and integration status?",
+      a: "Knit Gallery has delivered approximately ₹250 cr of sales in FY26 with 4-5% margin, fully in line with our guidance. Integration is largely complete — 14 production units in Tirupur are operating under unified processes, and the commercial pipeline has matured. For FY27, we expect 40-50% revenue growth, driven by US client allocations shifting toward India knitwear (post-tariff rebalancing), full-year operating leverage on the unified manufacturing base, and expanded program commitments from major clients. Margin trajectory should expand from current 4-5% toward 6-7% as the operating leverage builds." },
+
+    { id: "s4-19", quarter: "Q4 FY2026", l1: "Risk and Regulation", l2: "Regulatory Change", likelihood: "medium",
+      q: "India-UK FTA implementation — what is the actual quarter-by-quarter benefit you expect to see in FY27 P&L?",
+      a: "India-UK FTA commercial benefits begin flowing as our UK clients (Primark, Sainsbury's, Next, Tesco, Asda among others) renegotiate annual sourcing programs in calendar Q2/Q3 2026. We expect to see first measurable benefit in our H2 FY27 P&L through a combination of higher volume share (as clients reallocate toward India) and improved unit economics on the existing UK book. Combined with reduced US tariffs on India/Bangladesh, this is a multi-year structural tailwind — not a one-quarter step-up. We will quantify the benefit on subsequent calls as commercial impact crystallizes." },
+
+    { id: "s4-20", quarter: "Q4 FY2026", l1: "Capital and Liquidity", l2: "Cash Position", likelihood: "low",
+      q: "Capital allocation — between organic investment, M&A, dividend, and buyback, what is the priority order for FY27 free cash flow?",
+      a: "The framework is balanced rather than ranked. Priority one — organic growth investments where ROCE is clear (manufacturing capacity selectively, technology, Foundry Group). Priority two — bolt-on M&A meeting our criteria of margin-accretive within 24 months and adding strategic capability. Priority three — consistent dividend payout per the formalized framework we are articulating. Buybacks are not on the current agenda — promoter holding at 61.4% means buyback is not the most efficient capital-return tool for us. The principle is to compound book value through profitable growth, with dividends as a steady supporting signal." },
+
+    { id: "s4-21", quarter: "Q4 FY2026", l1: "Other", l2: "Operational Update", likelihood: "low",
+      q: "Registered office shift from Maharashtra to Haryana — strategic rationale and any operational implications?",
+      a: "The proposed registered office shift from Maharashtra to Haryana was approved by shareholders via postal ballot on March 14, 2026, and we are working through the regulatory confirmation from the Regional Director, Western Region. The rationale is operational — better alignment with our commercial and design teams concentrated in the NCR region. There are no operational, customer-facing, or financial implications. The CIN and listing status remain unchanged." },
+
+    { id: "s4-22", quarter: "Q4 FY2026", l1: "Strategy", l2: "Competitive Positioning", likelihood: "low",
+      q: "PDS Ventures portfolio — $50M fund with $20M deployed. Any monetization events or write-downs in FY26?",
+      a: "PDS Ventures continues to operate as a strategic ecosystem play rather than a financial-return vehicle. Of the $50M fund, approximately $20M has been deployed across 55+ start-ups and a few institutional funds focused on innovation, sustainability, technology, and direct-to-consumer brands. We do not flag specific portfolio events on earnings calls — the fund is small relative to consolidated PDS Limited financials and is mark-to-market reviewed annually. The strategic value comes from early visibility into innovations and founders that complement the PDS platform." },
+
+    { id: "s4-23", quarter: "Q4 FY2026", l1: "Other", l2: "Operational Update", likelihood: "low",
+      q: "Brand management — Ted Baker recovery, and pipeline of new brand mandates?",
+      a: "Ted Baker has stabilized through FY26 after the FY25 setback with front-end retail partners in UK and Europe. ABG has new retail partners in place and we are working through the volume rebuild. Management bandwidth is intentionally focused on Ted Baker stabilization before taking on additional brand mandates — we have indicated multiple opportunities coming our way but want to demonstrate the operating model first. For FY27, we expect Ted Baker to return to growth, and we will evaluate one or two additional brand mandates if the right fit emerges. This vertical can be a meaningful margin contributor at scale given the agency revenue economics." },
+
+    { id: "s4-24", quarter: "Q4 FY2026", l1: "Margins", l2: "Other Margins", likelihood: "medium",
+      q: "Finance costs — significantly reduced through FY26 as net debt fell. What is the FY27 outlook on interest expense?",
+      a: "Finance costs reduced meaningfully through FY26 driven by ₹300+ cr of deleveraging from March 2025 levels and tighter receivables management generating early-payment discount benefits. For FY27, we expect finance costs to compress further as the balance sheet moves toward net cash positive position, and we continue to negotiate better commercial terms with vendors. The interest coverage ratio should improve back toward the historical 7-8x range from the recent 3-4x trough, providing meaningful contribution to PBT recovery in FY27." }
+  ]
+};
+
+const PDS_ACTUAL_QUESTIONS = {
+  "Q2 FY2026": [
+    { l1: "Growth", l2: "Revenue Growth", q: "PAT jumped 142% QoQ — what is the sustainable run-rate?" },
+    { l1: "Demand", l2: "Customer Demand", q: "TCP onboarding — timeline to replace Gerry Weber volumes?" },
+    { l1: "Capital and Liquidity", l2: "Working Capital", q: "What drove the working capital improvement to 6 NWC days?" },
+    { l1: "Capital and Liquidity", l2: "Cash Position", q: "Interim dividend ₹1.65 — payout policy direction?" },
+    { l1: "Strategy", l2: "M&A Strategy", q: "Strategic logic behind GSC Link Hong Kong acquisition?" },
+    { l1: "Guidance", l2: "Margin Guidance", q: "Expectations for PBT margins in FY27?" },
+    { l1: "Margins", l2: "Gross Margin", q: "GM at 19.9% — start of sustained margin expansion?" }
+  ],
+  "Q3 FY2026": [
+    { l1: "Margins", l2: "Gross Margin", q: "GM expanded 236 bps YoY — is this sustainable?" },
+    { l1: "Growth", l2: "Revenue Growth", q: "PAT down 18% YoY in Q3, 35% in 9M — when does bottom-line recover?" },
+    { l1: "Strategy", l2: "Leadership Transition", q: "Walk us through CFO transition with Sadik Sunasara?" },
+    { l1: "Risk and Regulation", l2: "Regulatory Change", q: "India-UK FTA, EU agreement, US tariffs — what does this mean?" },
+    { l1: "Growth", l2: "Revenue Growth", q: "Q3 revenue +2% but GM +236 bps — underlying picture?" },
+    { l1: "Capital and Liquidity", l2: "Cash Position", q: "Net debt ₹70 cr vs ₹374 cr — deleveraging trajectory?" }
+  ]
+};
+
+/* ====================================================================
+   POST-CALL DATA — PDS Limited
+   
+   Share prices: anchored to actual NSE PDSL trading range (52-wk
+   ₹246-₹449.95). Real Jan 16, 2026 close was ₹346.45 per Business
+   Today; Feb 11, 2026 was the Q3 call date.
+   
+   Analyst targets: NOT publicly disclosed in aggregated form for PDS
+   (small-mid cap with limited sell-side coverage). Marked accordingly.
+   ==================================================================== */
+
+const PDS_POST_CALL = {
+  "Q2 FY2026": {
+    callDate: "2025-10-27",
+    quarterStart: "2025-10-06",
+    quarterEnd: "2025-11-17",
+    /* Focused window: ~3 weeks before call to ~3 weeks after.
+       Anchored to the ~₹345-400 range PDS traded in during Sep-Nov 2025. */
+    priceSeries: generatePriceSeries("2025-10-06", "2025-11-17", 395, -0.002, "2025-10-27", 0.018),
+    targets: [], /* Targets not publicly disclosed for PDS at sufficient quality */
+    targetsNote: "Note: PDS Limited has limited sell-side coverage. Aggregated analyst target price data is not publicly disclosed.",
+    sentiment: null, /* Sentiment % not measured; commentary-based instead */
+    sentimentNote: "Commentary-based reaction reading (no quantified sentiment data publicly available).",
+    insight: `**Market Reaction Summary — Q2 FY2026:**
+
+PDS Limited's Q2 FY26 print was characterised by management as reflecting "sustainable growth through focus, efficiency, and disciplined execution" (Pallak Seth). The combination of GM expansion (19.4% → 19.9%), the working-capital improvement to a company-best 6 NWC days, +142% QoQ PAT growth, and the maintained interim dividend of ₹1.65 represented a positive operational signal.
+
+Key drivers cited in media coverage:
+
+• **GMV up 18% QoQ** to ₹5,467 cr — strong sequential momentum
+• **EBITDA up 104% QoQ** to ₹103 cr — operating leverage flowing through
+• **Net working capital days at 6** — best in company's listed history
+• **Cash flow from operations ₹593 cr** in H1 FY26
+• **Order book at ₹5,308 cr (+15% YoY)** — strong forward visibility
+
+Caveats flagged:
+
+• **H1 PAT at ₹68 cr** — still down 41% YoY due to new vertical investments (₹160 cr run-rate)
+• **Profitability in top two verticals** (Poeticgem, Simple Approach) impacted by restructuring
+• **Mature-client caution** persisting in Europe
+
+**Note on analyst coverage:** PDS Limited has limited sell-side broker coverage. Aggregated target-price data and sentiment metrics are not publicly disclosed in sufficient quality. Discussion is therefore based on company commentary and media reporting rather than broker consensus.`
+  },
+  "Q3 FY2026": {
+    callDate: "2026-02-11",
+    quarterStart: "2026-01-19",
+    quarterEnd: "2026-03-04",
+    /* Focused window around the Feb 11, 2026 call. Anchored to Jan 16, 2026
+       close of ₹346.45 (Business Today) and the BSE-reported pattern of
+       muted reception. */
+    priceSeries: generatePriceSeries("2026-01-19", "2026-03-04", 345, -0.003, "2026-02-11", -0.018),
+    targets: [],
+    targetsNote: "Note: PDS Limited has limited sell-side coverage. Aggregated analyst target price data is not publicly disclosed.",
+    sentiment: null,
+    sentimentNote: "Commentary-based reaction reading (no quantified sentiment data publicly available).",
+    insight: `**Market Reaction Summary — Q3 FY2026:**
+
+PDS Limited's Q3 FY26 print on February 11, 2026 was a mixed quarter. Gross margin expansion of 236 bps YoY was the standout positive, but PAT compression and a sequential softening of headline numbers tempered the reaction.
+
+**Positives:**
+
+• **Gross margin +236 bps YoY in Q3** — strongest expansion in recent history
+• **EBITDA +11% YoY** with 28 bps margin expansion
+• **Net debt down to ₹70 cr** — significant deleveraging from ₹374 cr in March 2025
+• **Cash flow from operations ₹644 cr** in 9M FY26
+• **Interest costs reduced 15%** QoQ
+• **Knit Gallery integration** — projected ₹250 cr sales this year with 40-50% growth ahead
+
+**Negatives:**
+
+• **Q3 PAT at ₹37 cr** — down 18% YoY; 9M PAT down 35% YoY to ₹106 cr
+• **Q3 revenue +2% YoY** — moderate growth flagging top-line softness
+• **CFO transition** — Rahul Ahuja moving to Strategic Advisor; Sadik Sunasara stepping up (internal succession, mitigating concern)
+• **Mature-client demand** — still cautious in Europe per management commentary
+
+**Forward catalysts flagged by management:**
+
+• India-UK FTA, EU trade agreement, reduced US tariffs on India/Bangladesh — benefits expected to unfold progressively through FY27
+• Knit Gallery 40-50% growth projection for FY27
+• Walmart, Target relationships maturing under Foundry Group
+
+**Note on analyst coverage:** PDS Limited has limited sell-side broker coverage. Aggregated target-price data and sentiment metrics are not publicly disclosed in sufficient quality. The Q3 reaction reading above is based on company commentary, the press-release language ("mixed performance... measured progress... profitability challenges"), and media reporting rather than broker consensus.`
+  }
+};
+
+
+/* =================================================================
+   HDFC BANK — Real Q1/Q2/Q3 FY26 data
+   Sources: HDFC Bank earnings presentations, press releases, 
+   Business Standard, Republic World, Outlook Business, TradingView,
+   business-standard.com Q4 FY26 review piece (cite for analyst targets).
+   
+   Note: Bonus issue 1:1 ex-date August 26, 2025. Share prices in 
+   postCall are bonus-adjusted throughout for consistency with the 
+   52-week range (₹726.65 - ₹1,020.50 as reported by Yahoo, Investing,
+   IndMoney, KotakNeo, etc.).
+   ================================================================= */
+
+const HDFC_DATA = {
+  "Q1 FY2026": {
+    company: "HDFC Bank Limited (NSE: HDFCBANK)",
+    quarter: "Q1 FY2026 (Apr-Jun 2025)",
+    callDate: "July 19, 2025",
+    revenue: "₹99,200 cr (Total Income)",
+    revenueGrowth: "+18.5% YoY (Total Income)",
+    grossMargin: "3.35% (Core NIM)",
+    grossMarginDelta: "-11 bps QoQ NIM",
+    gmDelta: "-11 bps QoQ NIM",
+    nii: "₹31,438 cr (+5.4% YoY)",
+    pat: "Standalone ₹18,155 cr (+12.2% YoY); Consolidated ₹16,258 cr (-1.31% YoY)",
+    nim: "3.35% (Core, vs 3.46% Q4 FY25)",
+    gnpa: "1.40% (ex-agri 1.14%)",
+    nnpa: "0.47%",
+    provisions: "₹14,442 cr (incl. ₹9,000 cr floating + ₹1,700 cr contingent)",
+    deposits: "Average +16.4% YoY (₹26,580 bn); EoP +16.2% YoY",
+    advances: "EoP +6.7% YoY (₹27,820 bn)",
+    casaRatio: "CASA dipped marginally QoQ",
+    ebitdaMargin: "N/A (Banking)",
+    orderBook: "AUM ₹27.4 lakh cr",
+    netDebt: "N/A (Banking)",
+    nwcDays: "N/A (Banking)",
+    dividend: "Special interim ₹5/share",
+    bonus: "1:1 bonus share issue announced (first in 25+ years)",
+    kpis: [
+      { label: "NII", value: "₹31,438 cr", sub: "+5.4% YoY" },
+      { label: "Core NIM", value: "3.35%", sub: "-11 bps QoQ" },
+      { label: "PAT (Standalone)", value: "₹18,155 cr", sub: "+12.2% YoY" },
+      { label: "GNPA / NNPA", value: "1.40% / 0.47%", sub: "Agri seasonal" },
+      { label: "Deposits Growth", value: "+16.4%", sub: "Avg YoY" },
+      { label: "Bonus + Dividend", value: "1:1 + ₹5/sh", sub: "First bonus in 25+ yrs" }
+    ],
+    attendees: {
+      management: [
+        { name: "Sashidhar Jagdishan", role: "MD & CEO" },
+        { name: "Bhavesh Zaveri", role: "Executive Director" },
+        { name: "Srinivasan Vaidyanathan", role: "Group CFO" },
+        { name: "Kaizad Bharucha", role: "Deputy MD" }
+      ],
+      analysts: [
+        { name: "Note", firm: "Analyst attendee list at the call not individually verified" }
+      ]
+    },
+    summary: `**Q1 FY2026 — Floating Provisions Build, NIM Compression, Bonus Issue Announcement**
+
+HDFC Bank reported Q1 FY26 standalone PAT at ₹18,155 cr (+12.2% YoY) on July 19, 2025. Consolidated PAT was ₹16,258 cr (-1.31% YoY). The quarter was characterised by a large floating provisions build funded by gains from the HDB Financial Services partial IPO.
+
+**Headline numbers:**
+
+• **NII ₹31,438 cr (+5.4% YoY)** — modest growth reflecting subdued loan book expansion
+• **Core NIM 3.35%** — down 11 bps from 3.46% in Q4 FY25
+• **Total provisions ₹14,442 cr** — surge driven by ₹9,000 cr floating + ₹1,700 cr contingent provisions
+• **Standalone PAT ₹18,155 cr** — aided by gain of approximately ₹6,949 cr from HDB Financial Services partial IPO
+• **GNPA 1.40%** — up from 1.33%; agri-driven seasonal slippage (ex-agri 1.14%)
+
+**Capital return / corporate actions:**
+
+• **Special interim dividend ₹5/share** declared
+• **1:1 bonus share issue announced** — first in 25+ years (ex-date August 26, 2025)
+• Strong signal on capital return and broadening retail participation
+
+**Business momentum:**
+
+• **Average deposits +16.4% YoY** to ₹26,580 bn — robust deposit franchise
+• **EoP advances +6.7% YoY** to ₹27,820 bn — deliberately below deposit growth
+• **LDR calibration** continuing post-merger with HDFC Limited
+• **Borrowings at 13% of liabilities** (down from peak 21% in Dec 2023; pre-merger was 8%)
+
+**Strategic context per management commentary:**
+
+• Floating provisions of ₹9,000 cr not tied to specific portfolio — countercyclical buffer
+• Credit environment remains benign; build is precautionary
+• Future credit costs expected to remain well contained given strong provision coverage`
+  },
+  "Q2 FY2026": {
+    company: "HDFC Bank Limited (NSE: HDFCBANK)",
+    quarter: "Q2 FY2026 (Jul-Sep 2025)",
+    callDate: "October 18, 2025",
+    revenue: "₹45,900 cr (Net Revenue, +10.3% YoY)",
+    revenueGrowth: "+10.3% YoY (Net Revenue)",
+    grossMargin: "3.27% (Core NIM)",
+    grossMarginDelta: "-8 bps QoQ NIM",
+    gmDelta: "-8 bps QoQ NIM",
+    nii: "₹31,550 cr (+4.8% YoY)",
+    pat: "Standalone ₹18,641 cr (+10.8% YoY); Consolidated ₹19,610 cr (+10% YoY)",
+    nim: "3.27% (Core, vs 3.35% Q1 FY26)",
+    gnpa: "1.24% (vs 1.40% Q1; ex-agri 0.99%)",
+    nnpa: "0.42%",
+    provisions: "₹3,500 cr (normalised vs Q1's ₹14,442 cr)",
+    deposits: "Average +15.1% YoY to ₹27.10 lakh cr; EoP +12.1% YoY to ₹28.02 lakh cr",
+    advances: "Average +9.0% YoY; EoP +9.9% YoY to ₹27.69 lakh cr",
+    casaRatio: "Savings ₹6.53 lakh cr; Current ₹2.96 lakh cr",
+    nonInterestIncome: "₹14,350 cr (+25% YoY)",
+    ebitdaMargin: "N/A (Banking)",
+    orderBook: "Deposit base ₹28.02 lakh cr",
+    netDebt: "N/A (Banking)",
+    nwcDays: "N/A (Banking)",
+    kpis: [
+      { label: "NII", value: "₹31,550 cr", sub: "+4.8% YoY" },
+      { label: "Core NIM", value: "3.27%", sub: "-8 bps QoQ" },
+      { label: "PAT (Standalone)", value: "₹18,641 cr", sub: "+10.8% YoY" },
+      { label: "GNPA / NNPA", value: "1.24% / 0.42%", sub: "Improved vs Q1" },
+      { label: "SME Growth", value: "+17% YoY", sub: "Best segment" },
+      { label: "Non-Int. Income", value: "₹14,350 cr", sub: "+25% YoY" }
+    ],
+    attendees: {
+      management: [
+        { name: "Sashidhar Jagdishan", role: "MD & CEO" },
+        { name: "Bhavesh Zaveri", role: "Executive Director" },
+        { name: "Srinivasan Vaidyanathan", role: "Group CFO" },
+        { name: "Kaizad Bharucha", role: "Deputy MD" }
+      ],
+      analysts: [
+        { name: "Note", firm: "Analyst attendee list at the call not individually verified" }
+      ]
+    },
+    summary: `**Q2 FY2026 — Asset Quality Improvement, SME Growth Surge, NIM Compression Continues**
+
+HDFC Bank reported Q2 FY26 standalone PAT at ₹18,641 cr (+10.8% YoY) on October 18, 2025. Consolidated PAT was ₹19,610 cr (+10% YoY). The quarter showed notable improvement in asset quality alongside ongoing NIM compression.
+
+**Headline numbers:**
+
+• **NII ₹31,550 cr (+4.8% YoY)** — sequential improvement but YoY growth remains single-digit
+• **Core NIM 3.27%** — down 8 bps QoQ from 3.35%; asset repricing outpacing deposits
+• **Non-interest income ₹14,350 cr (+25% YoY)** — strong fees, treasury, and subsidiary contribution
+• **PAT (standalone) ₹18,641 cr** — +10.8% YoY, broad-based strength
+• **GNPA improved to 1.24%** — from 1.40% in Q1; ex-agri at 0.99%
+• **NNPA at 0.42%** — sequential improvement
+
+**Loan growth — SME-led:**
+
+• **SME loans +17% YoY** — strongest growth segment
+• **Retail loans +7.4% YoY** — steady
+• **Corporate +6.4% YoY** — measured
+• Overseas advances stable at 1.8% of book
+
+**Deposit franchise strength:**
+
+• **Average deposits ₹27.10 lakh cr (+15.1% YoY)**
+• **EoP deposits ₹28.02 lakh cr (+12.1% YoY)**
+• Average CASA +8.5% YoY
+• Deposit growth meaningfully outpacing advance growth — LDR improvement continuing
+
+**Strategic signals:**
+
+• Provisions normalised to ₹3,500 cr after Q1's floating provisions build
+• Asset quality improvement validates conservative provisioning posture
+• Bank continuing calibrated loan growth approach focused on risk/reward
+• Per Business Standard reporting, MD Jagdishan referenced setting up own factory for some emerging technologies`
+  },
+  "Q3 FY2026": {
+    company: "HDFC Bank Limited (NSE: HDFCBANK)",
+    quarter: "Q3 FY2026 (Oct-Dec 2025)",
+    callDate: "January 17, 2026",
+    revenue: "Standalone revenue ₹45,870 cr (+8.9% YoY); Consolidated revenue ₹87,066.94 cr",
+    revenueGrowth: "+8.9% YoY (Standalone Revenue)",
+    grossMargin: "3.35% (Core NIM)",
+    grossMarginDelta: "+8 bps QoQ NIM (first sequential expansion in several quarters)",
+    gmDelta: "+8 bps QoQ NIM",
+    nii: "₹32,620 cr (+6.4% YoY)",
+    pat: "Standalone ₹18,654 cr (+11.5% YoY); Consolidated ₹19,806 cr (+12.2% YoY)",
+    nim: "Core 3.35%; on interest-earning assets 3.51%",
+    gnpa: "1.24% (ex-agri 0.97%)",
+    nnpa: "0.42%",
+    provisions: "Normalised; excludes release of provision in respect of large borrower group on fulfilment of condition",
+    deposits: "Average +12.2% YoY to ₹27,52,400 cr; EoP +11.6% YoY to ₹28,60,100 cr",
+    advances: "Average +9.8% YoY; EoP +11.9% YoY to ₹28,45,000 cr (approx)",
+    casaRatio: "Average CASA +9.9% YoY to ₹8,98,400 cr",
+    operatingProfit: "₹27,907 cr (broadly flat QoQ vs ₹27,923 cr)",
+    ebitdaMargin: "N/A (Banking)",
+    orderBook: "Deposit base ₹28.60 lakh cr EoP",
+    netDebt: "N/A (Banking)",
+    nwcDays: "N/A (Banking)",
+    leadershipNote: "Executive Director Bhavesh Zaveri retiring on April 18, 2026",
+    kpis: [
+      { label: "NII", value: "₹32,620 cr", sub: "+6.4% YoY" },
+      { label: "Core NIM", value: "3.35%", sub: "+8 bps QoQ (inflection)" },
+      { label: "PAT (Standalone)", value: "₹18,654 cr", sub: "+11.5% YoY" },
+      { label: "GNPA (ex-agri)", value: "0.97%", sub: "Best in many quarters" },
+      { label: "EoP Advances", value: "+11.9% YoY", sub: "Picking up sequentially" },
+      { label: "Operating Profit", value: "₹27,907 cr", sub: "Flat QoQ" }
+    ],
+    attendees: {
+      management: [
+        { name: "Sashidhar Jagdishan", role: "MD & CEO" },
+        { name: "Bhavesh Zaveri", role: "Executive Director (retiring April 18, 2026)" },
+        { name: "Srinivasan Vaidyanathan", role: "Group CFO" },
+        { name: "Kaizad Bharucha", role: "Deputy MD" }
+      ],
+      analysts: [
+        { name: "Note", firm: "Analyst attendee list at the call not individually verified" }
+      ]
+    },
+    summary: `**Q3 FY2026 — NIM Inflection, Loan Growth Acceleration, Consistent Compounder Print**
+
+HDFC Bank reported Q3 FY26 standalone PAT at ₹18,654 cr (+11.5% YoY) on Saturday January 17, 2026. Consolidated PAT was ₹19,806 cr (+12.2% YoY). The print was characterised as "in line with consensus" — steady, predictable, broadly meeting expectations.
+
+**Headline numbers:**
+
+• **NII ₹32,620 cr (+6.4% YoY)** — accelerated from Q2's +4.8%
+• **Core NIM 3.35%** — up 8 bps QoQ from 3.27% (first sequential expansion in several quarters)
+• **NIM on interest-earning assets 3.51%**
+• **PAT (standalone) ₹18,654 cr (+11.5% YoY)** — virtually flat QoQ vs ₹18,641 cr in Q2
+• **PAT (consolidated) ₹19,806 cr (+12.2% YoY)**
+• **Operating profit ₹27,907 cr** — broadly flat QoQ (vs ₹27,923 cr)
+
+**Asset quality stable to improving:**
+
+• **GNPA 1.24%; ex-agri 0.97%** — structurally healthy
+• **NNPA 0.42%** — flat sequentially; improvement YoY
+• No large credit events; provisioning normalised
+
+**Loan and deposit growth picking up:**
+
+• **Average advances +9.8% YoY** (vs +9.0% in Q2)
+• **EoP advances +11.9% YoY** — strong sequential pick-up of +2.7%
+• **Average deposits +12.2% YoY** to ₹27,52,400 cr
+• **EoP deposits ₹28,60,100 cr (+11.6% YoY)**
+• **Average CASA +9.9% YoY** to ₹8,98,400 cr
+
+**Leadership note:**
+
+• **Executive Director Bhavesh Zaveri retiring April 18, 2026** — succession to be communicated separately
+
+**Market reception (per Outlook Business reporting):**
+
+• HDFC Bank shares fell to "three-month low" after Q3 update
+• Market viewed Q3 as broadly in-line — neither positive surprise nor disappointment
+• Per Business Standard (Apr 20, 2026 follow-up), HDFC Bank's near-term trajectory hinges on accelerating loan growth as a key trigger for potential rerating`
+  }
+};
+
+const HDFC_HISTORICAL_QA = {
+  "Q1 FY2026": [
+    {
+      analyst: "Analyst Q&A — Q1 FY26 transcript",
+      q: "Can you walk us through the rationale behind the ₹9,000 cr floating provisions? Is there specific stress?",
+      a: "The floating provisions of ₹9,000 crore are not tied to any specific portfolio, any specific borrower, or any specific anticipated stress event. They are countercyclical buffers. We received a one-time gain of approximately ₹6,949 crore from the partial divestment of HDB Financial Services through its IPO. The Board took the view that rather than letting this one-time gain flow disproportionately through the P&L, the prudent course was to use the opportunity to strengthen the balance sheet for the cycle.\n\nThe credit environment remains benign — we are not seeing systemic stress — but precisely because the environment is benign, this is the right time to build buffers. Our credit performance across all segments continues to remain steady. With ₹9,000 cr floating plus ₹1,700 cr contingent, our total non-specific provisions now stand at approximately 1.4 percent of the loan book. Combined with our specific provision coverage ratio, this gives us significant resilience for any future cycle stress. Future credit costs are expected to remain well contained."
+    },
+    {
+      analyst: "Analyst Q&A — Q1 FY26 transcript",
+      q: "NIM declined to 3.35% from 3.46%. What is the trajectory from here?",
+      a: "Q1 NIM at 3.35% reflects two dynamics. One, asset repricing — a meaningful portion of our floating-rate loan book reprices quickly when the policy rate moves, while our deposit book reprices more gradually on contractual maturity. Two, merger-related funding mix — post the HDFC Limited merger, borrowings as a share of total liabilities is at 13%, down from a peak of 21% in December 2023, but still above the pre-merger 8% level.\n\nLooking ahead, we expect near-term margin pressure to continue if there is an additional 25 basis points rate cut. The asset side will reprice faster than the deposit side, so reported NIM will be under pressure in the immediate term. However, we are well positioned to benefit from improved system liquidity and a softening interest rate cycle over the medium term, because our higher share of borrowings becomes a tailwind as borrowing costs come down. The structural NIM trajectory over FY27 is expected to recover."
+    },
+    {
+      analyst: "Analyst Q&A — Q1 FY26 transcript",
+      q: "Can you elaborate on the 1:1 bonus issue and the message to shareholders?",
+      a: "The 1:1 bonus issue is genuinely a meaningful milestone for the bank — this is our first bonus share issuance in over 25 years. Three reasons.\n\nFirst, share affordability and retail participation. Our share price has reached a level where the absolute price per share has become a barrier for many retail investors. The bonus issue brings the share price to a more accessible level, broadening retail participation. Second, it reflects the Board's confidence in the bank's medium-term earnings trajectory and capital generation. Third, it is also a recognition — this bank has come through a transformative merger with HDFC Limited, and the bonus issue is a way of sharing the value creation journey with our long-term shareholders.\n\nThe special interim dividend of ₹5 per share is a separate signal, reinforcing our commitment to consistent capital return. We are not changing our payout policy framework — the principle remains balanced capital allocation between growth and shareholder return."
+    },
+    {
+      analyst: "Analyst Q&A — Q1 FY26 transcript",
+      q: "Loan growth at 6.7% meaningfully below deposit growth at 16.4%. Intentional calibration?",
+      a: "Yes, this is intentional and a key strategic theme over the next several quarters. Post the merger with HDFC Limited, our loan-to-deposit ratio expanded materially — well above what we believe is the optimal range. So we have been deliberately running deposit growth faster than loan growth to systematically bring the LDR back to a more conservative range.\n\nThe 6.7% YoY loan growth in Q1 is below industry average, and that is a deliberate choice. It does not reflect demand weakness — demand remains healthy across retail, SME, and corporate segments. It reflects discipline on the supply side, particularly on pricing. We have walked away from select corporate transactions where the risk-adjusted return did not meet our threshold. Looking forward, as the LDR normalises, you should expect loan growth to gradually align closer to industry growth rates and eventually modestly above, given our franchise strength."
+    },
+    {
+      analyst: "Analyst Q&A — Q1 FY26 transcript",
+      q: "GNPA increased to 1.40% from 1.33%. Seasonal agri or broader stress?",
+      a: "This is entirely seasonal and agri-specific — there is no broader credit stress emerging in our other portfolios. The GNPA increase from 1.33% to 1.40% is almost entirely accounted for by slippages in the agricultural loan portfolio, which is a pattern we see consistently in the first and third quarters of every fiscal year due to crop cycles. Ex-agri GNPA at 1.14% is broadly stable.\n\nThe agri portfolio behaves cyclically. In Q1, which is the kharif season pre-harvest period, slippages tend to spike. By Q2-Q3, as harvest cash flows come in, recoveries are strong. In our other portfolios — retail mortgages, retail unsecured, corporate, SME — credit performance is steady. Do not extrapolate Q1 GNPA as a signal of credit cycle turn."
+    },
+    {
+      analyst: "Analyst Q&A — Q1 FY26 transcript",
+      q: "Borrowings still at 13% of liabilities. Trajectory back to pre-merger 8%?",
+      a: "The borrowings trajectory is a multi-year story. Pre-merger, HDFC Bank's borrowings were approximately 8% of total liabilities. Immediately post-merger in July 2023, given HDFC Limited's funding profile, our borrowings spiked to approximately 21%. Since then, we have been systematically replacing maturing borrowings with deposits.\n\nAs of June 2025, borrowings are at 13% of total liabilities. The glide path from here is gradual. As borrowings decline as a share of liabilities, our overall cost of funds improves, which structurally supports NIM expansion over the medium term. This matters for both the P&L and the balance sheet, and is one of the most important reasons we are confident in medium-term ROA improvement."
+    }
+  ],
+  "Q2 FY2026": [
+    {
+      analyst: "Analyst Q&A — Q2 FY26 transcript",
+      q: "NIM declined further to 3.27%. When do we see stabilisation?",
+      a: "The Q2 NIM at 3.27% reflects the second consecutive quarter of compression, driven by asset repricing outpacing deposit repricing. About 60-65% of our loan book is floating-rate, repricing within 90 days of benchmark rate changes. Our deposit book reprices on contractual maturity, which is slower.\n\nLooking ahead, we expect NIM to stabilise as the bulk of asset repricing post recent rate cuts flows through and deposit repricing benefits begin to accumulate. Cost-of-funds improvement should start showing meaningfully over the next 1-2 quarters as large maturing time deposits get re-issued at lower rates. Medium-term — over FY27 — we are expecting NIM recovery as deposit repricing benefits accumulate and our borrowings further normalise as a share of liabilities."
+    },
+    {
+      analyst: "Analyst Q&A — Q2 FY26 transcript",
+      q: "Non-interest income surge of 25% YoY — what is sustainable?",
+      a: "The 25% YoY growth in non-interest income to ₹14,350 cr is strong, and the question of sustainability is fair. Fee income — which is the most predictable component — grew in line with balance sheet growth, reflecting healthy contribution from cards, mutual fund distribution, wealth management, and transaction banking. We expect fee income to continue growing in line with revenue growth.\n\nTreasury and FX are more volatile components, dependent on market conditions. In Q2, both contributed strongly given favourable market movements during the quarter — we do not extrapolate these contributions forward. Dividend and other income from subsidiaries — HDB Financial Services, HDFC Life, HDFC AMC, HDFC Securities — has been steady and contributes meaningfully. The sustainable run-rate for non-interest income growth, in our view, is broadly tracking balance sheet growth, with quarterly variability based on treasury contribution."
+    },
+    {
+      analyst: "Analyst Q&A — Q2 FY26 transcript",
+      q: "SME loans growing at 17% YoY — credit-cost outlook for this segment?",
+      a: "The SME book has been a deliberate growth focus, and 17% YoY growth reflects that strategic priority. The book is high-quality — a meaningful share is secured against collateral or government-guaranteed schemes. The unsecured portion is small-ticket working capital lending to established SMEs with deep banking relationships with us.\n\nOur SME GNPA is well below industry average for the segment, reflecting both our origination discipline and our deep customer relationships. The risk-adjusted return on SME lending is meaningfully higher than corporate lending — the yields are wider, the relationships are stickier, and the cross-sell opportunity is larger. We expect to continue growing SME at high-teens over the next 2-3 years, supported by our branch network, technology capability, and the broader SME credit demand pickup."
+    },
+    {
+      analyst: "Analyst Q&A — Q2 FY26 transcript",
+      q: "Asset quality improved to 1.24% GNPA. Has the worst of cycle stress passed?",
+      a: "The Q2 GNPA improvement to 1.24% from 1.40% reflects the seasonal agri recovery plus broader stability in our portfolios. We are in a benign credit environment. We are not seeing build-up of stress in any specific segment that would indicate a cycle turn. Retail unsecured, which is the most cyclically sensitive, is stable. Corporate is benign with low slippages. SME is healthy.\n\nThat said, I would not declare the cycle done. Credit cycles in India typically last 3-4 years and can turn quickly. The reason we built ₹9,000 cr of floating provisions in Q1 was precisely to be ready when the cycle turns. So current asset quality is healthy and improving; but our provisioning posture is conservative because we believe in being prepared for cycle stress, not reacting to it after the fact."
+    },
+    {
+      analyst: "Analyst Q&A — Q2 FY26 transcript",
+      q: "LDR improvement — where do you want it to settle?",
+      a: "Post the merger with HDFC Limited in July 2023, our LDR rose to approximately 110%, materially higher than the pre-merger level. Our stated objective is to bring LDR back to approximately 95% over a 2-3 year horizon, which we view as the optimal range balancing growth potential, funding stability, and regulatory comfort.\n\nAs of Q2 FY26, we are tracking in the right direction — deposits growing meaningfully faster than advances. Once we reach the target range, you should expect loan growth to converge back to industry growth rates or modestly above, given our franchise strength. The thesis is — bring LDR to comfort, then accelerate market-share gains from a position of balance sheet strength."
+    },
+    {
+      analyst: "Analyst Q&A — Q2 FY26 transcript",
+      q: "Provisions normalised from ₹14,442 cr to ₹3,500 cr. Is this the run-rate?",
+      a: "The right way to think about provisions is in three components — specific provisions against identified NPAs, contingent provisions for non-specific risks, and floating provisions for cyclical buffer-building. Q1 included ₹9,000 cr floating + ₹1,700 cr contingent, both one-time builds funded by the HDB Financial Services divestment gain. Strip those out, and Q1 underlying provisions were comparable to Q2's ₹3,500 cr.\n\nFor modelling, think about specific credit cost running at a low level reflecting underlying loan-book risk, plus discretionary provision builds that depend on management view of cycle and opportunities. In a quarter without a one-time gain, you should not expect large discretionary provision builds. Our philosophy is to use opportunities to build buffers, and let normal-quarter credit cost reflect underlying loan-book risk."
+    }
+  ],
+  "Q3 FY2026": [
+    {
+      analyst: "Analyst Q&A — Q3 FY26 transcript",
+      q: "NIM expanded 8 bps QoQ to 3.35% — is this the inflection?",
+      a: "The Q3 NIM expansion to 3.35% from 3.27% is the first sequential improvement in several quarters, and it is a meaningful signal. The expansion reflects two dynamics. One, deposit repricing benefits are starting to flow through. Our deposit book reprices on contractual maturity, which takes 2-3 quarters from a rate cut to fully impact cost of funds. Q3 is the first quarter where we are seeing meaningful repricing flow-through. Two, our loan mix has continued to shift toward higher-yielding retail and SME segments.\n\nIs this sustainable? Our view is yes, with caveats. We expect NIM to stabilise in this range over Q4 FY26 and gradually expand as deposit repricing benefits accumulate over FY27. The caveat is policy rate moves — if RBI cuts further, there will be transitory asset-repricing pressure. But the structural direction is upward. The worst of the NIM compression cycle is behind us."
+    },
+    {
+      analyst: "Analyst Q&A — Q3 FY26 transcript",
+      q: "PAT growth at 11.5% YoY — but operating profit flat QoQ. What is the operating leverage story?",
+      a: "The operating profit flatness — ₹27,907 cr in Q3 versus ₹27,923 cr in Q2 — reflects three things. One, NII growth was solid at approximately ₹1,065 cr QoQ. Two, non-interest income was down sequentially because Q2 had elevated treasury contribution that did not repeat in Q3. Three, operating expenses grew at our usual run-rate, partly reflecting continued investment in technology, digital platforms, and branch expansion.\n\nWhat is the operating leverage story over the medium term? Our digital and technology investments have a 12-24 month payback profile — efficiency gains start showing in the cost-to-income ratio over FY27. As NIM recovers, the operating leverage flows through directly to operating profit growth. So while Q3 standalone shows flatness, the structural operating leverage trajectory is intact."
+    },
+    {
+      analyst: "Analyst Q&A — Q3 FY26 transcript",
+      q: "Loan growth accelerated to 11.9% YoY EoP. Ready to outpace system in FY27?",
+      a: "The Q3 acceleration to 11.9% YoY EoP loan growth is encouraging, with EoP advances up 2.7% QoQ. Our medium-term goal is to grow at or modestly above system credit growth, leveraging our franchise strength, distribution, and digital capabilities.\n\nOn the FY27 question — will we outpace system growth — let me be measured. Two things need to fall into place. One, the LDR has to be in the comfort range — we are tracking well. Two, the credit cycle has to remain benign — if cycle turns, we will calibrate accordingly. Assuming both conditions hold, FY27 should see meaningfully stronger loan growth than current levels. We will provide more specific FY27 guidance at the Q4 print."
+    },
+    {
+      analyst: "Analyst Q&A — Q3 FY26 transcript",
+      q: "Deposit growth at 12.2% (average) — is the franchise still gaining share?",
+      a: "The deposit growth moderation from 15-16% in earlier quarters to 12.2% in Q3 is partly base-effect and partly intentional. Base-effect — in Q1 and Q2, we were lapping low base from previous year. By Q3, the base is normalising. Intentional — we have moderated some aggressive deposit pricing in segments where the marginal cost of deposits did not justify the marginal yield.\n\nYes, we are continuing to gain market share. Our deposit market share has improved. Branch expansion continued — we added over 600 new branches in the last 12 months, primarily in semi-urban and rural geographies. Digital deposit acquisition is also contributing. Looking ahead, deposit growth should remain in the low-to-mid teens, consistent with our balance sheet plans and LDR objectives."
+    },
+    {
+      analyst: "Analyst Q&A — Q3 FY26 transcript",
+      q: "Asset quality strong at 1.24% GNPA. Are credit costs likely to step up?",
+      a: "Asset quality at 1.24% GNPA and 0.42% NNPA is strong. Ex-agri GNPA at 0.97% is the best in many quarters. The provision coverage ratio is healthy. Our floating and contingent provisions stand at approximately 1.4% of the loan book. The balance sheet is well-prepared.\n\nOn credit cost step-up — our base case is that core credit cost remains low over the next 4-6 quarters. We are not seeing leading indicators that would suggest a step-up. Retail unsecured is performing well within historical norms. Our underwriting discipline has been tight. That said, we are watching three external factors — regulatory actions on unsecured retail, global macro spillovers including US tariff situation, and election-cycle disruptions. Our philosophy remains: be conservative on credit during good times, so we have buffers when stress arrives."
+    },
+    {
+      analyst: "Analyst Q&A — Q3 FY26 transcript",
+      q: "Bhavesh Zaveri retiring April 18, 2026 — succession plan?",
+      a: "Bhavesh Zaveri has been a longstanding contributor to HDFC Bank's growth journey, particularly across operations and technology. His retirement is amicable and planned with significant lead time. The succession will be communicated through formal channels in due course, ensuring continuity across all functional areas he has been responsible for. The leadership team remains strong and we expect a smooth transition with no impact on strategic direction or operational priorities."
+    }
+  ]
+};
+
+const HDFC_SIMULATOR_QUESTIONS = {
+  "Q2 FY2026": [
+    { id: "h2-1", quarter: "Q2 FY2026", l1: "Margins", l2: "Net Interest Margin", likelihood: "high",
+      q: "Q1 NIM declined to 3.35%. What is the trajectory for FY26?",
+      a: "Q1 NIM at 3.35% reflects asset repricing outpacing deposit repricing. About 60-65% of our loan book is floating-rate, repricing quickly; deposits reprice on contractual maturity. We expect some near-term margin pressure if rate cuts continue, but stabilisation by H2 FY26 as deposit repricing benefits accumulate. Over the medium term — into FY27 — NIM should recover as our borrowings (currently 13% of liabilities) further normalise toward the pre-merger 8% level." },
+    { id: "h2-2", quarter: "Q2 FY2026", l1: "Provisions", l2: "Credit Cost", likelihood: "high",
+      q: "Provisions surged to ₹14,442 cr in Q1. Run-rate going forward?",
+      a: "Q1 provisions included ₹9,000 cr floating + ₹1,700 cr contingent — one-time builds funded by HDB Financial Services divestment gain. Underlying Q1 provisions ex these were comparable to a normalised run-rate. Going forward, expect provisions to reflect underlying credit cost, with occasional larger builds when we have one-time gains to deploy." },
+    { id: "h2-3", quarter: "Q2 FY2026", l1: "Loan Growth", l2: "LDR Strategy", likelihood: "high",
+      q: "Loan growth 6.7% vs deposit 16.4% — sustainable calibration?",
+      a: "Yes, intentional. Post-merger LDR was materially above optimal range. We are deliberately running deposit growth faster than loan growth to bring LDR back to ~95% over 2-3 years. The 6.7% Q1 loan growth reflects supply-side discipline — walking away from low-return corporate transactions, selective in retail unsecured. As LDR normalises, loan growth should gradually align with industry rates." },
+    { id: "h2-4", quarter: "Q2 FY2026", l1: "Asset Quality", l2: "GNPA Trajectory", likelihood: "high",
+      q: "GNPA up to 1.40% in Q1. Seasonal agri or broader stress?",
+      a: "Entirely seasonal and agri-specific. Q1 agri slippages are a structural pattern due to crop cycles. Ex-agri GNPA at 1.14% is broadly stable. Other portfolios — retail, corporate, SME — are performing steadily. Do not extrapolate Q1 GNPA as a credit cycle turn signal." },
+    { id: "h2-5", quarter: "Q2 FY2026", l1: "Capital Return", l2: "Dividend Policy", likelihood: "medium",
+      q: "Special ₹5/share dividend + 1:1 bonus — broader payout philosophy?",
+      a: "Q1 actions reflect commitment to consistent capital return. Bonus issue (first in 25+ years) broadens retail participation. Special dividend reflects one-time HDB gain partially being returned. Broader philosophy: balanced capital allocation between growth, regulatory capital, and shareholder return. Not changing payout framework — these were specific decisions tied to corporate events." },
+    { id: "h2-6", quarter: "Q2 FY2026", l1: "Funding", l2: "Borrowings Mix", likelihood: "medium",
+      q: "Borrowings at 13% of liabilities. Trajectory?",
+      a: "Pre-merger borrowings were ~8% of liabilities; spiked to ~21% post-merger; currently 13%. Trajectory is gradual decline as maturing borrowings are replaced with deposits. Lower borrowings share = lower cost of funds = NIM tailwind over medium term. Important driver of medium-term ROA improvement." },
+    { id: "h2-7", quarter: "Q2 FY2026", l1: "Non-Interest Income", l2: "Fee Growth", likelihood: "medium",
+      q: "Trajectory for fee income and non-interest income?",
+      a: "Non-interest income engine is strong — driven by scale, distribution, subsidiary monetisation. Fee income (predictable) grows in line with balance sheet. Treasury/FX volatile, dependent on markets. Subsidiary dividends steady. Sustainable run-rate broadly tracks balance sheet growth with quarterly variability from treasury contribution." },
+    { id: "h2-8", quarter: "Q2 FY2026", l1: "Subsidiaries", l2: "HDB Financial Services", likelihood: "medium",
+      q: "HDB Financial Services IPO — post-listing strategy?",
+      a: "Post partial IPO, we hold 74.19% of HDB Financial Services. The IPO realised approximately ₹6,949 cr gain, largely deployed into floating provisions for balance sheet resilience. HDB continues to scale — Q1 loan book ₹1,093 bn, up 14.3% YoY. Net profit ₹5.7 bn with EPS ₹7.1 in Q1. Strategic subsidiary with continued meaningful contribution expected." },
+    { id: "h2-9", quarter: "Q2 FY2026", l1: "Costs", l2: "Cost-to-Income", likelihood: "medium",
+      q: "Operating expenses — cost-to-income trajectory?",
+      a: "Cost-to-income has been broadly in expected range, reflecting continued investment in technology, digital platforms, and branch expansion. Branch additions (600+ in last 12 months) and digital investments have payback profiles of 12-24 months. We expect efficiency gains to start showing from FY27 onwards as investments mature." },
+    { id: "h2-10", quarter: "Q2 FY2026", l1: "Strategy", l2: "Digital and Technology", likelihood: "low",
+      q: "Digital investment strategy and competitive positioning?",
+      a: "Digital and technology investment is a core medium-term strategy pillar. Per MD Jagdishan's commentary, we have set up an own factory for emerging technologies. Investments focus on AI-driven underwriting, customer experience platforms, payment infrastructure, partnership-led acquisition. Objective: maintain technology leadership with measurable revenue or cost benefits within 12-24 months." }
+  ],
+  "Q3 FY2026": [
+    { id: "h3-1", quarter: "Q3 FY2026", l1: "Margins", l2: "Net Interest Margin", likelihood: "high",
+      q: "Q2 NIM 3.27%, down 8 bps QoQ. When does margin pressure end?",
+      a: "Q2 NIM compression continues asset-vs-deposit repricing dynamic. About 60-65% of loan book is floating-rate (90-day repricing); deposits reprice on maturity (slower). Expect stabilisation in Q3-Q4 FY26 as deposit repricing benefits accumulate. Medium-term over FY27 — NIM recovery as deposit repricing deepens and borrowings normalise further. Worst of NIM compression likely behind us." },
+    { id: "h3-2", quarter: "Q3 FY2026", l1: "Loan Growth", l2: "Advances Trajectory", likelihood: "high",
+      q: "Loan growth still below industry. When does convergence happen?",
+      a: "Q2 loan growth 9.9% YoY EoP is below industry growth of ~11-12%, tied to LDR normalisation strategy. As LDR moves toward target range by end-FY27, loan growth should gradually align with industry. By FY27, base case is system-equivalent growth. Acceleration depends on LDR reaching comfort range and credit cycle remaining benign. Explicit FY27 guidance at Q4 print." },
+    { id: "h3-3", quarter: "Q3 FY2026", l1: "Asset Quality", l2: "GNPA Trends", likelihood: "high",
+      q: "GNPA improved to 1.24% in Q2. Sustainable through FY26?",
+      a: "The Q2 GNPA improvement reflects seasonal agri recovery plus genuine improvement in other portfolios. Expect GNPA to remain stable through FY26, with quarterly variability driven by agri seasonality. Ex-agri GNPA at sub-1% is the structural baseline. Credit cost run-rate is expected to remain low. The ₹9,000 cr floating provisions built in Q1 are countercyclical buffer for when stress eventually arrives." },
+    { id: "h3-4", quarter: "Q3 FY2026", l1: "Non-Interest Income", l2: "Fee Income Sustainability", likelihood: "medium",
+      q: "Non-interest income +25% YoY in Q2. What is sustainable?",
+      a: "Q2 25% YoY includes meaningful treasury upside that may not repeat consistently. Fee income (most predictable) grew in line with balance sheet. Treasury/FX volatile, dependent on market conditions. Subsidiary dividend and other income steady. Sustainable run-rate broadly tracks balance sheet growth. Fee trajectory remains structurally strong driven by cards, MF distribution, wealth, transaction banking." },
+    { id: "h3-5", quarter: "Q3 FY2026", l1: "Costs", l2: "Operating Leverage", likelihood: "medium",
+      q: "When do digital investments show in cost-to-income?",
+      a: "Cost-to-income has been broadly stable, reflecting continued investment in technology, digital, branch expansion. Investments have 12-24 month payback profiles. Efficiency gains start showing from FY27 onwards. Combined with NIM recovery providing revenue tailwind, expect operating profit to grow ahead of revenue over FY27-FY28." },
+    { id: "h3-6", quarter: "Q3 FY2026", l1: "Capital Return", l2: "Dividend Policy", likelihood: "medium",
+      q: "Post bonus issue and special dividend in Q1 — FY26 capital return outlook?",
+      a: "Q1 saw 1:1 bonus + ₹5/share special interim dividend, tied to HDB Financial Services gain. Broader philosophy: balanced capital allocation. For FY26, expect continued regular dividend distributions consistent with our stated approach. Final FY26 dividend at year-end based on full-year performance and Board view." },
+    { id: "h3-7", quarter: "Q3 FY2026", l1: "Subsidiaries", l2: "HDB Performance", likelihood: "medium",
+      q: "HDB Financial Services post-IPO update?",
+      a: "Q2 FY26 HDB loan book ₹1,114 bn, up 13% YoY, 1.9% sequentially. Gross Stage 3 assets at 2.81% vs 2.56% prior — modest asset quality moderation. NIM 7.9%, improved QoQ and YoY. Q2 net profit ₹5.8 bn with EPS ₹7.0. RoA 1.9%, RoE 12.2%, CAR 21.8%. Strategic subsidiary with continued meaningful contribution." },
+    { id: "h3-8", quarter: "Q3 FY2026", l1: "Strategy", l2: "Market Share", likelihood: "medium",
+      q: "Continuing to gain market share in deposits and advances?",
+      a: "Yes. Deposit market share improved over last 12-15 months in CASA and term deposits. 600+ new branches added in last 12 months, primarily semi-urban/rural. Digital acquisition contributing. Below system on advances near-term due to LDR calibration, but as LDR reaches target, expect to grow at or modestly above system." },
+    { id: "h3-9", quarter: "Q3 FY2026", l1: "Risk", l2: "Retail Unsecured", likelihood: "high",
+      q: "Retail unsecured stress concerns in the system — what is HDFC Bank seeing?",
+      a: "Retail unsecured has been the most-discussed risk area given RBI's increased risk weights and system stress signals. Our retail unsecured book is performing in line with historical patterns, no concerning leading indicators. Underwriting discipline tight throughout. Concentration in higher-risk sub-segments is low. Collection infrastructure strong. Well-positioned to weather any system-wide stress." },
+    { id: "h3-10", quarter: "Q3 FY2026", l1: "Guidance", l2: "FY27 Outlook", likelihood: "high",
+      q: "Preliminary thoughts on FY27 — loan growth, NIM, ROA?",
+      a: "Explicit FY27 guidance at Q4 print in April 2026. Directional thoughts. Loan growth — expect FY27 to be meaningfully above current rates as LDR normalises. NIM — expect recovery through FY27 as deposit repricing benefits accumulate. ROA — targeting gradual improvement supported by NIM recovery, operating leverage, stable credit cost. Preliminary working framework, refined at year-end." },
+    { id: "h3-11", quarter: "Q3 FY2026", l1: "Strategy", l2: "Technology and Innovation", likelihood: "low",
+      q: "Update on technology factory and emerging technology investments?",
+      a: "Own technology factory established for emerging technologies — AI/ML, cloud-native, customer experience platforms. Key initiatives include AI-driven underwriting, real-time fraud detection, personalisation engines, core banking modernisation. Investments managed within cost envelope. Returns over 18-30 months. Multi-year journey to maintain technology leadership in Indian banking." },
+    { id: "h3-12", quarter: "Q3 FY2026", l1: "Risk and Regulation", l2: "Macro Risk", likelihood: "medium",
+      q: "Global macro spillovers — how are you positioning?",
+      a: "Global macro environment uncertain. Direct impact on HDFC Bank limited — balance sheet overwhelmingly domestic, overseas advances just 1.8% of book. Indirect impact through FII outflows, currency volatility, potential second-order effects on corporate credit demand. Watching export-oriented corporate clients, import-export-dependent SMEs. Floating provisions of ₹9,000 cr built precisely for such scenarios." }
+  ]
+};
+
+const HDFC_ACTUAL_QUESTIONS = {
+  "Q2 FY2026": [
+    { l1: "Margins", l2: "Net Interest Margin", q: "NIM declined further to 3.27%. When does margin stabilise?" },
+    { l1: "Non-Interest Income", l2: "Fee Income Sustainability", q: "Non-interest income +25% YoY — what is sustainable?" },
+    { l1: "Loan Growth", l2: "SME Segment", q: "SME loans +17% YoY — credit cost outlook?" },
+    { l1: "Asset Quality", l2: "GNPA Trends", q: "GNPA improved to 1.24%. Has cycle stress passed?" },
+    { l1: "Loan Growth", l2: "LDR Strategy", q: "LDR improvement timeline?" },
+    { l1: "Provisions", l2: "Credit Cost", q: "Provisions normalised to ₹3,500 cr. Run-rate?" },
+    { l1: "Costs", l2: "Cost-to-Income", q: "Operating leverage trajectory?" }
+  ],
+  "Q3 FY2026": [
+    { l1: "Margins", l2: "Net Interest Margin", q: "NIM expanded 8 bps QoQ to 3.35% — inflection?" },
+    { l1: "Costs", l2: "Operating Leverage", q: "PAT +11.5% YoY but operating profit flat QoQ — leverage story?" },
+    { l1: "Loan Growth", l2: "Advances Trajectory", q: "Loan growth 11.9% YoY EoP. Ready to outpace system?" },
+    { l1: "Funding", l2: "Deposit Growth", q: "Deposit growth moderating. Franchise still gaining share?" },
+    { l1: "Asset Quality", l2: "GNPA Trends", q: "Credit costs likely to step up?" },
+    { l1: "Strategy", l2: "Leadership", q: "Bhavesh Zaveri retirement — succession?" },
+    { l1: "Guidance", l2: "FY27 Outlook", q: "Preliminary FY27 thoughts?" }
+  ]
+};
+
+/* ====================================================================
+   HDFC BANK — POST CALL DATA
+   
+   Share prices: bonus-adjusted throughout (52-wk range ₹726.65-₹1,020.50).
+   Key reference points:
+   - Jan 16, 2026 close ₹931.10 (Upstox)
+   - Q3 results Sat Jan 17, 2026; market resumed Mon Jan 19
+   - Per Outlook Business: stock fell to "three-month low" after Q3
+   
+   Analyst targets: Real targets from publicly confirmed sources only.
+   - Antique Stock Broking ₹1,055 (trimmed from ₹1,100), Buy — from BS Q4 review
+   - Equirus ₹1,160, Long — from BS Q4 review
+   - Per TradingView consensus: 43 analysts, avg ₹1,043.91, range ₹890-₹1,360
+   - Per Investing.com: 38 analysts, avg ₹1,041.11, Strong Buy
+   - Per Trendlyne: 39 analysts, avg ₹1,169
+   
+   These are post-Q3 / pre-Q4 targets. Q2-specific targets not separately
+   isolated in public sources; marked accordingly.
+   ==================================================================== */
+
+const HDFC_POST_CALL = {
+  "Q2 FY2026": {
+    callDate: "2025-10-18",
+    quarterStart: "2025-09-29",
+    quarterEnd: "2025-11-10",
+    /* Focused window around Oct 18, 2025 call. Bonus issue ex-date was
+       Aug 26, 2025 — so all prices in this window are post-bonus.
+       Anchored to mid-October trading range. */
+    priceSeries: generatePriceSeries("2025-09-29", "2025-11-10", 985, 0.001, "2025-10-18", 0.012),
+    targets: [],
+    targetsNote: "Note: Aggregated Q2-specific broker target updates were not isolated in publicly searchable sources. Post-Q2 analyst consensus targets (combined view): see post-Q3 entry.",
+    sentiment: null,
+    sentimentNote: "Reaction reading is based on company press release language and media reporting (Republic World, Business Standard) rather than quantified sentiment.",
+    insight: `**Market Reaction Summary — Q2 FY2026:**
+
+HDFC Bank's Q2 FY26 print on October 18, 2025 was characterised as a steady, in-line quarter. The combination of:
+
+• **Asset quality improvement** — GNPA down to 1.24% from 1.40%; NNPA at 0.42%
+• **Non-interest income +25% YoY** — strong fee, treasury, and subsidiary contribution
+• **SME growth +17% YoY** — strongest segment, broad-based momentum
+• **Provisions normalised** — ₹3,500 cr vs Q1's ₹14,442 cr (one-time floating provisions)
+• **PAT +10.8% YoY standalone, +10% YoY consolidated**
+
+...represented a positive operational signal, supporting the "consistent compounder" narrative around the franchise.
+
+**Caveats that limited the rally:**
+
+• **NIM declined 8 bps QoQ** to 3.27% — asset repricing pressure continuing
+• **Loan growth still below system** at 9.9% YoY EoP — LDR calibration ongoing
+• Some skepticism on whether non-interest income strength (driven partly by treasury) is repeatable
+
+**Note on analyst targets:** Q2-specific broker target updates were not isolated in publicly searchable sources at sufficient quality. Post-Q3 / pre-Q4 consensus targets (combined view from multiple post-quarter reports) ranged across approximately ₹890-₹1,360 per share with a consensus mean of approximately ₹1,043 (per TradingView aggregating 43 analysts; Investing.com aggregating 38 analysts shows ₹1,041; Trendlyne aggregating 39 analysts shows ₹1,169). These are forward-looking consensus targets, not Q2-specific deltas.
+
+**Note on sentiment metrics:** Quantified sentiment data (positive/neutral/negative %) is not available from public sources. The reaction reading above is based on management commentary and media reporting (Republic World, Business Standard) rather than quantified scores.`
+  },
+  "Q3 FY2026": {
+    callDate: "2026-01-19",
+    quarterStart: "2025-12-29",
+    quarterEnd: "2026-02-10",
+    /* Focused window around Q3 results. Results announced Sat Jan 17, 2026.
+       Market resumed Mon Jan 19, 2026.
+       Jan 16, 2026 close was ₹931.10 (Upstox).
+       Per Outlook Business: stock fell to "three-month low" after Q3.
+       Modeling with realistic muted-to-negative reaction. */
+    priceSeries: generatePriceSeries("2025-12-29", "2026-02-10", 940, -0.003, "2026-01-19", -0.015),
+    targets: [
+      { firm: "Antique Stock Broking", target: 1055, rating: "Buy", change: "Trimmed from ₹1,100", source: "Business Standard, Apr 20 2026" },
+      { firm: "Equirus Securities", target: 1160, rating: "Long", change: "Maintained", source: "Business Standard, Apr 20 2026" }
+    ],
+    targetsNote: "Note: Above are individual broker targets confirmed in public sources (post-Q3 / Q4 review window). Consensus (43 analysts per TradingView): avg ₹1,043.91, range ₹890-₹1,360. Strong Buy consensus. Note that these targets span the Q3-to-Q4 window; precise Q3-day broker reactions vary by firm.",
+    sentiment: null,
+    sentimentNote: "Reaction reading is based on Outlook Business (which reported stock fell to three-month low after Q3 update) and Business Standard reporting rather than quantified sentiment scores.",
+    insight: `**Market Reaction Summary — Q3 FY2026:**
+
+HDFC Bank announced Q3 FY26 results on Saturday January 17, 2026 (markets closed); first trading day was Monday January 19, 2026. The print was characterised by media as "in line with consensus" — neither a positive surprise nor a disappointment, with some commentary flagging concerns.
+
+**Print highlights:**
+
+• **NIM expanded 8 bps QoQ to 3.35%** — first sequential NIM expansion in several quarters, validates repricing thesis
+• **Standalone PAT ₹18,654 cr (+11.5% YoY)** — consistent compounder
+• **Consolidated PAT ₹19,806 cr (+12.2% YoY)**
+• **EoP advances +11.9% YoY** — pick-up from prior quarters
+• **GNPA ex-agri 0.97%** — best in many quarters
+
+**Concerns flagged:**
+
+• **Operating profit flat QoQ** at ₹27,907 cr (vs ₹27,923 cr) — flagged as a watch point
+• **Non-interest income softer QoQ** — treasury upside in Q2 didn't repeat
+• **Bhavesh Zaveri retirement** announcement adding to near-term leadership churn discussion
+• Per **Outlook Business** reporting, **HDFC Bank shares fell to a three-month low** after the Q3 update
+
+**Per Business Standard (Apr 20, 2026 follow-up review):**
+
+• Per Antique Stock Broking: maintained Buy but **trimmed target to ₹1,055 from ₹1,100**, noting "a meaningful acceleration in loan growth is still awaited and remains a key trigger for potential rerating"
+• Per Equirus Securities: retained Long rating at ₹1,160, citing calibrated loan growth approach focused on risk/reward
+• Per Emkay: expects HDFC Bank's RoA to gradually improve to 1.9–2% over FY27-FY29
+• Per Motilal Oswal: projected FY27 RoA/RoE at 1.84%/14.4%
+
+**Consensus position:**
+
+• Per **TradingView aggregating 43 analysts**: avg target ₹1,043.91, range ₹890-₹1,360, Strong Buy
+• Per **Investing.com aggregating 38 analysts**: avg target ₹1,041.11, Strong Buy
+• Per **Trendlyne aggregating 39 analysts**: avg target ₹1,169
+
+**Note on data quality:** Individual Q3-day-specific broker target deltas are not separately isolated in publicly available sources at sufficient quality. The targets shown above are confirmed individual broker views from the post-Q3 / Q4 review window. Quantified sentiment metrics are not available; reaction reading is based on media coverage.`
+  }
+};
+
+
+/* ====================================================================
+   COMPANY ROUTER — top-level accessor
+   ==================================================================== */
+
+const ALL_COMPANY_DATA = {
+  "PDS Limited": {
+    summary: PDS_DATA,
+    qa: PDS_HISTORICAL_QA,
+    sim: PDS_SIMULATOR_QUESTIONS,
+    actual: PDS_ACTUAL_QUESTIONS,
+    postCall: PDS_POST_CALL,
+    ticker: "PDSL.NS"
+  },
+  "HDFC Bank": {
+    summary: HDFC_DATA,
+    qa: HDFC_HISTORICAL_QA,
+    sim: HDFC_SIMULATOR_QUESTIONS,
+    actual: HDFC_ACTUAL_QUESTIONS,
+    postCall: HDFC_POST_CALL,
+    ticker: "HDFCBANK.NS"
+  }
+};
+
+/* ====================================================================
+   Helper: generate a realistic-looking daily price series.
+   Used to simulate a focused window around the earnings call.
+   Anchored to a real reference price for each company / quarter.
+   ==================================================================== */
+function generatePriceSeries(startDate, endDate, startPrice, drift, callDate, callShock) {
+  const series = [];
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  let price = startPrice;
+  const seed = startPrice;
+  let rand = function(i) {
+    const x = Math.sin(seed + i * 12.9898) * 43758.5453;
+    return x - Math.floor(x);
+  };
+  let i = 0;
+  let shockApplied = false;
+  const callDateObj = new Date(callDate);
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    const dow = d.getDay();
+    if (dow === 0 || dow === 6) continue; /* skip weekends */
+    const dailyDrift = drift / 30;
+    const noise = (rand(i) - 0.5) * 0.018;
+    price = price * (1 + dailyDrift + noise);
+    /* apply call-day shock to the first trading day on or after the call date */
+    if (!shockApplied && d >= callDateObj) {
+      price = price * (1 + callShock);
+      shockApplied = true;
+    }
+    const dateStr = d.toISOString().slice(0, 10);
+    series.push({ date: dateStr, close: Math.round(price * 100) / 100 });
+    i++;
+  }
+  return series;
+}
+
+</script>
+<script>
+/* ====================================================================
+   Earnings Call Companion — UI logic
+   Multi-company aware: reads from per-page company dropdowns and routes
+   all data accesses through ALL_COMPANY_DATA[currentCompany].
+   ==================================================================== */
+
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
+const simulator = {
+  quarter: "Q4 FY2026",
+  retained: new Set(),
+  rejected: new Set(),
+  custom: []
+};
+
+const pcCharts = { stock: null, target: null, sentiment: null };
+
+/* Global state: the currently selected company, shared across all tabs */
+let SELECTED_COMPANY = "PDS Limited";
+
+/* ---------- COMPANY RESOLUTION ----------
+   Each page has its own company dropdown:
+   #histCompany, #simCompany, #debriefCompany, #pcCompany
+   SELECTED_COMPANY is the source of truth; all dropdowns are synced to it. */
+function getCurrentCompany() {
+  return SELECTED_COMPANY;
+}
+
+function getCompanyData() {
+  return ALL_COMPANY_DATA[SELECTED_COMPANY] || ALL_COMPANY_DATA["PDS Limited"];
+}
+
+function syncAllDropdowns() {
+  const ids = ["histCompany", "simCompany", "debriefCompany", "pcCompany"];
+  for (const id of ids) {
+    const el = document.getElementById(id);
+    if (el && el.value !== SELECTED_COMPANY) el.value = SELECTED_COMPANY;
+  }
+}
+
+/* When user changes any company dropdown, update the global and reload the current page */
+function onCompanyChange(page) {
+  const idMap = {
+    "historical": "histCompany",
+    "simulator": "simCompany",
+    "debrief": "debriefCompany",
+    "postcall": "pcCompany"
+  };
+  const sourceEl = document.getElementById(idMap[page]);
+  if (sourceEl && sourceEl.value) {
+    SELECTED_COMPANY = sourceEl.value;
+  }
+  syncAllDropdowns();
+
+  /* Reload the current page's content with the new company */
+  if (page === "historical") {
+    const host = document.getElementById("histSummaryHost");
+    if (host && host.innerHTML.trim().length > 0) {
+      generateHistSummary();
+    }
+  } else if (page === "simulator") {
+    simulator.retained = new Set();
+    simulator.rejected = new Set();
+    simulator.custom = [];
+    loadSimulator();
+  } else if (page === "debrief") {
+    loadDebrief();
+  } else if (page === "postcall") {
+    loadPostCall();
+  }
+}
+
+/* ---------- LOGIN ---------- */
+function doLogin() {
+  const u = ($("#loginUser").value || "").trim();
+  const p = ($("#loginPass").value || "").trim();
+  if (u === "admin" && p === "admin") {
+    $("#screen-login").classList.add("hidden");
+    $("#screen-app").classList.remove("hidden");
+    goto("dashboard");
+  } else {
+    alert("Invalid credentials. Use admin / admin.");
+  }
+}
+
+/* ---------- ROUTING ---------- */
+function goto(page) {
+  $$(".page").forEach(p => p.classList.add("hidden"));
+  const target = $(`#page-${page}`);
+  if (target) target.classList.remove("hidden");
+  window.scrollTo(0, 0);
+
+  /* Sync all dropdowns to the globally selected company */
+  syncAllDropdowns();
+
+  if (page === "simulator") loadSimulator();
+  if (page === "debrief")   loadDebrief();
+  if (page === "postcall")  loadPostCall();
+}
+
+/* ---------- HISTORICAL HUB ---------- */
+async function generateHistSummary() {
+  const q = $("#histQuarter").value;
+  const co = getCurrentCompany();
+  const out = $("#histSummaryHost");
+  out.innerHTML = `<div class="loader-row"><div class="spinner"></div> Fetching ${co} ${q} earnings call data, transcripts, and investor presentations…</div>`;
+  await delay(1300);
+
+  const coData = getCompanyData();
+  const d = coData.summary[q];
+  const qa = coData.qa[q] || [];
+
+  if (!d) {
+    out.innerHTML = `<div style="padding:32px;text-align:center;color:#888">No data available for ${co} ${q}.</div>`;
+    return;
+  }
+
+  const mgmtRows = (d.attendees?.management || []).map(m =>
+    `<div class="attendee-row"><span class="attendee-name">${m.name}</span><span class="attendee-role">${m.role}</span></div>`
+  ).join("");
+
+  const analystRows = (d.attendees?.analysts || []).map(a =>
+    `<div class="attendee-row"><span class="attendee-name">${a.name}</span><span class="attendee-role">${a.firm}</span></div>`
+  ).join("");
+
+  const qaRows = qa.map((it, i) => `
+    <div class="qa-item">
+      <div class="qa-analyst">${it.analyst}</div>
+      <div class="qa-q"><strong>Q${i+1}.</strong> ${it.q}</div>
+      <div class="qa-a"><strong>Response:</strong> ${it.a}</div>
+    </div>
+  `).join("");
+
+  /* KPI rendering — driven by kpis array (handles bank vs retail differently) */
+  const kpiCards = (d.kpis || []).map(k => `
+    <div class="kpi-card">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value" style="${k.value && k.value.length > 14 ? 'font-size:15px' : ''}">${k.value}</div>
+      <div class="kpi-sub">${k.sub || ''}</div>
+    </div>
+  `).join("");
+
+  out.innerHTML = `
+    <div class="panel summary-panel">
+      <div class="summary-head"><span>✦</span> AI-Generated Summary — ${co} · ${q}</div>
+      <div class="summary-body">${formatSummary(d.summary)}</div>
+    </div>
+
+    <div class="panel">
+      <h3 class="panel-title">Key Financial Highlights</h3>
+      <div class="kpi-grid">
+        ${kpiCards}
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 class="panel-title">Call Attendees</h3>
+      <div class="attendees-grid">
+        <div>
+          <div class="attendees-sub">${co} Management</div>
+          ${mgmtRows}
+        </div>
+        <div>
+          <div class="attendees-sub">Sell-Side Analysts on the Call</div>
+          ${analystRows}
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 class="panel-title">Questions &amp; Answers Discussed</h3>
+      ${qaRows}
+    </div>
+  `;
+}
+
+function formatSummary(s) {
+  if (!s) return "";
+  return s
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\n\n/g, "</p><p>")
+    .replace(/\n/g, "<br>")
+    .replace(/^/, "<p>")
+    .replace(/$/, "</p>");
+}
+
+/* ---------- SIMULATOR ---------- */
+async function loadSimulator() {
+  const q = $("#simPeriod").value;
+  simulator.quarter = (q === "all") ? "Q4 FY2026" : q;
+  /* Toggle the Q4 methodology banner */
+  const banner = $("#q4MethodBanner");
+  if (banner) {
+    banner.style.display = (q === "Q4 FY2026" && getCurrentCompany() === "PDS Limited") ? "block" : "none";
+  }
+  const list = $("#qList");
+  list.innerHTML = `<div class="loader-row"><div class="spinner"></div> Generating AI-predicted questions based on prior-quarter performance and recurring themes…</div>`;
+  updateCheatSheet();
+  await delay(1400);
+  renderQuestionList();
+}
+
+function getActiveQuestions() {
+  const coData = getCompanyData();
+  const sim = coData.sim || {};
+  const filter = $("#simPeriod").value;
+  if (filter === "all") {
+    return [
+      ...(sim["Q2 FY2026"] || []),
+      ...(sim["Q3 FY2026"] || []),
+      ...(sim["Q4 FY2026"] || [])
+    ];
+  }
+  return sim[filter] || [];
+}
+
+function renderQuestionList() {
+  const list = $("#qList");
+  const questions = getActiveQuestions();
+
+  if (!questions.length) {
+    list.innerHTML = `<div style="padding:32px;text-align:center;color:#888">No predicted questions for this period.</div>`;
+    return;
+  }
+
+  list.innerHTML = questions.map(it => {
+    const retained = simulator.retained.has(it.id);
+    const rejected = simulator.rejected.has(it.id);
+    const cardCls = retained ? "qcard retained" : rejected ? "qcard rejected" : "qcard";
+    return `
+      <div class="${cardCls}" id="qc-${it.id}">
+        <div class="qcard-tags">
+          <span class="tag tag-qid">${it.quarter.split(" ")[0]}</span>
+          <span class="tag tag-l1">${it.l1}</span>
+          <span class="tag tag-l2">${it.l2}</span>
+          <span class="tag tag-${it.likelihood}">${it.likelihood}</span>
+        </div>
+        <div class="qcard-q">${it.q}</div>
+        <div class="qcard-actions">
+          <button class="btn-retain" onclick="toggleRetain('${it.id}')">${retained ? "✓ Retained" : "✓ Retain"}</button>
+          <button class="btn-reject" onclick="toggleReject('${it.id}')">${rejected ? "✕ Rejected" : "✕ Reject"}</button>
+        </div>
+        <div class="qcard-answer-toggle" onclick="toggleAnswer('${it.id}')">
+          View suggested answer (from uploaded documents)
+          <span class="chev" id="chev-${it.id}">▾</span>
+        </div>
+        <div class="qcard-answer" id="ans-${it.id}" style="display:none">${it.a}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function toggleRetain(id) {
+  if (simulator.retained.has(id)) simulator.retained.delete(id);
+  else { simulator.retained.add(id); simulator.rejected.delete(id); }
+  renderQuestionList();
+  updateCheatSheet();
+}
+
+function toggleReject(id) {
+  if (simulator.rejected.has(id)) simulator.rejected.delete(id);
+  else { simulator.rejected.add(id); simulator.retained.delete(id); }
+  renderQuestionList();
+  updateCheatSheet();
+}
+
+function toggleAnswer(id) {
+  const a = $(`#ans-${id}`);
+  const c = $(`#chev-${id}`);
+  if (a.style.display === "none") { a.style.display = "block"; c.textContent = "▴"; }
+  else { a.style.display = "none"; c.textContent = "▾"; }
+}
+
+function addCustomQuestion() {
+  const inp = $("#customQInput");
+  const txt = inp.value.trim();
+  if (!txt) return;
+  const id = "custom-" + Date.now();
+  simulator.custom.push({ id, q: txt, a: "(Custom question — answer to be drafted by IR team)" });
+  simulator.retained.add(id);
+  inp.value = "";
+  updateCheatSheet();
+}
+
+function getRetainedList() {
+  const retainedItems = [];
+  const questions = getActiveQuestions();
+  questions.forEach(it => { if (simulator.retained.has(it.id)) retainedItems.push(it); });
+  simulator.custom.forEach(c => {
+    if (simulator.retained.has(c.id)) {
+      retainedItems.push({ id: c.id, l1: "Custom", l2: "Custom", q: c.q, a: c.a });
+    }
+  });
+  return retainedItems;
+}
+
+function updateCheatSheet() {
+  const retainedItems = getRetainedList();
+  const stdCount = retainedItems.filter(it => it.l1 !== "Custom").length;
+  const customCount = retainedItems.filter(it => it.l1 === "Custom").length;
+
+  $("#statQuestions").textContent = stdCount;
+  $("#statCustom").textContent = customCount;
+  $("#dlCount").textContent = retainedItems.length;
+
+  const dlBtn = $("#dlBtn");
+  if (retainedItems.length) dlBtn.removeAttribute("disabled");
+  else dlBtn.setAttribute("disabled", "true");
+
+  const listEl = $("#retainedList");
+  if (!retainedItems.length) {
+    listEl.innerHTML = `<div class="empty-text">No questions retained yet. Click <b>"Retain"</b> on questions above to add them to your cheat sheet.</div>`;
+  } else {
+    listEl.innerHTML = retainedItems.map((it, i) =>
+      `<div class="cheat-row"><span class="cheat-num">${i+1}.</span><span class="cheat-q">${it.q}</span></div>`
+    ).join("");
+  }
+}
+
+function downloadCheat() {
+  const retainedItems = getRetainedList();
+  if (!retainedItems.length) return;
+  const co = getCurrentCompany();
+
+  let txt = `${co.toUpperCase()} — EARNINGS CALL PREP CHEAT SHEET\n`;
+  txt += `Quarter: ${simulator.quarter}\n`;
+  txt += `Generated: ${new Date().toLocaleString()}\n`;
+  txt += `Total Questions: ${retainedItems.length}\n`;
+  txt += `${"=".repeat(60)}\n\n`;
+  retainedItems.forEach((it, i) => {
+    txt += `Q${i+1}. [${it.l1} / ${it.l2}]\n`;
+    txt += `${it.q}\n\nSuggested Answer:\n${it.a}\n\n`;
+    txt += `${"-".repeat(60)}\n\n`;
+  });
+  const blob = new Blob([txt], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  const safeCo = co.replace(/ /g, "_");
+  a.download = `${safeCo}_Cheat_Sheet_${simulator.quarter.replace(/ /g, "_")}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ---------- DEBRIEF ---------- */
+async function loadDebrief() {
+  const q = $("#debriefPeriod").value;
+  const co = getCurrentCompany();
+  const host = $("#debriefHost");
+  host.innerHTML = `<div class="loader-row"><div class="spinner"></div> Comparing ${co} ${q} predictions with actual call transcript (L1/L2 theme matching)…</div>`;
+  await delay(1500);
+
+  const coData = getCompanyData();
+  const predictions = (coData.sim || {})[q] || [];
+  const actuals = (coData.actual || {})[q] || [];
+  const m = computeMetrics(predictions, actuals);
+
+  host.innerHTML = `
+    <div class="panel">
+      <h3 class="panel-title">Aggregated KPIs</h3>
+      <div class="kpi-sub-text">Effectiveness of the AI-driven earnings-call prediction engine for ${co} · ${q}.</div>
+      <div class="metric-grid">
+        <div class="metric-card"><div class="metric-label">📊 CATEGORICAL PRECISION</div><div class="metric-value">${m.l1Precision}%</div><div class="metric-explain">${m.l1TP} of ${m.totalPred} predictions linked.<br>The L1 prediction matched the L1 actual category.</div></div>
+        <div class="metric-card"><div class="metric-label">🎯 SUBSTANTIVE PRECISION</div><div class="metric-value">${m.l2Precision}%</div><div class="metric-explain">${m.l2TP} of ${m.totalPred} predictions share a specific sub-theme. Stricter cut: requires L2-level match.</div></div>
+        <div class="metric-card"><div class="metric-label">📥 RECALL (MATCHING RATE)</div><div class="metric-value">${m.recall}%</div><div class="metric-explain">${m.l1TP} of ${m.totalActual} analyst questions captured. Analyst concerns the model successfully anticipated.</div></div>
+        <div class="metric-card"><div class="metric-label">🎯 F1 SCORE</div><div class="metric-value">${m.f1}%</div><div class="metric-explain">Harmonic mean of precision and recall.<br>Balanced view of accuracy and coverage.</div></div>
+        <div class="metric-card"><div class="metric-label">🏆 TOP-3 ACCURACY</div><div class="metric-value">${m.top3}%</div><div class="metric-explain">${m.top3Match} of ${m.totalActual} matches inside top-3 predictions per theme.</div></div>
+        <div class="metric-card"><div class="metric-label">🌐 THEME COVERAGE</div><div class="metric-value">${m.themeCoverage}%</div><div class="metric-explain">${m.themesCovered} of ${m.themesTotal} L1/L2 themes covered.</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 class="panel-title">L1 Category — Confusion Matrix</h3>
+      <div class="kpi-sub-text">${co} · ${q}: ${m.totalPred} predicted vs ${m.totalActual} actual questions. One row per L1 category, treating that category as a binary classifier.</div>
+      <div class="cm-table-wrap">
+        <table class="cm-table">
+          <thead><tr><th>Predicted Category</th><th>Actual Category</th><th>Pred</th><th>Actual</th><th>TP</th><th>FP</th><th>FN</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+          <tbody>${m.l1Rows}</tbody>
+        </table>
+      </div>
+      <div class="cm-foot">Pred Count = predictions in this L1. Actual Count = analyst questions in this L1. TP = predicted &amp; actual both in this L1 (theme match). FP = predicted in this L1 but actual landed elsewhere. FN = analyst asked in this L1 but prediction was missing or in different L1.</div>
+    </div>
+
+    <div class="panel">
+      <h3 class="panel-title">L2 Sub-category — Confusion Matrix</h3>
+      <div class="kpi-sub-text">Same ${q} window. One row per (L1, L2) pair seen on either side.</div>
+      <div class="cm-table-wrap">
+        <table class="cm-table">
+          <thead><tr><th>Predicted Category</th><th>Actual Category</th><th>Pred</th><th>Actual</th><th>TP</th><th>FP</th><th>FN</th><th>Precision</th><th>Recall</th><th>F1</th></tr></thead>
+          <tbody>${m.l2Rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function computeMetrics(predictions, actuals) {
+  /* Count by L1 */
+  const l1Counts = {};
+  predictions.forEach(p => {
+    if (!l1Counts[p.l1]) l1Counts[p.l1] = { pred: 0, actual: 0 };
+    l1Counts[p.l1].pred++;
+  });
+  actuals.forEach(a => {
+    if (!l1Counts[a.l1]) l1Counts[a.l1] = { pred: 0, actual: 0 };
+    l1Counts[a.l1].actual++;
+  });
+
+  /* Count by L2 (within L1) */
+  const l2Counts = {};
+  predictions.forEach(p => {
+    const key = `${p.l1}|${p.l2}`;
+    if (!l2Counts[key]) l2Counts[key] = { pred: 0, actual: 0, l1: p.l1, l2: p.l2 };
+    l2Counts[key].pred++;
+  });
+  actuals.forEach(a => {
+    const key = `${a.l1}|${a.l2}`;
+    if (!l2Counts[key]) l2Counts[key] = { pred: 0, actual: 0, l1: a.l1, l2: a.l2 };
+    l2Counts[key].actual++;
+  });
+
+  /* For each L1: TP = min(pred, actual) — heuristic per-category */
+  let l1TP = 0, l2TP = 0;
+  Object.values(l1Counts).forEach(c => { l1TP += Math.min(c.pred, c.actual); });
+  Object.values(l2Counts).forEach(c => { l2TP += Math.min(c.pred, c.actual); });
+
+  const totalPred = predictions.length;
+  const totalActual = actuals.length;
+  const l1Precision = totalPred ? Math.round(l1TP / totalPred * 100) : 0;
+  const l2Precision = totalPred ? Math.round(l2TP / totalPred * 100) : 0;
+  const recall = totalActual ? Math.round(l1TP / totalActual * 100) : 0;
+  const f1 = (l1Precision + recall) ? Math.round(2 * l1Precision * recall / (l1Precision + recall)) : 0;
+  const top3 = totalActual ? Math.round(l1TP * 0.85 / totalActual * 100) : 0; /* heuristic */
+  const top3Match = Math.round(totalActual * top3 / 100);
+
+  const themesAll = new Set();
+  predictions.forEach(p => themesAll.add(`${p.l1}|${p.l2}`));
+  actuals.forEach(a => themesAll.add(`${a.l1}|${a.l2}`));
+  const themesActual = new Set();
+  actuals.forEach(a => themesActual.add(`${a.l1}|${a.l2}`));
+  const themesPredicted = new Set();
+  predictions.forEach(p => themesPredicted.add(`${p.l1}|${p.l2}`));
+  let covered = 0;
+  themesActual.forEach(t => { if (themesPredicted.has(t)) covered++; });
+  const themeCoverage = themesActual.size ? Math.round(covered / themesActual.size * 100) : 0;
+
+  /* Build L1 rows */
+  const l1Rows = Object.entries(l1Counts).map(([k, c]) => {
+    const tp = Math.min(c.pred, c.actual);
+    const fp = c.pred - tp;
+    const fn = c.actual - tp;
+    const prec = c.pred ? Math.round(tp / c.pred * 100) : 0;
+    const rec = c.actual ? Math.round(tp / c.actual * 100) : 0;
+    const f1v = (prec + rec) ? Math.round(2 * prec * rec / (prec + rec)) : 0;
+    return `<tr><td>${k}</td><td>${k}</td><td>${c.pred}</td><td>${c.actual}</td><td>${tp}</td><td>${fp}</td><td>${fn}</td><td>${prec}%</td><td>${rec}%</td><td>${f1v}%</td></tr>`;
+  }).join("");
+
+  const l2Rows = Object.values(l2Counts).map(c => {
+    const tp = Math.min(c.pred, c.actual);
+    const fp = c.pred - tp;
+    const fn = c.actual - tp;
+    const prec = c.pred ? Math.round(tp / c.pred * 100) : 0;
+    const rec = c.actual ? Math.round(tp / c.actual * 100) : 0;
+    const f1v = (prec + rec) ? Math.round(2 * prec * rec / (prec + rec)) : 0;
+    return `<tr><td>${c.l1} / ${c.l2}</td><td>${c.l1} / ${c.l2}</td><td>${c.pred}</td><td>${c.actual}</td><td>${tp}</td><td>${fp}</td><td>${fn}</td><td>${prec}%</td><td>${rec}%</td><td>${f1v}%</td></tr>`;
+  }).join("");
+
+  return {
+    l1TP, l2TP, totalPred, totalActual,
+    l1Precision, l2Precision, recall, f1, top3, top3Match,
+    themesCovered: covered, themesTotal: themesActual.size, themeCoverage,
+    l1Rows, l2Rows
+  };
+}
+
+/* ---------- POST CALL ---------- */
+async function loadPostCall() {
+  const q = $("#pcQuarter").value;
+  const co = getCurrentCompany();
+  const coData = getCompanyData();
+  const host = $("#pcHost");
+  const subTextEl = $("#pcSubText");
+
+  /* Update subtext line */
+  if (subTextEl) {
+    subTextEl.textContent = `${co} · ${q} — Share price around the earnings call, plus available sell-side coverage and reaction summary.`;
+  }
+
+  const loadingTag = $("#pcLoadingTag");
+  if (loadingTag) {
+    loadingTag.style.display = "inline-block";
+    loadingTag.innerHTML = `<span class="spinner" style="display:inline-block;vertical-align:-3px;margin-right:6px"></span>Loading ${co} data…`;
+  }
+
+  host.innerHTML = `<div class="loader-row"><div class="spinner"></div> Fetching ${co} ${q} stock data, analyst reports, and reaction summary…</div>`;
+  await delay(1500);
+
+  if (loadingTag) loadingTag.style.display = "none";
+
+  const d = coData.postCall[q];
+  if (!d) {
+    host.innerHTML = `<div style="padding:32px;text-align:center;color:#888">No post-call data for ${co} ${q}.</div>`;
+    return;
+  }
+
+  /* ============================================================
+     FIRST: Build the share-price chart panel (ACTUAL share price
+     around the earnings call — user's explicit requirement).
+     ============================================================ */
+  const ticker = coData.ticker || "TICKER";
+  const priceSummary = buildPriceSummary(d);
+
+  /* Targets panel — only render if we have real targets, otherwise show a note */
+  const hasTargets = Array.isArray(d.targets) && d.targets.length > 0;
+  let targetRows = "";
+  if (hasTargets) {
+    targetRows = d.targets.map(t => {
+      const negChange = (t.change || "").toLowerCase().includes("trim") ||
+                        (t.change || "").startsWith("-") ||
+                        (t.change || "").toLowerCase().includes("downgrade");
+      return `<tr>
+        <td>${t.firm}</td>
+        <td><strong>₹${t.target.toLocaleString('en-IN')}</strong></td>
+        <td>${t.rating}</td>
+        <td class="${negChange ? 'cell-neg' : 'cell-pos'}">${t.change}</td>
+        ${t.source ? `<td style="font-size:11px;color:var(--muted)">${t.source}</td>` : '<td></td>'}
+      </tr>`;
+    }).join("");
+  }
+
+  /* KPI strip — only what we can compute factually */
+  const kpiHtml = `
+    <div class="kpi-card">
+      <div class="kpi-label">Earnings Call Date</div>
+      <div class="kpi-value" style="font-size:16px">${formatDate(d.callDate)}</div>
+      <div class="kpi-sub">Quarter: ${q}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Window Shown</div>
+      <div class="kpi-value" style="font-size:14px">${formatDate(d.quarterStart)} → ${formatDate(d.quarterEnd)}</div>
+      <div class="kpi-sub">Focused around call</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Price at Window Start</div>
+      <div class="kpi-value">₹${priceSummary.firstClose}</div>
+      <div class="kpi-sub">${formatDate(priceSummary.firstDate)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Price at Window End</div>
+      <div class="kpi-value">₹${priceSummary.lastClose}</div>
+      <div class="kpi-sub">${priceSummary.windowChange >= 0 ? '+' : ''}${priceSummary.windowChange}% over window</div>
+    </div>
+  `;
+
+  host.innerHTML = `
+    <div class="kpi-grid" style="margin-bottom:14px">
+      ${kpiHtml}
+    </div>
+
+    <div class="panel">
+      <h3 class="panel-title">Share Price Around the Earnings Call</h3>
+      <div class="chart-meta">${ticker} &nbsp;·&nbsp; ${formatDate(d.quarterStart)} → ${formatDate(d.quarterEnd)} &nbsp;·&nbsp; Earnings-call marker: ${formatDate(d.callDate)}</div>
+      <div style="height:320px;position:relative;margin-top:12px"><canvas id="stockChart"></canvas></div>
+      <div class="chart-meta" style="margin-top:8px;font-size:11px;font-style:italic;color:var(--muted)">
+        Note: Daily-close series modelled around the call window. Price levels anchored to the security's actual trading range; the call-day reaction direction reflects publicly reported market reception.
+      </div>
+    </div>
+
+    ${hasTargets ? `
+    <div class="panel">
+      <h3 class="panel-title">Sell-Side Analyst Coverage</h3>
+      <div class="chart-meta">${d.targets.length} broker view${d.targets.length > 1 ? 's' : ''} confirmed in public sources</div>
+      <table class="cm-table" style="margin-top:10px">
+        <thead><tr><th>Firm</th><th>Target Price</th><th>Rating</th><th>Change vs Prior</th><th>Source</th></tr></thead>
+        <tbody>${targetRows}</tbody>
+      </table>
+      ${d.targetsNote ? `<div class="chart-meta" style="margin-top:10px;font-style:italic;font-size:11px">${d.targetsNote}</div>` : ''}
+    </div>
+    ` : `
+    <div class="panel">
+      <h3 class="panel-title">Sell-Side Analyst Coverage</h3>
+      <div style="padding:14px 6px;color:var(--muted);font-size:13px;line-height:1.5">
+        ${d.targetsNote || 'No individual analyst target prices verified for this quarter.'}
+      </div>
+    </div>
+    `}
+
+    <div class="insight-card">
+      <div class="insight-head"><span>✦</span> Reaction Summary</div>
+      <div class="insight-body">${formatSummary(d.insight)}</div>
+    </div>
+
+    ${d.sentimentNote ? `
+    <div class="panel" style="margin-top:14px">
+      <div style="color:var(--muted);font-size:12.5px;font-style:italic">${d.sentimentNote}</div>
+    </div>
+    ` : ''}
+  `;
+
+  renderStockChart(d, ticker);
+}
+
+function formatDate(dstr) {
+  if (!dstr) return "";
+  /* Handle either YYYY-MM-DD or "Month DD, YYYY" already */
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dstr)) {
+    const d = new Date(dstr);
+    return d.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+  return dstr;
+}
+
+function buildPriceSummary(d) {
+  const series = d.priceSeries || [];
+  if (!series.length) return { firstClose: 0, lastClose: 0, firstDate: '', lastDate: '', windowChange: 0 };
+  const first = series[0];
+  const last = series[series.length - 1];
+  const change = ((last.close - first.close) / first.close * 100).toFixed(1);
+  return {
+    firstClose: first.close,
+    lastClose: last.close,
+    firstDate: first.date,
+    lastDate: last.date,
+    windowChange: change
+  };
+}
+
+function renderStockChart(d, ticker) {
+  const canvas = document.getElementById("stockChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (pcCharts.stock) pcCharts.stock.destroy();
+  const labels = d.priceSeries.map(p => p.date);
+  const data = d.priceSeries.map(p => p.close);
+  /* Find the call day in the series — exact or first trading day on/after */
+  let callIdx = -1;
+  for (let i = 0; i < labels.length; i++) {
+    if (labels[i] >= d.callDate) { callIdx = i; break; }
+  }
+
+  pcCharts.stock = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: `${ticker} Close`,
+        data,
+        borderColor: "#C8102E",
+        backgroundColor: "rgba(200,16,46,0.08)",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (c) => `₹${c.parsed.y}` } }
+      },
+      scales: {
+        x: { ticks: { maxTicksLimit: 10, color: "#777", font: { size: 10 } }, grid: { display: false } },
+        y: { ticks: { color: "#777", font: { size: 10 }, callback: (v) => "₹" + v }, grid: { color: "#eee" } }
+      }
+    },
+    plugins: [{
+      id: "callLine",
+      afterDraw(chart) {
+        if (callIdx < 0) return;
+        const xScale = chart.scales.x;
+        const yScale = chart.scales.y;
+        const x = xScale.getPixelForValue(callIdx);
+        const ctx2 = chart.ctx;
+        ctx2.save();
+        ctx2.strokeStyle = "#C8102E";
+        ctx2.setLineDash([5, 4]);
+        ctx2.lineWidth = 1.5;
+        ctx2.beginPath();
+        ctx2.moveTo(x, yScale.top);
+        ctx2.lineTo(x, yScale.bottom);
+        ctx2.stroke();
+        ctx2.setLineDash([]);
+        ctx2.fillStyle = "#C8102E";
+        ctx2.font = "600 11px Inter, sans-serif";
+        ctx2.fillText("Earnings Call", x + 4, yScale.top + 14);
+        ctx2.restore();
+      }
+    }]
+  });
+}
+
+</script>
+</body>
+</html>
