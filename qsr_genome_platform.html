@@ -6,13 +6,13 @@
 <title>QSR Genome — Strategic Analytics Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   html, body { margin:0; padding:0; background:#fff; font-family: 'Inter', -apple-system, sans-serif; }
   #loading { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; background:#fff; color:#6b6b6b; font-size:11px; letter-spacing:2px; text-transform:uppercase; z-index: 9999; }
-  #loading .dot { width:6px; height:6px; border-radius:50%; background:#a3171d; animation: pulse 1s infinite ease-in-out; }
+  #loading .dot { width:6px; height:6px; border-radius:50%; background:#C8102E; animation: pulse 1s infinite ease-in-out; }
   @keyframes pulse { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:1;transform:scale(1.4)} }
-  .err { color:#a3171d; font-family:monospace; font-size:12px; max-width:760px; padding:24px; line-height:1.6; text-transform:none; letter-spacing:0; white-space: pre-wrap; }
+  .err { color:#C8102E; font-family:monospace; font-size:12px; max-width:760px; padding:24px; line-height:1.6; text-transform:none; letter-spacing:0; white-space: pre-wrap; }
 </style>
 <meta name="agent-name" content="QSR Genome Platform">
 <script src="agent-shell.js" defer></script>
@@ -6014,7 +6014,7 @@ const C = {
   line: "#e7e5e2",
   bg: "#ffffff",
   panel: "#fbfaf8",
-  red: "#a3171d",
+  red: "#C8102E",
   redSoft: "#f5e6e7",
   redLine: "#d97a7e",
   amber: "#b78628",
@@ -6160,7 +6160,7 @@ const Card = ({
     fontSize: 17,
     fontWeight: 500,
     color: C.ink,
-    fontFamily: "'Tinos', 'Georgia', serif"
+    fontFamily: "'Source Serif 4', 'Georgia', serif"
   }
 }, title)), right), children);
 const KPI = ({
@@ -6189,7 +6189,7 @@ const KPI = ({
     fontWeight: 400,
     color: C.ink,
     marginTop: 8,
-    fontFamily: "'Tinos', 'Georgia', serif",
+    fontFamily: "'Source Serif 4', 'Georgia', serif",
     lineHeight: 1
   }
 }, value), sub && /*#__PURE__*/React.createElement("div", {
@@ -6297,7 +6297,7 @@ const Section = ({
 }, kicker), title && /*#__PURE__*/React.createElement("div", {
   style: {
     fontSize: 26,
-    fontFamily: "'Tinos','Georgia',serif",
+    fontFamily: "'Source Serif 4','Georgia',serif",
     fontWeight: 400,
     color: C.ink,
     marginBottom: children ? 20 : 0,
@@ -6333,7 +6333,7 @@ const FlowStep = ({
     fontWeight: 500,
     color: C.ink,
     marginTop: 4,
-    fontFamily: "'Tinos',serif"
+    fontFamily: "'Source Serif 4',serif"
   }
 }, title), sub && /*#__PURE__*/React.createElement("div", {
   style: {
@@ -6968,7 +6968,7 @@ function Meta({
       fontSize: 14,
       color: C.ink,
       marginTop: 4,
-      fontFamily: "'Tinos',serif"
+      fontFamily: "'Source Serif 4',serif"
     }
   }, value));
 }
@@ -7356,7 +7356,7 @@ function MenuPlacementEngine({
     style: {
       fontSize: 14,
       color: C.ink,
-      fontFamily: "'Tinos',serif"
+      fontFamily: "'Source Serif 4',serif"
     }
   }, w.fs.feature_set_name)), /*#__PURE__*/React.createElement("span", {
     style: {
@@ -7404,7 +7404,7 @@ function MenuPlacementEngine({
     style: {
       fontSize: 13,
       color: C.ink2,
-      fontFamily: "'Tinos',serif"
+      fontFamily: "'Source Serif 4',serif"
     }
   }, l.fs.feature_set_name), /*#__PURE__*/React.createElement("span", {
     style: {
@@ -7784,7 +7784,7 @@ function PricingEngine({
   }, "Recommended price"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 44,
-      fontFamily: "'Tinos',serif",
+      fontFamily: "'Source Serif 4',serif",
       color: C.red,
       lineHeight: 1,
       marginTop: 6
@@ -7983,7 +7983,7 @@ function PricingEngine({
       style: {
         fontSize: 13,
         color: C.ink,
-        fontFamily: "'Tinos',serif",
+        fontFamily: "'Source Serif 4',serif",
         marginBottom: 6
       }
     }, pfs.pricing_feature_set_name), /*#__PURE__*/React.createElement("div", {
@@ -8541,7 +8541,7 @@ function Methodology() {
     style: methodFormula
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontFamily: "'Tinos',serif",
+      fontFamily: "'Source Serif 4',serif",
       fontSize: 14,
       color: C.ink,
       lineHeight: 1.8
@@ -8552,7 +8552,7 @@ function Methodology() {
     }
   }, "Affinity"), " = weighted cosine ( ", /*#__PURE__*/React.createElement("i", null, "Store Food-Behavior Genome"), ", ", /*#__PURE__*/React.createElement("i", null, "Menu Feature-Set Genome"), " )"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontFamily: "'Tinos',serif",
+      fontFamily: "'Source Serif 4',serif",
       fontSize: 14,
       color: C.ink,
       lineHeight: 1.8,
@@ -8576,7 +8576,7 @@ function Methodology() {
     style: methodFormula
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontFamily: "'Tinos',serif",
+      fontFamily: "'Source Serif 4',serif",
       fontSize: 14,
       color: C.ink,
       lineHeight: 1.8
@@ -8677,7 +8677,7 @@ function App() {
       display: "flex"
     }
   }, /*#__PURE__*/React.createElement("style", null, `
-        @import url('https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
         body { margin:0; }
         * { box-sizing: border-box; }
         select:focus, button:focus { outline: 1px solid ${C.red}; outline-offset: 1px; }
@@ -8725,7 +8725,7 @@ function App() {
   }, "QSR Genome")), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 18,
-      fontFamily: "'Tinos',serif",
+      fontFamily: "'Source Serif 4',serif",
       color: C.ink,
       lineHeight: 1.3,
       letterSpacing: -0.2
@@ -8810,7 +8810,7 @@ function App() {
   }, "Module"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 13,
-      fontFamily: "'Tinos',serif",
+      fontFamily: "'Source Serif 4',serif",
       color: C.ink,
       marginTop: 2
     }
