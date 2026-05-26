@@ -88,17 +88,6 @@
     .hero-sub{font-size:16px}
   }
 
-  /* ============ SOCIAL PROOF BAR ============ */
-  .proof{padding:36px 0 28px;border-bottom:1px solid var(--line)}
-  .proof-label{text-align:center;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:22px}
-  .proof-logos{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:48px;opacity:.7}
-  .proof-logo{font-family:'Source Serif 4';font-weight:700;font-size:18px;color:var(--ink-2);letter-spacing:-.02em;display:inline-flex;align-items:center;gap:6px}
-  .proof-logo .dot{width:7px;height:7px;border-radius:50%;background:var(--ink-2)}
-  .proof-meta{display:flex;justify-content:center;gap:42px;flex-wrap:wrap;margin-top:28px;padding-top:22px;border-top:1px dashed var(--line)}
-  .proof-meta-item{text-align:center}
-  .proof-meta-item .num{font-family:'Source Serif 4';font-weight:700;font-size:26px;color:var(--red-dark);line-height:1.1}
-  .proof-meta-item .lbl{font-size:12.5px;color:var(--muted);margin-top:4px}
-
   /* ============ SECTION COMMON ============ */
   section{padding:80px 0}
   .section-head{text-align:center;max-width:680px;margin:0 auto 56px}
@@ -110,16 +99,42 @@
     .section-head h2{font-size:30px}
   }
 
-  /* ============ DASHBOARD ============ */
-  .dashboard{background:var(--bg)}
-  .dash-filter-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 28px;padding:18px 22px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
-  .dash-filter-label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);flex-shrink:0}
-  .dash-chips{display:flex;gap:8px;flex-wrap:wrap}
-  .dash-chip{font-size:13px;font-weight:600;color:var(--ink-2);background:#fff;border:1px solid var(--line);padding:7px 14px;border-radius:20px;cursor:pointer;transition:.15s;font-family:inherit}
-  .dash-chip:hover{border-color:var(--red);color:var(--red-dark)}
+  /* ============ APP SHELL (CATALOG / ALL AGENTS) ============ */
+  .app{background:var(--bg)}
+  .app-shell{display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:flex-start}
+  .app-side{position:sticky;top:84px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+  .app-side-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 10px;padding:0 4px}
+  .app-side-label:not(:first-child){margin-top:22px}
+  .app-side-nav{display:flex;flex-direction:column;gap:4px}
+  .app-nav-item{display:flex;align-items:flex-start;gap:11px;padding:11px 12px;border-radius:9px;border:1px solid transparent;background:transparent;cursor:pointer;font-family:inherit;color:var(--ink-2);text-align:left;transition:.15s;width:100%}
+  .app-nav-item:hover{background:var(--bg)}
+  .app-nav-item.active{background:var(--red);color:#fff;border-color:var(--red)}
+  .app-nav-item svg{width:16px;height:16px;margin-top:2px;flex-shrink:0}
+  .app-nav-text{display:flex;flex-direction:column;line-height:1.3}
+  .app-nav-text .ttl{font-weight:600;font-size:13.5px}
+  .app-nav-text .sub{font-size:11.5px;color:var(--muted);font-weight:400;margin-top:1px}
+  .app-nav-item.active .app-nav-text .sub{color:rgba(255,255,255,0.78)}
+  .app-side-chips{display:flex;flex-direction:column;gap:6px}
+  .dash-chip{font-size:13px;font-weight:500;color:var(--ink-2);background:transparent;border:1px solid var(--line);padding:7px 12px;border-radius:8px;cursor:pointer;transition:.15s;font-family:inherit;display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left}
+  .dash-chip:hover{border-color:var(--red);color:var(--red-dark);background:var(--red-tint)}
   .dash-chip.active{background:var(--red);border-color:var(--red);color:#fff}
-  .dash-chip .count{display:inline-block;font-size:11px;font-weight:600;background:rgba(0,0,0,0.08);color:inherit;padding:1px 6px;border-radius:10px;margin-left:6px;opacity:.85}
-  .dash-chip.active .count{background:rgba(255,255,255,0.25)}
+  .dash-chip .count{font-size:11px;font-weight:600;background:rgba(0,0,0,0.06);color:inherit;padding:1px 7px;border-radius:10px;opacity:.85}
+  .dash-chip.active .count{background:rgba(255,255,255,0.22)}
+  .app-side-footer{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+  .app-side-status{font-size:12.5px;color:var(--muted);font-weight:500}
+  .app-main{min-width:0}
+  .app-main-head{margin-bottom:22px}
+  .app-main-head .section-eyebrow{margin-bottom:8px;text-align:left}
+  .app-main-head h2{font-family:'Source Serif 4';font-weight:700;font-size:28px;color:var(--ink);margin:0 0 8px;line-height:1.2;letter-spacing:-.3px}
+  .app-main-head p{color:var(--muted);font-size:14.5px;margin:0;line-height:1.55}
+  .view-pane{animation:viewIn .2s ease-out}
+  @keyframes viewIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:880px){
+    .app-shell{grid-template-columns:1fr;gap:18px}
+    .app-side{position:static}
+    .app-side-chips{flex-direction:row;flex-wrap:wrap}
+    .dash-chip{width:auto}
+  }
 
   .matrix-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:32px}
   .matrix{width:100%;border-collapse:collapse;min-width:760px;font-size:13.5px}
@@ -241,6 +256,7 @@
     </a>
     <nav class="nav-links">
       <a class="nav-link" href="#agents">Catalog</a>
+      <a class="nav-link" href="#all-agents">All Agents</a>
       <a class="nav-link" href="#how">How it works</a>
       <a class="nav-link" href="#security">Security</a>
     </nav>
@@ -274,60 +290,87 @@
   </div>
 </section>
 
-<!-- ============ SOCIAL PROOF BAR ============ -->
-<section class="proof" style="padding:36px 0 28px">
+<!-- ============ APP SHELL: CATALOG + ALL AGENTS ============ -->
+<section class="app" id="agents">
   <div class="container">
-    <div class="proof-label">Trusted by analytics teams at</div>
-    <div class="proof-logos">
-      <span class="proof-logo"><span class="dot"></span>Meridian Capital</span>
-      <span class="proof-logo"><span class="dot"></span>Northwind Brands</span>
-      <span class="proof-logo"><span class="dot"></span>Halsted &amp; Co.</span>
-      <span class="proof-logo"><span class="dot"></span>Crestview Research</span>
-      <span class="proof-logo"><span class="dot"></span>BlueRidge Partners</span>
-      <span class="proof-logo"><span class="dot"></span>Sentinel Group</span>
-    </div>
-    <div class="proof-meta">
-      <div class="proof-meta-item"><div class="num">10,000+</div><div class="lbl">Earnings calls processed per quarter</div></div>
-      <div class="proof-meta-item"><div class="num">70%</div><div class="lbl">Average reduction in research time</div></div>
-      <div class="proof-meta-item"><div class="num">Ex-MBB &amp; GS</div><div class="lbl">Built by senior analysts &amp; consultants</div></div>
-    </div>
-  </div>
-</section>
+    <div class="app-shell">
 
-<!-- ============ DASHBOARD ============ -->
-<section class="dashboard" id="agents">
-  <div class="container">
-    <div class="section-head">
-      <div class="section-eyebrow">Agent catalog</div>
-      <h2>Browse by function, industry, or technology</h2>
-      <p>Each row is an industry. Each column is a business function. Filled cells contain a live agent — click to drill in.</p>
-    </div>
+      <!-- LEFT NAV -->
+      <aside class="app-side">
+        <div class="app-side-label">View</div>
+        <nav class="app-side-nav" id="appNav">
+          <button class="app-nav-item active" data-view="catalog" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+            </svg>
+            <span class="app-nav-text">
+              <span class="ttl">Catalog</span>
+              <span class="sub">Industry × Function matrix</span>
+            </span>
+          </button>
+          <button class="app-nav-item" data-view="all" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            <span class="app-nav-text">
+              <span class="ttl">All Agents</span>
+              <span class="sub">Browse the full list</span>
+            </span>
+          </button>
+        </nav>
 
-    <!-- Tech filter chips -->
-    <div class="dash-filter-row">
-      <div class="dash-filter-label">Technology</div>
-      <div class="dash-chips" id="techChips"></div>
-    </div>
+        <div class="app-side-label">Technology</div>
+        <div class="app-side-chips" id="techChips"></div>
 
-    <!-- The matrix -->
-    <div class="matrix-wrap">
-      <table class="matrix" id="matrix"></table>
-    </div>
-
-    <!-- Filtered agents -->
-    <div class="dash-results">
-      <div class="dash-results-head">
-        <div>
-          <h3 id="resultsTitle">All agents</h3>
-          <div class="dash-results-sub" id="resultsSub">3 agents</div>
+        <div class="app-side-footer">
+          <div id="sideStatus" class="app-side-status">3 agents</div>
+          <button class="dash-clear" id="clearFilter" type="button" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Clear filters
+          </button>
         </div>
-        <button class="dash-clear" id="clearFilter" type="button" hidden>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          Clear filters
-        </button>
+      </aside>
+
+      <!-- MAIN PANE -->
+      <div class="app-main">
+        <div class="app-main-head">
+          <div class="section-eyebrow">Agent catalog</div>
+          <h2 id="viewTitle">Browse by function, industry, or technology</h2>
+          <p id="viewSub">Each row is an industry. Each column is a business function. Filled cells contain a live agent — click to drill in.</p>
+        </div>
+
+        <!-- CATALOG VIEW -->
+        <div class="view-pane" data-view="catalog">
+          <div class="matrix-wrap">
+            <table class="matrix" id="matrix"></table>
+          </div>
+          <div class="dash-results">
+            <div class="dash-results-head">
+              <div>
+                <h3 id="resultsTitle">All agents</h3>
+                <div class="dash-results-sub" id="resultsSub">3 agents</div>
+              </div>
+            </div>
+            <div id="agentGrid" class="agent-grid"></div>
+            <div id="agentEmpty" class="dash-empty" hidden>No agents match these filters yet — we're working on it.</div>
+          </div>
+        </div>
+
+        <!-- ALL AGENTS VIEW -->
+        <div class="view-pane" data-view="all" hidden>
+          <div class="dash-results-head" style="margin-bottom:18px">
+            <div>
+              <h3 id="allTitle">All agents</h3>
+              <div class="dash-results-sub" id="allSub">3 agents</div>
+            </div>
+          </div>
+          <div id="agentGridAll" class="agent-grid"></div>
+          <div id="agentEmptyAll" class="dash-empty" hidden>No agents match this technology filter.</div>
+        </div>
       </div>
-      <div id="agentGrid" class="agent-grid"></div>
-      <div id="agentEmpty" class="dash-empty" hidden>No agents match these filters yet — we're working on it.</div>
+
     </div>
   </div>
 </section>
@@ -524,8 +567,11 @@
     }
   ];
 
-  // ---------- Filter state ----------
-  const filter = { industry: null, fn: null, tech: null };
+  // ---------- App state ----------
+  const state = {
+    view: 'catalog',                              // 'catalog' | 'all'
+    filter: { industry: null, fn: null, tech: null }
+  };
 
   function agentMatches(a, f) {
     if (f.industry && !a.industries.includes(f.industry)) return false;
@@ -534,78 +580,8 @@
     return true;
   }
 
-  // ---------- Render tech chips ----------
-  function renderTechChips() {
-    const wrap = document.getElementById('techChips');
-    const allCount = AGENTS.length;
-    const html = [
-      `<button class="dash-chip ${filter.tech === null ? 'active' : ''}" data-tech="">All<span class="count">${allCount}</span></button>`,
-      ...TECH.map(t => {
-        const n = AGENTS.filter(a => a.tech.includes(t)).length;
-        if (n === 0) return '';
-        return `<button class="dash-chip ${filter.tech === t ? 'active' : ''}" data-tech="${escapeAttr(t)}">${escapeHtml(t)}<span class="count">${n}</span></button>`;
-      })
-    ].filter(Boolean).join('');
-    wrap.innerHTML = html;
-    wrap.querySelectorAll('.dash-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const t = chip.dataset.tech;
-        filter.tech = t === '' ? null : t;
-        renderAll();
-      });
-    });
-  }
-
-  // ---------- Render matrix ----------
-  function renderMatrix() {
-    const m = document.getElementById('matrix');
-    // Pre-filter by tech only (industry/fn axes are the matrix dimensions themselves)
-    const pool = AGENTS.filter(a => !filter.tech || a.tech.includes(filter.tech));
-
-    let html = '<thead><tr><th>Industry \\ Function</th>';
-    for (const fn of FUNCTIONS) {
-      html += `<th>${escapeHtml(fn)}</th>`;
-    }
-    html += '</tr></thead><tbody>';
-
-    for (const ind of INDUSTRIES) {
-      html += `<tr><th><span class="matrix-row-label"><span class="dot"></span>${escapeHtml(ind)}</span></th>`;
-      for (const fn of FUNCTIONS) {
-        const agents = pool.filter(a => a.industries.includes(ind) && a.functions.includes(fn));
-        const isActive = filter.industry === ind && filter.fn === fn;
-        if (agents.length) {
-          html += `<td class="matrix-cell filled ${isActive ? 'active' : ''}" data-ind="${escapeAttr(ind)}" data-fn="${escapeAttr(fn)}">
-            <div class="matrix-check">✓<span class="matrix-count">${agents.length} agent${agents.length>1?'s':''}</span></div>
-          </td>`;
-        } else {
-          html += `<td class="matrix-cell empty">—</td>`;
-        }
-      }
-      html += '</tr>';
-    }
-    html += '</tbody>';
-    m.innerHTML = html;
-
-    m.querySelectorAll('.matrix-cell.filled').forEach(cell => {
-      cell.addEventListener('click', () => {
-        const ind = cell.dataset.ind, fn = cell.dataset.fn;
-        if (filter.industry === ind && filter.fn === fn) {
-          filter.industry = null; filter.fn = null; // toggle off
-        } else {
-          filter.industry = ind; filter.fn = fn;
-        }
-        renderAll();
-      });
-    });
-  }
-
-  // ---------- Render agent cards ----------
-  function renderAgents() {
-    const grid = document.getElementById('agentGrid');
-    const empty = document.getElementById('agentEmpty');
-    const list = AGENTS.filter(a => agentMatches(a, filter));
-
-    grid.innerHTML = list.map(a => `
+  function agentCardHtml(a) {
+    return `
       <article class="agent-card">
         <span class="agent-audience">${escapeHtml(a.audience)}</span>
         <div class="agent-icon">${a.icon}</div>
@@ -622,31 +598,170 @@
           <a class="btn btn-primary" href="${encodeURI(a.url)}" target="_blank" rel="noopener noreferrer">See it in action</a>
         </div>
       </article>
-    `).join('');
+    `;
+  }
 
+  // ---------- Render side nav + tech chips ----------
+  function renderSide() {
+    // View nav active state
+    document.querySelectorAll('#appNav .app-nav-item').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === state.view);
+    });
+
+    // Tech chips
+    const wrap = document.getElementById('techChips');
+    const allCount = AGENTS.length;
+    wrap.innerHTML = [
+      `<button class="dash-chip ${state.filter.tech === null ? 'active' : ''}" data-tech="">All<span class="count">${allCount}</span></button>`,
+      ...TECH.map(t => {
+        const n = AGENTS.filter(a => a.tech.includes(t)).length;
+        if (n === 0) return '';
+        return `<button class="dash-chip ${state.filter.tech === t ? 'active' : ''}" data-tech="${escapeAttr(t)}">${escapeHtml(t)}<span class="count">${n}</span></button>`;
+      })
+    ].filter(Boolean).join('');
+    wrap.querySelectorAll('.dash-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const t = chip.dataset.tech;
+        state.filter.tech = t === '' ? null : t;
+        renderAll();
+      });
+    });
+
+    // Footer status + clear button
+    const visibleCount = AGENTS.filter(a => agentMatches(a, state.filter)).length;
+    document.getElementById('sideStatus').textContent =
+      `${visibleCount} of ${AGENTS.length} agent${AGENTS.length === 1 ? '' : 's'}`;
+    const hasFilter = state.filter.industry || state.filter.fn || state.filter.tech;
+    document.getElementById('clearFilter').hidden = !hasFilter;
+  }
+
+  // ---------- Render matrix ----------
+  function renderMatrix() {
+    const m = document.getElementById('matrix');
+    const pool = AGENTS.filter(a => !state.filter.tech || a.tech.includes(state.filter.tech));
+
+    let html = '<thead><tr><th>Industry \\ Function</th>';
+    for (const fn of FUNCTIONS) html += `<th>${escapeHtml(fn)}</th>`;
+    html += '</tr></thead><tbody>';
+
+    for (const ind of INDUSTRIES) {
+      html += `<tr><th><span class="matrix-row-label"><span class="dot"></span>${escapeHtml(ind)}</span></th>`;
+      for (const fn of FUNCTIONS) {
+        const agents = pool.filter(a => a.industries.includes(ind) && a.functions.includes(fn));
+        const isActive = state.filter.industry === ind && state.filter.fn === fn;
+        if (agents.length) {
+          html += `<td class="matrix-cell filled ${isActive ? 'active' : ''}" data-ind="${escapeAttr(ind)}" data-fn="${escapeAttr(fn)}">
+            <div class="matrix-check">✓<span class="matrix-count">${agents.length} agent${agents.length>1?'s':''}</span></div>
+          </td>`;
+        } else {
+          html += `<td class="matrix-cell empty">—</td>`;
+        }
+      }
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    m.innerHTML = html;
+
+    m.querySelectorAll('.matrix-cell.filled').forEach(cell => {
+      cell.addEventListener('click', () => {
+        const ind = cell.dataset.ind, fn = cell.dataset.fn;
+        if (state.filter.industry === ind && state.filter.fn === fn) {
+          state.filter.industry = null; state.filter.fn = null;
+        } else {
+          state.filter.industry = ind; state.filter.fn = fn;
+        }
+        renderAll();
+      });
+    });
+  }
+
+  // ---------- Render main pane ----------
+  function renderMain() {
+    // Toggle which view pane is visible
+    document.querySelectorAll('.view-pane').forEach(p => {
+      p.hidden = p.dataset.view !== state.view;
+    });
+
+    // Header copy per view
+    const head = document.getElementById('viewTitle');
+    const sub  = document.getElementById('viewSub');
+    if (state.view === 'catalog') {
+      head.textContent = 'Browse by function, industry, or technology';
+      sub.textContent  = 'Each row is an industry. Each column is a business function. Filled cells contain a live agent — click to drill in.';
+    } else {
+      head.textContent = 'All agents';
+      sub.textContent  = 'Every agent in the catalog. Filter by technology in the sidebar.';
+    }
+
+    if (state.view === 'catalog') renderCatalogPane();
+    else                          renderAllPane();
+  }
+
+  function renderCatalogPane() {
+    renderMatrix();
+    const list = AGENTS.filter(a => agentMatches(a, state.filter));
+    const grid = document.getElementById('agentGrid');
+    const empty = document.getElementById('agentEmpty');
+    grid.innerHTML = list.map(agentCardHtml).join('');
     grid.hidden = list.length === 0;
     empty.hidden = list.length !== 0;
 
-    // Results header
     const parts = [];
-    if (filter.industry) parts.push(filter.industry);
-    if (filter.fn)       parts.push(filter.fn);
-    if (filter.tech)     parts.push(filter.tech);
+    if (state.filter.industry) parts.push(state.filter.industry);
+    if (state.filter.fn)       parts.push(state.filter.fn);
+    if (state.filter.tech)     parts.push(state.filter.tech);
     document.getElementById('resultsTitle').textContent = parts.length ? parts.join(' · ') : 'All agents';
     document.getElementById('resultsSub').textContent =
       `${list.length} agent${list.length === 1 ? '' : 's'}` + (parts.length ? ' matching' : '');
-    document.getElementById('clearFilter').hidden = !parts.length;
+  }
+
+  function renderAllPane() {
+    // All Agents view ignores industry/fn matrix filters; only tech applies.
+    const list = AGENTS.filter(a => !state.filter.tech || a.tech.includes(state.filter.tech));
+    const grid = document.getElementById('agentGridAll');
+    const empty = document.getElementById('agentEmptyAll');
+    grid.innerHTML = list.map(agentCardHtml).join('');
+    grid.hidden = list.length === 0;
+    empty.hidden = list.length !== 0;
+
+    const techSuffix = state.filter.tech ? ` · ${state.filter.tech}` : '';
+    document.getElementById('allTitle').textContent = state.filter.tech ? `All agents${techSuffix}` : 'All agents';
+    document.getElementById('allSub').textContent =
+      `${list.length} agent${list.length === 1 ? '' : 's'}`;
   }
 
   function renderAll() {
-    renderTechChips();
-    renderMatrix();
-    renderAgents();
+    renderSide();
+    renderMain();
   }
 
-  document.getElementById('clearFilter').addEventListener('click', () => {
-    filter.industry = null; filter.fn = null; filter.tech = null;
+  // ---------- View switching + hash routing ----------
+  function setView(view, pushHash = true) {
+    if (view !== 'catalog' && view !== 'all') view = 'catalog';
+    state.view = view;
+    // When switching to All Agents, industry/fn filters are not meaningful — clear them.
+    if (view === 'all') { state.filter.industry = null; state.filter.fn = null; }
+    if (pushHash) {
+      const target = view === 'all' ? '#all-agents' : '#agents';
+      if (location.hash !== target) history.replaceState(null, '', target);
+    }
     renderAll();
+  }
+
+  document.getElementById('appNav').addEventListener('click', e => {
+    const btn = e.target.closest('.app-nav-item');
+    if (!btn) return;
+    setView(btn.dataset.view);
+  });
+
+  document.getElementById('clearFilter').addEventListener('click', () => {
+    state.filter.industry = null; state.filter.fn = null; state.filter.tech = null;
+    renderAll();
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#all-agents') setView('all', false);
+    else if (location.hash === '#agents') setView('catalog', false);
   });
 
   function escapeHtml(s) {
@@ -657,6 +772,8 @@
   function escapeAttr(s) { return escapeHtml(s); }
 
   document.getElementById('footYear').textContent = new Date().getFullYear();
+  // Honor initial hash so deep-links work
+  if (location.hash === '#all-agents') state.view = 'all';
   renderAll();
 </script>
 
