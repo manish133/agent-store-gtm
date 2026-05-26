@@ -6,24 +6,24 @@
 <title>QSR CEO Decision Simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
-  --bg: #0a0e1a;
-  --bg-card: #111826;
-  --bg-card-2: #1a2335;
-  --border: #243049;
-  --border-soft: #1a2335;
-  --text: #e8ecf5;
-  --text-dim: #8b95a8;
-  --text-mute: #5a6378;
-  --accent: #facc15;     /* gold */
-  --accent-2: #f59e0b;
-  --green: #22c55e;
-  --red: #ef4444;
+  --bg: #F6F7F9;
+  --bg-card: #FFFFFF;
+  --bg-card-2: #FBE9EC;       /* red-soft, used for elevated/active surfaces */
+  --border: #E6E6EB;
+  --border-soft: #F0F0F4;
+  --text: #1F1F23;            /* ink */
+  --text-dim: #6b6b73;        /* muted */
+  --text-mute: #9a9aa3;
+  --accent: #C8102E;          /* Agent Store red */
+  --accent-2: #8B0E26;        /* red-dark */
+  --green: #1F9D55;
+  --red: #C8102E;
   --blue: #3b82f6;
   --purple: #a855f7;
   --orange: #f97316;
@@ -36,7 +36,7 @@
 html, body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   min-height: 100vh;
@@ -45,15 +45,15 @@ html, body {
 
 body {
   background:
-    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(250,204,21,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 1000px 800px at 90% 100%, rgba(59,130,246,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(200,16,46,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 800px at 90% 100%, rgba(200,16,46,0.025) 0%, transparent 60%),
     var(--bg);
 }
 
 /* ============ HEADER ============ */
 .header {
   border-bottom: 1px solid var(--border);
-  background: rgba(10,14,26,0.85);
+  background: rgba(255,255,255,0.92);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -73,14 +73,14 @@ body {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
   border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Fraunces', serif;
-  font-weight: 900;
-  color: #0a0e1a;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 700;
+  color: #fff;
   font-size: 20px;
-  box-shadow: 0 4px 20px rgba(250,204,21,0.25);
+  box-shadow: 0 4px 20px rgba(200,16,46,0.25);
 }
 .brand-text h1 {
-  font-family: 'Fraunces', serif;
+  font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 700;
   font-size: 18px;
   letter-spacing: -0.01em;
@@ -128,7 +128,7 @@ body {
 .btn:hover { border-color: var(--accent); background: var(--bg-card-2); }
 .btn-primary {
   background: var(--accent);
-  color: #0a0e1a;
+  color: #fff;
   border-color: var(--accent);
 }
 .btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
@@ -188,7 +188,7 @@ body {
   overflow: hidden;
 }
 .panel h2 {
-  font-family: 'Fraunces', serif;
+  font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 700;
   font-size: 16px;
   margin-bottom: 4px;
@@ -236,7 +236,7 @@ body {
   font-size: 12px;
   font-weight: 700;
   color: var(--accent);
-  background: rgba(250,204,21,0.08);
+  background: rgba(200,16,46,0.08);
   padding: 2px 7px;
   border-radius: 4px;
 }
@@ -339,7 +339,7 @@ input[type="range"]::-moz-range-thumb {
   margin-bottom: 6px;
 }
 .kpi-value {
-  font-family: 'Fraunces', serif;
+  font-family: 'Source Serif 4', Georgia, serif;
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -390,7 +390,7 @@ input[type="range"]::-moz-range-thumb {
 .kg-node:hover { filter: brightness(1.15); }
 .kg-node-text {
   pointer-events: none;
-  font-family: 'Inter Tight', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   fill: white;
   font-size: 9px;
@@ -479,9 +479,9 @@ input[type="range"]::-moz-range-thumb {
   transition: all 0.15s;
 }
 .scenario-card:hover { border-color: var(--accent); }
-.scenario-card.active { border-color: var(--accent); background: rgba(250,204,21,0.05); }
+.scenario-card.active { border-color: var(--accent); background: rgba(200,16,46,0.05); }
 .scenario-card .sc-name {
-  font-family: 'Fraunces', serif;
+  font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 3px;
@@ -614,7 +614,7 @@ input[type="range"]::-moz-range-thumb {
   max-width: 90vw;
 }
 .modal h3 {
-  font-family: 'Fraunces', serif;
+  font-family: 'Source Serif 4', Georgia, serif;
   font-size: 18px;
   margin-bottom: 14px;
 }
@@ -701,7 +701,7 @@ input[type="range"]::-moz-range-thumb {
   border-bottom: 1px solid var(--border-soft);
   vertical-align: middle;
 }
-.admin-table tr:hover td { background: rgba(250,204,21,0.03); }
+.admin-table tr:hover td { background: rgba(200,16,46,0.03); }
 .admin-table .node-pill {
   display: inline-block;
   padding: 2px 8px;
@@ -715,9 +715,9 @@ input[type="range"]::-moz-range-thumb {
 .admin-table .pill-kpi { background: rgba(59,130,246,0.15); color: #3b82f6; }
 .admin-table .pill-driver { background: rgba(168,85,247,0.15); color: #a855f7; }
 .admin-table .pill-op { background: rgba(249,115,22,0.15); color: #f97316; }
-.admin-table .pill-lever { background: rgba(250,204,21,0.15); color: #facc15; }
+.admin-table .pill-lever { background: rgba(200,16,46,0.15); color: #facc15; }
 .admin-table .pill-live { background: rgba(34,197,94,0.15); color: #22c55e; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
-.admin-table .pill-doc { background: rgba(139,149,168,0.12); color: #8b95a8; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
+.admin-table .pill-doc { background: rgba(107,107,115,0.12); color: #6b6b73; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
 .admin-input, .admin-table input, .admin-table select {
   width: 100%;
   background: var(--bg-card);
@@ -790,7 +790,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .coef-row input.modified {
   border-color: var(--accent);
-  background: rgba(250,204,21,0.08);
+  background: rgba(200,16,46,0.08);
 }
 
 /* ============ DIAGNOSTICS TAB ============ */
@@ -821,7 +821,7 @@ input[type="range"]::-moz-range-thumb {
   font-family: 'JetBrains Mono', monospace;
   text-align: right;
 }
-.diag-table tr:hover td { background: rgba(250,204,21,0.02); }
+.diag-table tr:hover td { background: rgba(200,16,46,0.02); }
 .diag-table .sign-match {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
@@ -865,7 +865,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .real-finding .rf-content { flex: 1; }
 .real-finding .rf-title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 700;
   font-size: 14px;
   margin-bottom: 2px;
@@ -1122,7 +1122,7 @@ input[type="range"]::-moz-range-thumb {
 <div class="tab-content" id="tab-kg">
   <div class="kg-tab-content">
     <div class="kg-full">
-      <h2 style="font-family:'Fraunces',serif; font-weight:700; font-size:20px; margin-bottom:4px;">Enterprise Knowledge Graph</h2>
+      <h2 style="font-family:'Source Serif 4',Georgia,serif; font-weight:700; font-size:20px; margin-bottom:4px;">Enterprise Knowledge Graph</h2>
       <div class="panel-sub">Click a node to highlight its causal influence path · Edge thickness = sensitivity strength</div>
       <svg id="kg-svg" viewBox="0 0 1200 700"></svg>
       <div style="margin-top: 18px; display: flex; gap: 24px; flex-wrap: wrap; font-size: 11px; color: var(--text-dim);">
@@ -1235,19 +1235,19 @@ input[type="range"]::-moz-range-thumb {
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px;">
       <div class="panel" style="text-align: center; padding: 16px;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Hypotheses Tested</div>
-        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;">25</div>
+        <div style="font-family:'Source Serif 4',Georgia,serif;font-size:32px;font-weight:700;line-height:1;">25</div>
       </div>
       <div class="panel" style="text-align: center; padding: 16px;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Fit-able from Data</div>
-        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;color:var(--green);">0</div>
+        <div style="font-family:'Source Serif 4',Georgia,serif;font-size:32px;font-weight:700;line-height:1;color:var(--green);">0</div>
       </div>
       <div class="panel" style="text-align: center; padding: 16px;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Statistical Noise</div>
-        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;color:var(--red);">25</div>
+        <div style="font-family:'Source Serif 4',Georgia,serif;font-size:32px;font-weight:700;line-height:1;color:var(--red);">25</div>
       </div>
       <div class="panel" style="text-align: center; padding: 16px;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Real Patterns Found</div>
-        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;color:var(--accent);">2</div>
+        <div style="font-family:'Source Serif 4',Georgia,serif;font-size:32px;font-weight:700;line-height:1;color:var(--accent);">2</div>
       </div>
     </div>
 
@@ -1309,7 +1309,7 @@ input[type="range"]::-moz-range-thumb {
         </div>
       </div>
       <div class="panel-sub">Edit the Knowledge Graph structure and simulator coefficients. Changes flow through every tab.</div>
-      <div style="background: rgba(250,204,21,0.06); border-left: 3px solid var(--accent); padding: 10px 14px; margin-top: 12px; border-radius: 4px; font-size: 12px; color: var(--text-dim);">
+      <div style="background: rgba(200,16,46,0.06); border-left: 3px solid var(--accent); padding: 10px 14px; margin-top: 12px; border-radius: 4px; font-size: 12px; color: var(--text-dim);">
         <b style="color: var(--accent);">How this works:</b> Edge weights for lever→outcome paths drive the simulator directly. Coefficients handle non-linear effects (thresholds, capacity, externalities). All changes persist to localStorage.
       </div>
     </div>
@@ -1984,20 +1984,20 @@ let charts = {};
 const chartDefaults = {
   responsive: true, maintainAspectRatio: false,
   plugins: {
-    legend: { labels: { color: '#8b95a8', font: {family: 'Inter Tight', size: 11}, boxWidth: 10, boxHeight: 10 } },
+    legend: { labels: { color: '#6b6b73', font: {family: 'Inter', size: 11}, boxWidth: 10, boxHeight: 10 } },
     tooltip: {
-      backgroundColor: '#1a2335',
-      borderColor: '#243049', borderWidth: 1,
-      titleColor: '#e8ecf5', bodyColor: '#e8ecf5',
-      titleFont: {family: 'Inter Tight', size: 12, weight: '600'},
+      backgroundColor: '#1F1F23',
+      borderColor: '#E6E6EB', borderWidth: 1,
+      titleColor: '#ffffff', bodyColor: '#ffffff',
+      titleFont: {family: 'Inter', size: 12, weight: '600'},
       bodyFont: {family: 'JetBrains Mono', size: 11}
     }
   },
   scales: {
-    x: { ticks: { color: '#8b95a8', font: {family: 'JetBrains Mono', size: 10} },
-         grid: { color: '#1a2335' } },
-    y: { ticks: { color: '#8b95a8', font: {family: 'JetBrains Mono', size: 10} },
-         grid: { color: '#1a2335' } }
+    x: { ticks: { color: '#6b6b73', font: {family: 'JetBrains Mono', size: 10} },
+         grid: { color: '#F0F0F4' } },
+    y: { ticks: { color: '#6b6b73', font: {family: 'JetBrains Mono', size: 10} },
+         grid: { color: '#F0F0F4' } }
   }
 };
 
@@ -2008,10 +2008,10 @@ function buildCharts() {
     data: {
       labels: BASELINE.months,
       datasets: [
-        { label: 'Baseline', data: BASELINE.monthly_revenue, borderColor: '#5a6378',
-          backgroundColor: 'rgba(90,99,120,0.05)', tension: 0.35, borderDash: [4,4], borderWidth: 2, pointRadius: 0 },
-        { label: 'Simulated', data: BASELINE.monthly_revenue, borderColor: '#facc15',
-          backgroundColor: 'rgba(250,204,21,0.08)', tension: 0.35, borderWidth: 2.5, pointRadius: 0, fill: true }
+        { label: 'Baseline', data: BASELINE.monthly_revenue, borderColor: '#9a9aa3',
+          backgroundColor: 'rgba(155,155,163,0.05)', tension: 0.35, borderDash: [4,4], borderWidth: 2, pointRadius: 0 },
+        { label: 'Simulated', data: BASELINE.monthly_revenue, borderColor: '#C8102E',
+          backgroundColor: 'rgba(200,16,46,0.08)', tension: 0.35, borderWidth: 2.5, pointRadius: 0, fill: true }
       ]
     },
     options: chartDefaults
@@ -2024,8 +2024,8 @@ function buildCharts() {
       labels: ['Food Cost', 'Labor', 'Other OpEx', 'Marketing', 'EBITDA'],
       datasets: [{
         data: [32.2, 11.0, 32.6, 0.7, 23.5],
-        backgroundColor: ['#f97316','#a855f7','#3b82f6','#ec4899','#22c55e'],
-        borderColor: '#111826', borderWidth: 2
+        backgroundColor: ['#f97316','#a855f7','#3b82f6','#ec4899','#1F9D55'],
+        borderColor: '#FFFFFF', borderWidth: 2
       }]
     },
     options: { ...chartDefaults, cutout: '60%', scales: {} }
@@ -2085,10 +2085,10 @@ function buildCharts() {
       ...chartDefaults,
       scales: {
         r: {
-          angleLines: { color: '#243049' },
-          grid: { color: '#1a2335' },
-          pointLabels: { color: '#e8ecf5', font: {family:'Inter Tight', size:11, weight:'600'} },
-          ticks: { display: false, color: '#5a6378' }
+          angleLines: { color: '#E6E6EB' },
+          grid: { color: '#F0F0F4' },
+          pointLabels: { color: '#1F1F23', font: {family:'Inter', size:11, weight:'600'} },
+          ticks: { display: false, color: '#9a9aa3' }
         }
       }
     }
@@ -2217,8 +2217,8 @@ function buildKG() {
       const mx = (x1+x2)/2, my = (y1+y2)/2;
       const lbl = (e.weight >= 0 ? '' : '') + (Math.abs(e.weight) < 0.01 ? '0' : e.weight.toFixed(2));
       const lblW = Math.max(28, lbl.length * 6 + 6);
-      edgeHTML += `<rect x="${mx-lblW/2}" y="${my-9}" width="${lblW}" height="14" rx="3" fill="#1a2335" stroke="#243049"/>`;
-      edgeHTML += `<text x="${mx}" y="${my+1}" text-anchor="middle" fill="#e8ecf5" font-size="10" font-family="JetBrains Mono" font-weight="700" dominant-baseline="middle">${lbl}</text>`;
+      edgeHTML += `<rect x="${mx-lblW/2}" y="${my-9}" width="${lblW}" height="14" rx="3" fill="#FFFFFF" stroke="#E6E6EB"/>`;
+      edgeHTML += `<text x="${mx}" y="${my+1}" text-anchor="middle" fill="#1F1F23" font-size="10" font-family="JetBrains Mono" font-weight="700" dominant-baseline="middle">${lbl}</text>`;
     }
   });
 
