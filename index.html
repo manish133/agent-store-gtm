@@ -66,7 +66,9 @@
   .agent-icon svg{width:24px;height:24px;color:#fff}
   .agent-tag{position:absolute;top:18px;right:18px;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:20px;background:var(--green-soft);color:var(--green)}
   .agent-name{font-family:'Source Serif 4';font-weight:700;font-size:20px;color:var(--red-dark);margin:0 0 8px;line-height:1.25}
-  .agent-desc{color:var(--muted);font-size:13.5px;margin:0 0 18px;line-height:1.55;flex-grow:1}
+  .agent-desc{color:var(--muted);font-size:13.5px;margin:0 0 14px;line-height:1.55;flex-grow:1}
+  .agent-tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}
+  .agent-tag-pill{font-size:11px;font-weight:500;color:var(--ink-2);background:var(--line-2);padding:3px 9px;border-radius:20px;line-height:1.5;white-space:nowrap}
   .agent-cta{color:var(--red);font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;margin-top:auto;transition:gap .15s}
   .agent-cta svg{width:14px;height:14px;transition:transform .15s}
 
@@ -141,6 +143,7 @@
       description: "All-in-one workspace to summarize earnings calls, compare quarters, surface KPIs, and benchmark sentiment across peers.",
       url: "ECC_All_In_One.html",
       tag: "Live",
+      tags: ["Finance", "Earnings", "Research"],
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 3v18h18"/>
               <path d="M7 14l4-4 4 4 5-6"/>
@@ -151,6 +154,7 @@
       description: "Strategic analytics workspace for QSR operators — unit economics, market share, cohort performance, and competitive positioning in one view.",
       url: "qsr_genome_platform.html",
       tag: "Live",
+      tags: ["QSR", "Strategy", "Analytics"],
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="9"/>
               <path d="M3 12h18"/>
@@ -163,6 +167,7 @@
       description: "Run what-if scenarios on pricing, menu mix, labor, and unit growth. Stress-test strategic decisions before committing capital.",
       url: "qsr_simulator.html",
       tag: "Live",
+      tags: ["QSR", "Simulation", "Decision Support"],
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16v16H4z"/>
               <path d="M4 9h16"/>
@@ -181,9 +186,15 @@
 
   function renderAgents(filter = "") {
     const q = filter.trim().toLowerCase();
-    const filtered = AGENTS.filter(a =>
-      !q || a.name.toLowerCase().includes(q) || a.description.toLowerCase().includes(q)
-    );
+    const filtered = AGENTS.filter(a => {
+      if (!q) return true;
+      const hay = [
+        a.name,
+        a.description,
+        ...(Array.isArray(a.tags) ? a.tags : [])
+      ].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
     grid.innerHTML = filtered.map(agentTile).join('');
     emptyState.style.display = filtered.length ? 'none' : 'block';
   }
@@ -191,6 +202,9 @@
   function agentTile(a) {
     const isSoon = !!a.comingSoon;
     const tagHtml = a.tag ? `<span class="agent-tag">${escapeHtml(a.tag)}</span>` : '';
+    const tagsHtml = Array.isArray(a.tags) && a.tags.length
+      ? `<div class="agent-tags">${a.tags.map(t => `<span class="agent-tag-pill">${escapeHtml(t)}</span>`).join('')}</div>`
+      : '';
     const ctaText = isSoon ? 'Coming soon' : 'Open agent';
     const arrow = isSoon ? '' : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
     const inner = `
@@ -198,6 +212,7 @@
       <div class="agent-icon">${a.icon}</div>
       <h3 class="agent-name">${escapeHtml(a.name)}</h3>
       <p class="agent-desc">${escapeHtml(a.description)}</p>
+      ${tagsHtml}
       <span class="agent-cta">${ctaText}${arrow}</span>
     `;
     if (isSoon) {
