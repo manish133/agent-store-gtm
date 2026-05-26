@@ -110,8 +110,46 @@
     .section-head h2{font-size:30px}
   }
 
-  /* ============ AGENT GRID ============ */
-  .agents{background:var(--bg)}
+  /* ============ DASHBOARD ============ */
+  .dashboard{background:var(--bg)}
+  .dash-filter-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 28px;padding:18px 22px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+  .dash-filter-label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);flex-shrink:0}
+  .dash-chips{display:flex;gap:8px;flex-wrap:wrap}
+  .dash-chip{font-size:13px;font-weight:600;color:var(--ink-2);background:#fff;border:1px solid var(--line);padding:7px 14px;border-radius:20px;cursor:pointer;transition:.15s;font-family:inherit}
+  .dash-chip:hover{border-color:var(--red);color:var(--red-dark)}
+  .dash-chip.active{background:var(--red);border-color:var(--red);color:#fff}
+  .dash-chip .count{display:inline-block;font-size:11px;font-weight:600;background:rgba(0,0,0,0.08);color:inherit;padding:1px 6px;border-radius:10px;margin-left:6px;opacity:.85}
+  .dash-chip.active .count{background:rgba(255,255,255,0.25)}
+
+  .matrix-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:32px}
+  .matrix{width:100%;border-collapse:collapse;min-width:760px;font-size:13.5px}
+  .matrix th,.matrix td{padding:0;text-align:center;border-bottom:1px solid var(--line-2);border-right:1px solid var(--line-2);background:#fff}
+  .matrix th:last-child,.matrix td:last-child{border-right:none}
+  .matrix tr:last-child td{border-bottom:none}
+  .matrix thead th{background:var(--bg);font-weight:600;color:var(--ink);padding:14px 12px;font-size:13px;text-align:center;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
+  .matrix thead th:first-child{background:var(--bg);border-right:1px solid var(--line);text-align:left;padding-left:20px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .matrix tbody th{background:#fff;text-align:left;font-weight:600;color:var(--ink);padding:14px 18px;font-size:13.5px;border-right:1px solid var(--line);position:sticky;left:0;z-index:1;white-space:nowrap}
+  .matrix tbody tr:hover th{background:var(--red-tint)}
+  .matrix-cell{padding:0;height:60px;width:14%;min-width:88px;cursor:default;position:relative;transition:background .15s}
+  .matrix-cell.filled{background:var(--red-tint);cursor:pointer}
+  .matrix-cell.filled:hover{background:var(--red-soft)}
+  .matrix-cell.filled .matrix-check{color:var(--red);font-weight:700;font-size:18px;line-height:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .matrix-cell.filled .matrix-count{font-family:'JetBrains Mono','Inter',monospace;font-size:10px;font-weight:600;color:var(--red-dark);background:#fff;border:1px solid var(--red-soft);padding:1px 6px;border-radius:10px;letter-spacing:.02em}
+  .matrix-cell.empty{color:var(--line);font-size:18px}
+  .matrix-cell.active{background:var(--red);color:#fff}
+  .matrix-cell.active .matrix-check{color:#fff}
+  .matrix-cell.active .matrix-count{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.4);color:#fff}
+  .matrix-row-label{display:flex;align-items:center;gap:9px}
+  .matrix-row-label .dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
+
+  .dash-results-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:16px;flex-wrap:wrap}
+  .dash-results-head h3{font-family:'Source Serif 4';font-weight:700;font-size:22px;color:var(--ink);margin:0;line-height:1.2}
+  .dash-results-sub{color:var(--muted);font-size:13px;margin-top:4px}
+  .dash-clear{background:#fff;border:1px solid var(--line);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:.15s}
+  .dash-clear:hover{border-color:var(--red);color:var(--red-dark)}
+  .dash-clear svg{width:13px;height:13px}
+  .dash-empty{text-align:center;color:var(--muted);font-size:14px;padding:40px 20px;background:#fff;border:1px dashed var(--line);border-radius:12px}
+
   .agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px}
   .agent-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;transition:.2s}
   .agent-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--red-soft)}
@@ -138,24 +176,6 @@
   .how-step h3{font-family:'Source Serif 4';font-weight:700;font-size:20px;margin:0 0 10px;color:var(--ink)}
   .how-step p{font-size:14px;color:var(--muted);margin:0;line-height:1.55}
   @media(max-width:760px){.how-grid{grid-template-columns:1fr}.how-grid::before{display:none}}
-
-  /* ============ INDUSTRIES ============ */
-  .industries{background:var(--bg)}
-  .ind-tabs{display:flex;justify-content:center;gap:6px;margin-bottom:36px;flex-wrap:wrap}
-  .ind-tab{padding:10px 22px;border-radius:8px;font-weight:600;font-size:14px;color:var(--ink-2);background:#fff;border:1px solid var(--line);cursor:pointer;transition:.15s;font-family:inherit}
-  .ind-tab:hover{border-color:var(--red);color:var(--red-dark)}
-  .ind-tab.active{background:var(--red);color:#fff;border-color:var(--red)}
-  .ind-panel{display:none;background:#fff;border:1px solid var(--line);border-radius:16px;padding:40px;max-width:920px;margin:0 auto;box-shadow:var(--shadow)}
-  .ind-panel.active{display:grid;grid-template-columns:1fr 1.2fr;gap:36px;align-items:center}
-  .ind-panel-icon{width:120px;height:120px;border-radius:18px;background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);display:flex;align-items:center;justify-content:center;margin:0 auto}
-  .ind-panel-icon svg{width:60px;height:60px;color:#fff}
-  .ind-panel h3{font-family:'Source Serif 4';font-weight:700;font-size:24px;color:var(--ink);margin:0 0 14px}
-  .ind-panel-uses{list-style:none;padding:0;margin:0 0 22px}
-  .ind-panel-uses li{font-size:14.5px;color:var(--ink-2);padding:7px 0;display:flex;gap:10px}
-  .ind-panel-uses li::before{content:"→";color:var(--red);font-weight:700}
-  .ind-panel a{color:var(--red);font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:5px}
-  .ind-panel a:hover{text-decoration:underline}
-  @media(max-width:680px){.ind-panel.active{grid-template-columns:1fr;text-align:center}.ind-panel-uses li{justify-content:center}.ind-panel{padding:28px}}
 
   /* ============ SECURITY ============ */
   .security{background:linear-gradient(180deg,var(--ink) 0%,#0e0e12 100%);color:#fff;padding:64px 0}
@@ -220,27 +240,7 @@
       Agent Store
     </a>
     <nav class="nav-links">
-      <div class="nav-item">
-        <button class="nav-link">Solutions
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="nav-dropdown">
-          <a href="#agents">Earnings analysis<small>Summarize calls, compare quarters</small></a>
-          <a href="#agents">Market intelligence<small>Competitive briefs and benchmarks</small></a>
-          <a href="#agents">Scenario planning<small>Stress-test strategic decisions</small></a>
-        </div>
-      </div>
-      <div class="nav-item">
-        <button class="nav-link">Industries
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="nav-dropdown">
-          <a href="#industries" data-ind="finance">Finance<small>Equity research, IR, FP&amp;A</small></a>
-          <a href="#industries" data-ind="qsr">QSR<small>Restaurants &amp; food service</small></a>
-          <a href="#industries" data-ind="retail">Retail<small>Brand &amp; category analytics</small></a>
-          <a href="#industries" data-ind="pharma">Pharma<small>Therapy-area intelligence</small></a>
-        </div>
-      </div>
+      <a class="nav-link" href="#agents">Catalog</a>
       <a class="nav-link" href="#how">How it works</a>
       <a class="nav-link" href="#security">Security</a>
     </nav>
@@ -294,15 +294,41 @@
   </div>
 </section>
 
-<!-- ============ AGENT GRID ============ -->
-<section class="agents" id="agents">
+<!-- ============ DASHBOARD ============ -->
+<section class="dashboard" id="agents">
   <div class="container">
     <div class="section-head">
-      <div class="section-eyebrow">Our agents</div>
-      <h2>Outcomes, not features</h2>
-      <p>Every agent ships with a measurable result. Pick one by the work it eliminates.</p>
+      <div class="section-eyebrow">Agent catalog</div>
+      <h2>Browse by function, industry, or technology</h2>
+      <p>Each row is an industry. Each column is a business function. Filled cells contain a live agent — click to drill in.</p>
     </div>
-    <div id="agentGrid" class="agent-grid"></div>
+
+    <!-- Tech filter chips -->
+    <div class="dash-filter-row">
+      <div class="dash-filter-label">Technology</div>
+      <div class="dash-chips" id="techChips"></div>
+    </div>
+
+    <!-- The matrix -->
+    <div class="matrix-wrap">
+      <table class="matrix" id="matrix"></table>
+    </div>
+
+    <!-- Filtered agents -->
+    <div class="dash-results">
+      <div class="dash-results-head">
+        <div>
+          <h3 id="resultsTitle">All agents</h3>
+          <div class="dash-results-sub" id="resultsSub">3 agents</div>
+        </div>
+        <button class="dash-clear" id="clearFilter" type="button" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Clear filters
+        </button>
+      </div>
+      <div id="agentGrid" class="agent-grid"></div>
+      <div id="agentEmpty" class="dash-empty" hidden>No agents match these filters yet — we're working on it.</div>
+    </div>
   </div>
 </section>
 
@@ -331,24 +357,6 @@
         <p>Your team gets answers in Slack, Teams, your BI tool, or the Agent Store UI — wherever they already work.</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ============ INDUSTRIES ============ -->
-<section class="industries" id="industries">
-  <div class="container">
-    <div class="section-head">
-      <div class="section-eyebrow">Built for your stack</div>
-      <h2>Solutions by industry</h2>
-      <p>Pre-configured workflows tailored to how your sector actually works.</p>
-    </div>
-    <div class="ind-tabs" id="indTabs">
-      <button class="ind-tab active" data-ind="finance">Finance</button>
-      <button class="ind-tab" data-ind="qsr">QSR</button>
-      <button class="ind-tab" data-ind="retail">Retail</button>
-      <button class="ind-tab" data-ind="pharma">Pharma</button>
-    </div>
-    <div id="indPanels"></div>
   </div>
 </section>
 
@@ -441,7 +449,13 @@
 </footer>
 
 <script>
+  // ---------- Taxonomy ----------
+  const FUNCTIONS  = ['Finance', 'Strategy & Research', 'Sales & Mktg', 'HR', 'Ops & Supply', 'Legal & Risk'];
+  const INDUSTRIES = ['Cross-industry', 'QSR & Restaurants', 'Banking & Financial', 'Retail & E-comm', 'Pharma & Healthcare', 'Manufacturing & CPG'];
+  const TECH       = ['Agentic AI', 'ML', 'NLP', 'CV', 'Decision Intelligence'];
+
   // ---------- Agent registry ----------
+  // To add an agent: append an object with the same fields below.
   const AGENTS = [
     {
       name: "Earnings Call Companion",
@@ -454,7 +468,9 @@
       ],
       quote: "Saved our team 200 hours last earnings season — the analysts now spend that time on thesis work.",
       attribution: "Director of Research, mid-market hedge fund",
-      tags: ["Finance", "Earnings", "Research"],
+      functions:  ["Finance", "Strategy & Research"],
+      industries: ["Cross-industry", "Banking & Financial"],
+      tech:       ["NLP", "Agentic AI"],
       url: "ECC_All_In_One.html",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 3v18h18"/>
@@ -472,7 +488,9 @@
       ],
       quote: "We retired three vendor subscriptions in the first quarter. It's now where strategy meetings start.",
       attribution: "Head of Strategy, Fortune 500 restaurant brand",
-      tags: ["QSR", "Strategy", "Analytics"],
+      functions:  ["Strategy & Research"],
+      industries: ["QSR & Restaurants"],
+      tech:       ["ML", "Agentic AI"],
       url: "qsr_genome_platform.html",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="9"/>
@@ -492,7 +510,9 @@
       ],
       quote: "Replaced a six-figure consulting engagement. Same answer, two days instead of six weeks.",
       attribution: "CFO, multi-brand QSR operator",
-      tags: ["QSR", "Simulation", "Decision Support"],
+      functions:  ["Strategy & Research", "Ops & Supply"],
+      industries: ["QSR & Restaurants"],
+      tech:       ["ML", "Decision Intelligence"],
       url: "qsr_simulator.html",
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16v16H4z"/>
@@ -504,37 +524,88 @@
     }
   ];
 
-  // ---------- Industry registry ----------
-  const INDUSTRIES = {
-    finance: {
-      title: "For finance teams",
-      uses: ["Earnings season prep & call summaries", "Competitive intelligence briefs", "Risk committee & IC summaries", "Peer benchmarking on demand"],
-      cta: "See agents in action",
-      icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>`
-    },
-    qsr: {
-      title: "For QSR & restaurant operators",
-      uses: ["Unit economics & cohort performance", "Market share & white-space analysis", "Pricing & menu mix simulation", "Field reporting & store-level diagnostics"],
-      cta: "See agents in action",
-      icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>`
-    },
-    retail: {
-      title: "For retail & brand teams",
-      uses: ["Category share & SKU performance", "Promotional ROI modeling", "Consumer sentiment from reviews", "Competitive shelf & assortment analysis"],
-      cta: "See agents in action",
-      icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M3 9v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9"/><path d="M8 13h8"/></svg>`
-    },
-    pharma: {
-      title: "For pharma & life sciences",
-      uses: ["Therapy-area competitive intel", "KOL &amp; trial landscape monitoring", "Earnings &amp; pipeline read-throughs", "Payer policy summaries"],
-      cta: "See agents in action",
-      icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5L4 14a4.95 4.95 0 0 1 7-7l6.5 6.5a4.95 4.95 0 0 1-7 7z"/><path d="M8.5 8.5l7 7"/></svg>`
-    }
-  };
+  // ---------- Filter state ----------
+  const filter = { industry: null, fn: null, tech: null };
 
-  // ---------- Render agents ----------
+  function agentMatches(a, f) {
+    if (f.industry && !a.industries.includes(f.industry)) return false;
+    if (f.fn       && !a.functions.includes(f.fn))        return false;
+    if (f.tech     && !a.tech.includes(f.tech))           return false;
+    return true;
+  }
+
+  // ---------- Render tech chips ----------
+  function renderTechChips() {
+    const wrap = document.getElementById('techChips');
+    const allCount = AGENTS.length;
+    const html = [
+      `<button class="dash-chip ${filter.tech === null ? 'active' : ''}" data-tech="">All<span class="count">${allCount}</span></button>`,
+      ...TECH.map(t => {
+        const n = AGENTS.filter(a => a.tech.includes(t)).length;
+        if (n === 0) return '';
+        return `<button class="dash-chip ${filter.tech === t ? 'active' : ''}" data-tech="${escapeAttr(t)}">${escapeHtml(t)}<span class="count">${n}</span></button>`;
+      })
+    ].filter(Boolean).join('');
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('.dash-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const t = chip.dataset.tech;
+        filter.tech = t === '' ? null : t;
+        renderAll();
+      });
+    });
+  }
+
+  // ---------- Render matrix ----------
+  function renderMatrix() {
+    const m = document.getElementById('matrix');
+    // Pre-filter by tech only (industry/fn axes are the matrix dimensions themselves)
+    const pool = AGENTS.filter(a => !filter.tech || a.tech.includes(filter.tech));
+
+    let html = '<thead><tr><th>Industry \\ Function</th>';
+    for (const fn of FUNCTIONS) {
+      html += `<th>${escapeHtml(fn)}</th>`;
+    }
+    html += '</tr></thead><tbody>';
+
+    for (const ind of INDUSTRIES) {
+      html += `<tr><th><span class="matrix-row-label"><span class="dot"></span>${escapeHtml(ind)}</span></th>`;
+      for (const fn of FUNCTIONS) {
+        const agents = pool.filter(a => a.industries.includes(ind) && a.functions.includes(fn));
+        const isActive = filter.industry === ind && filter.fn === fn;
+        if (agents.length) {
+          html += `<td class="matrix-cell filled ${isActive ? 'active' : ''}" data-ind="${escapeAttr(ind)}" data-fn="${escapeAttr(fn)}">
+            <div class="matrix-check">✓<span class="matrix-count">${agents.length} agent${agents.length>1?'s':''}</span></div>
+          </td>`;
+        } else {
+          html += `<td class="matrix-cell empty">—</td>`;
+        }
+      }
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    m.innerHTML = html;
+
+    m.querySelectorAll('.matrix-cell.filled').forEach(cell => {
+      cell.addEventListener('click', () => {
+        const ind = cell.dataset.ind, fn = cell.dataset.fn;
+        if (filter.industry === ind && filter.fn === fn) {
+          filter.industry = null; filter.fn = null; // toggle off
+        } else {
+          filter.industry = ind; filter.fn = fn;
+        }
+        renderAll();
+      });
+    });
+  }
+
+  // ---------- Render agent cards ----------
   function renderAgents() {
-    document.getElementById('agentGrid').innerHTML = AGENTS.map(a => `
+    const grid = document.getElementById('agentGrid');
+    const empty = document.getElementById('agentEmpty');
+    const list = AGENTS.filter(a => agentMatches(a, filter));
+
+    grid.innerHTML = list.map(a => `
       <article class="agent-card">
         <span class="agent-audience">${escapeHtml(a.audience)}</span>
         <div class="agent-icon">${a.icon}</div>
@@ -545,61 +616,48 @@
         </ul>
         <blockquote class="agent-quote">"${escapeHtml(a.quote)}"<cite>— ${escapeHtml(a.attribution)}</cite></blockquote>
         <div class="agent-tags">
-          ${a.tags.map(t => `<span class="agent-tag">${escapeHtml(t)}</span>`).join('')}
+          ${[...a.functions.slice(0,1), ...a.industries.slice(0,1), ...a.tech.slice(0,1)].map(t => `<span class="agent-tag">${escapeHtml(t)}</span>`).join('')}
         </div>
         <div class="agent-actions">
           <a class="btn btn-primary" href="${encodeURI(a.url)}" target="_blank" rel="noopener noreferrer">See it in action</a>
         </div>
       </article>
     `).join('');
+
+    grid.hidden = list.length === 0;
+    empty.hidden = list.length !== 0;
+
+    // Results header
+    const parts = [];
+    if (filter.industry) parts.push(filter.industry);
+    if (filter.fn)       parts.push(filter.fn);
+    if (filter.tech)     parts.push(filter.tech);
+    document.getElementById('resultsTitle').textContent = parts.length ? parts.join(' · ') : 'All agents';
+    document.getElementById('resultsSub').textContent =
+      `${list.length} agent${list.length === 1 ? '' : 's'}` + (parts.length ? ' matching' : '');
+    document.getElementById('clearFilter').hidden = !parts.length;
   }
 
-  // ---------- Render industries ----------
-  function renderIndustries() {
-    const panels = document.getElementById('indPanels');
-    panels.innerHTML = Object.entries(INDUSTRIES).map(([key, ind], i) => `
-      <div class="ind-panel ${i === 0 ? 'active' : ''}" data-ind="${key}">
-        <div class="ind-panel-icon">${ind.icon}</div>
-        <div>
-          <h3>${escapeHtml(ind.title)}</h3>
-          <ul class="ind-panel-uses">
-            ${ind.uses.map(u => `<li>${u}</li>`).join('')}
-          </ul>
-          <a href="#agents">${escapeHtml(ind.cta)} →</a>
-        </div>
-      </div>
-    `).join('');
-
-    document.querySelectorAll('.ind-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        const key = tab.dataset.ind;
-        document.querySelectorAll('.ind-tab').forEach(t => t.classList.toggle('active', t === tab));
-        document.querySelectorAll('.ind-panel').forEach(p => p.classList.toggle('active', p.dataset.ind === key));
-      });
-    });
-
-    // Industry dropdown links from nav
-    document.querySelectorAll('.nav-dropdown a[data-ind]').forEach(link => {
-      link.addEventListener('click', e => {
-        const key = link.dataset.ind;
-        if (!key) return;
-        setTimeout(() => {
-          const tab = document.querySelector(`.ind-tab[data-ind="${key}"]`);
-          if (tab) tab.click();
-        }, 100);
-      });
-    });
+  function renderAll() {
+    renderTechChips();
+    renderMatrix();
+    renderAgents();
   }
+
+  document.getElementById('clearFilter').addEventListener('click', () => {
+    filter.industry = null; filter.fn = null; filter.tech = null;
+    renderAll();
+  });
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[c]));
   }
+  function escapeAttr(s) { return escapeHtml(s); }
 
   document.getElementById('footYear').textContent = new Date().getFullYear();
-  renderAgents();
-  renderIndustries();
+  renderAll();
 </script>
 
 </body>
