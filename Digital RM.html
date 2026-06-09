@@ -19,12 +19,12 @@
   --ink:#0d1b2e;
   --ink-2:#475569;
   --ink-3:#7a8aa0;
-  --blue:#2f6bcc;
-  --blue-2:#4a86d4;
-  --blue-soft:#e5eef9;
-  --blue-soft-border:#c6d8ee;
-  --blue-glow:rgba(47,107,204,.10);
-  --cyan:#0891a9;
+  --blue:#C8102E;
+  --blue-2:#8B0E26;
+  --blue-soft:#FBE9EC;
+  --blue-soft-border:#F2CDD3;
+  --blue-glow:rgba(200,16,46,.10);
+  --cyan:#8B0E26;
   --green:#16a34a;
   --green-soft:#dcfce7;
   --green-border:#86efac;
@@ -51,7 +51,7 @@ html,body{height:100%}
 body{
   font-family:var(--sans);
   background:
-    radial-gradient(1200px 600px at 78% -8%,rgba(47,107,204,.07),transparent 60%),
+    radial-gradient(1200px 600px at 78% -8%,rgba(200,16,46,.07),transparent 60%),
     radial-gradient(900px 500px at -5% 100%,rgba(8,145,169,.04),transparent 55%),
     var(--bg);
   color:var(--ink);
@@ -97,7 +97,7 @@ body{
 .nav-item .badge{margin-left:auto;background:var(--blue);color:#ffffff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center}
 .nav-item .badge.red{background:var(--red);color:#fff}
 .side-foot{padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}
-.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3a6db5,#5d8ed1);display:grid;place-items:center;font-weight:600;font-size:12px;color:#fff;flex-shrink:0}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#8B0E26,#E0445A);display:grid;place-items:center;font-weight:600;font-size:12px;color:#fff;flex-shrink:0}
 .side-foot .nm{font-size:12.5px;font-weight:600}
 .side-foot .rl{font-size:10.5px;color:var(--ink-3)}
 
@@ -148,7 +148,7 @@ body{
 
 .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:9px;font-family:var(--sans);font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid var(--line-2);background:var(--panel-2);color:var(--ink);transition:.15s}
 .btn:hover{background:var(--panel-3);border-color:var(--line-2)}
-.btn.primary{background:linear-gradient(135deg,var(--blue),#3f76c0);border-color:transparent;color:#fff;box-shadow:0 6px 18px var(--blue-glow)}
+.btn.primary{background:linear-gradient(135deg,var(--blue),#8B0E26);border-color:transparent;color:#fff;box-shadow:0 6px 18px var(--blue-glow)}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{background:transparent}
 .btn.sm{padding:6px 11px;font-size:11.5px}
@@ -162,7 +162,7 @@ body{
 
 /* AI card accent */
 .ai-card{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--blue-soft),var(--panel));border:1px solid var(--blue-soft-border)}
-.ai-card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 140px at 100% 0,rgba(47,107,204,.10),transparent 70%);pointer-events:none}
+.ai-card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 140px at 100% 0,rgba(200,16,46,.10),transparent 70%);pointer-events:none}
 .ai-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 9px;border-radius:20px;border:1px solid var(--blue-soft-border)}
 .ai-badge .spark{width:11px;height:11px}
 
@@ -584,7 +584,7 @@ const COMPANIES = [
 
   /* ============================ BHARAT FORGE ============================ */
   {
-    id:"CIF-77103", name:"Bharat Forge Ltd", short:"Bharat Forge", logo:"BF", color:"#4a86d4",
+    id:"CIF-77103", name:"Bharat Forge Ltd", short:"Bharat Forge", logo:"BF", color:"#8B0E26",
     sector:"Auto Components · Forging & Defence", group:"Kalyani Group", rating:"AA-", relYrs:11,
     fin:{ revenue:"₹16,812 Cr", revenueFY:"FY26 (+11% YoY)", ebitda:"₹2,921 Cr (17.4%)", pat:"₹1,079 Cr (+15%)",
           netWorth:"—", netCash:"Net debt ₹2,150 Cr", deRatio:"0.6x", rocE:"—" },
@@ -892,7 +892,7 @@ const COMPANIES = [
 
   /* ============================ JSW STEEL ============================ */
   {
-    id:"CIF-71290", name:"JSW Steel Ltd", short:"JSW Steel", logo:"JS", color:"#4a86d4",
+    id:"CIF-71290", name:"JSW Steel Ltd", short:"JSW Steel", logo:"JS", color:"#8B0E26",
     sector:"Metals · Steel", group:"JSW Group", rating:"AA", relYrs:10,
     fin:{ revenue:"₹1,80,000 Cr+", revenueFY:"FY26", ebitda:"₹8,634 Cr (Q4)", pat:"—",
           netWorth:"—", netCash:"Net debt ₹53,870 Cr", deRatio:"—", rocE:"—" },
@@ -1557,7 +1557,7 @@ function corpTabBody(tab){
       <div class="card" style="flex:1.4"><div class="card-h"><h3>Internal RM Notes</h3><div class="spacer"></div><span class="sub">Last edited by A. Rao</span></div>
         <div class="card-pad"><div class="note-card" style="border-left:3px solid var(--blue)">${c.notes}</div></div></div>
       <div class="card" style="flex:1"><div class="card-h"><h3>Key Contacts</h3></div><div class="card-pad col" style="gap:10px">
-        ${c.contacts.map(ct=>`<div style="display:flex;gap:11px;align-items:center"><div class="avatar" style="background:linear-gradient(135deg,#3a6db5,#5d8ed1)">${ct.n.split(' ').map(x=>x[0]).join('')}</div><div><div style="font-weight:600;font-size:13px">${ct.n}</div><div style="font-size:11.5px;color:var(--ink-3)">${ct.r}${ct.e==='primary'?' · Primary':''}</div></div></div>`).join('')}
+        ${c.contacts.map(ct=>`<div style="display:flex;gap:11px;align-items:center"><div class="avatar" style="background:linear-gradient(135deg,#8B0E26,#E0445A)">${ct.n.split(' ').map(x=>x[0]).join('')}</div><div><div style="font-weight:600;font-size:13px">${ct.n}</div><div style="font-size:11.5px;color:var(--ink-3)">${ct.r}${ct.e==='primary'?' · Primary':''}</div></div></div>`).join('')}
       </div></div>
     </div>`;
 }

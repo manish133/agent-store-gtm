@@ -8,6 +8,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+<script>
+  // ---------- Auth gate ----------
+  // Require sign-in before the catalog. Runs before render to avoid a content flash.
+  (function () {
+    var AUTH_KEY = 'agentStoreAuth';
+    if (sessionStorage.getItem(AUTH_KEY) !== 'true') {
+      location.replace('login.html');
+    }
+  })();
+</script>
 <style>
   :root{
     --red:#C8102E;
@@ -231,7 +241,7 @@
       <a class="nav-link" href="#security">Security</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-ghost" href="#">Sign in</a>
+      <a class="btn btn-ghost" id="signOut" href="#">Sign out</a>
       <a class="btn btn-primary" href="#agents">See in Action</a>
     </div>
   </div>
@@ -775,6 +785,16 @@
     }[c]));
   }
   function escapeAttr(s) { return escapeHtml(s); }
+
+  // ---------- Sign out ----------
+  document.getElementById('signOut').addEventListener('click', e => {
+    e.preventDefault();
+    ['agentStoreAuth', 'agentStoreEmail'].forEach(k => {
+      sessionStorage.removeItem(k);
+      localStorage.removeItem(k);
+    });
+    location.replace('login.html');
+  });
 
   document.getElementById('footYear').textContent = new Date().getFullYear();
   // Honor initial hash so deep-links work
