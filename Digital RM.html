@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian — RM Assistant Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f8fc;
+  --bg-2:#eef3fa;
+  --panel:#ffffff;
+  --panel-2:#f7fafd;
+  --panel-3:#eaf1fa;
+  --line:#e3e9f1;
+  --line-2:#cdd8e7;
+  --ink:#0d1b2e;
+  --ink-2:#475569;
+  --ink-3:#7a8aa0;
+  --blue:#2f6bcc;
+  --blue-2:#4a86d4;
+  --blue-soft:#e5eef9;
+  --blue-soft-border:#c6d8ee;
+  --blue-glow:rgba(47,107,204,.10);
+  --cyan:#0891a9;
+  --green:#16a34a;
+  --green-soft:#dcfce7;
+  --green-border:#86efac;
+
+  --amber:#b8860b;
+  --amber-soft:#fef3c7;
+  --amber-border:#fcd34d;
+  --red:#c2453f;
+  --red-soft:#fee2e2;
+  --red-border:#fca5a5;
+  --violet:#6b5cb8;
+  --violet-soft:#ede9fe;
+  --violet-border:#c4b5fd;
+  --radius:14px;
+  --radius-sm:9px;
+  --shadow:0 1px 2px rgba(13,27,46,.04),0 6px 18px rgba(13,27,46,.06);
+  --shadow-lg:0 22px 56px rgba(13,27,46,.14);
+  --sans:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --serif:'Fraunces',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--sans);
+  background:
+    radial-gradient(1200px 600px at 78% -8%,rgba(47,107,204,.07),transparent 60%),
+    radial-gradient(900px 500px at -5% 100%,rgba(8,145,169,.04),transparent 55%),
+    var(--bg);
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:var(--line-2)}
+
+/* ---------- App shell ---------- */
+.app{display:grid;grid-template-columns:248px 1fr;height:100vh}
+
+/* Sidebar */
+.side{
+  background:linear-gradient(180deg,var(--bg-2),var(--bg));
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;
+  padding:18px 14px;gap:4px;overflow-y:auto;
+}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 8px 16px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.brand .logo{
+  width:34px;height:34px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(140deg,var(--blue),var(--cyan));
+  display:grid;place-items:center;font-weight:700;color:#ffffff;
+  font-family:var(--serif);font-size:19px;box-shadow:0 6px 18px var(--blue-glow);
+}
+.brand .bn{font-family:var(--serif);font-size:18px;font-weight:600;letter-spacing:.2px}
+.brand .bt{font-size:10.5px;color:var(--ink-3);letter-spacing:.8px;text-transform:uppercase;margin-top:1px}
+.nav-group{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-3);padding:14px 10px 6px;font-weight:600}
+.nav-item{
+  display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;
+  color:var(--ink-2);cursor:pointer;font-size:13px;font-weight:500;
+  transition:all .15s;border:1px solid transparent;position:relative;
+}
+.nav-item:hover{background:var(--panel);color:var(--ink)}
+.nav-item.active{background:var(--blue-soft);color:var(--blue);border-color:var(--line-2)}
+.nav-item.active::before{content:"";position:absolute;left:-14px;top:8px;bottom:8px;width:3px;background:var(--blue-2);border-radius:0 3px 3px 0}
+.nav-item .ic{width:17px;height:17px;flex-shrink:0;opacity:.85}
+.nav-item .badge{margin-left:auto;background:var(--blue);color:#ffffff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center}
+.nav-item .badge.red{background:var(--red);color:#fff}
+.side-foot{padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3a6db5,#5d8ed1);display:grid;place-items:center;font-weight:600;font-size:12px;color:#fff;flex-shrink:0}
+.side-foot .nm{font-size:12.5px;font-weight:600}
+.side-foot .rl{font-size:10.5px;color:var(--ink-3)}
+
+/* Main */
+.main{overflow-y:auto;height:100vh;position:relative}
+.topbar{
+  position:sticky;top:0;z-index:30;
+  background:rgba(255,255,255,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  padding:14px 30px;display:flex;align-items:center;gap:18px;
+}
+.topbar h1{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:.2px}
+.topbar .crumb{font-size:11.5px;color:var(--ink-3);margin-top:1px}
+.topbar .spacer{flex:1}
+.search{
+  display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);
+  padding:8px 13px;border-radius:9px;width:280px;color:var(--ink-3);font-size:12.5px;
+}
+.search input{background:none;border:none;color:var(--ink);outline:none;flex:1;font-family:var(--sans);font-size:13px}
+.icon-btn{width:36px;height:36px;border-radius:9px;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;color:var(--ink-2);position:relative;transition:.15s}
+.icon-btn:hover{background:var(--panel-2);color:var(--ink)}
+.icon-btn .dot{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--red);border:2px solid var(--bg)}
+.page{padding:26px 30px 70px;animation:fade .4s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Generic */
+.row{display:flex;gap:18px}
+.col{display:flex;flex-direction:column;gap:18px}
+.grid{display:grid;gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-pad{padding:20px}
+.card-h{display:flex;align-items:center;gap:11px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.card-h h3{font-size:14px;font-weight:600;letter-spacing:.1px}
+.card-h .sub{font-size:11.5px;color:var(--ink-3)}
+.card-h .spacer{flex:1}
+.eyebrow{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue-2);font-weight:600;display:flex;align-items:center;gap:7px}
+.section-title{font-family:var(--serif);font-size:23px;font-weight:600;margin:2px 0 3px}
+.section-sub{color:var(--ink-2);font-size:13px;max-width:640px}
+
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:30px;border:1px solid var(--line-2);color:var(--ink-2);background:var(--panel-2)}
+.tag.blue{background:var(--blue-soft);color:var(--blue);border-color:var(--blue-soft-border)}
+.tag.green{background:var(--green-soft);color:#15803d;border-color:var(--green-border)}
+.tag.amber{background:var(--amber-soft);color:#92400e;border-color:var(--amber-border)}
+.tag.red{background:var(--red-soft);color:#991b1b;border-color:var(--red-border)}
+.tag.violet{background:var(--violet-soft);color:#5b21b6;border-color:var(--violet-border)}
+.tag .pulse{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:9px;font-family:var(--sans);font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid var(--line-2);background:var(--panel-2);color:var(--ink);transition:.15s}
+.btn:hover{background:var(--panel-3);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(135deg,var(--blue),#3f76c0);border-color:transparent;color:#fff;box-shadow:0 6px 18px var(--blue-glow)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:6px 11px;font-size:11.5px}
+.btn .ic{width:15px;height:15px}
+
+.kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-3)}
+.kv .v{font-weight:600;color:var(--ink)}
+.mono{font-family:var(--mono)}
+
+/* AI card accent */
+.ai-card{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--blue-soft),var(--panel));border:1px solid var(--blue-soft-border)}
+.ai-card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 140px at 100% 0,rgba(47,107,204,.10),transparent 70%);pointer-events:none}
+.ai-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 9px;border-radius:20px;border:1px solid var(--blue-soft-border)}
+.ai-badge .spark{width:11px;height:11px}
+
+.spark-ring{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--blue-soft);border:1px solid var(--blue-soft-border)}
+
+/* meter */
+.meter{height:6px;border-radius:6px;background:var(--panel-3);overflow:hidden}
+.meter>span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:11px 14px;border-bottom:1px solid var(--line)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:.12s;cursor:pointer}
+tbody tr:hover{background:var(--panel-2)}
+
+/* hidden views */
+.view{display:none}
+.view.active{display:block}
+
+/* stat */
+.stat{padding:18px 20px}
+.stat .lbl{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.stat .num{font-family:var(--serif);font-size:30px;font-weight:600;margin:5px 0 2px;line-height:1}
+.stat .delta{font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:4px}
+.delta.up{color:var(--green)}.delta.down{color:var(--red)}
+
+/* timeline */
+.tl{position:relative;padding-left:26px}
+.tl::before{content:"";position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:var(--line-2)}
+.tl-item{position:relative;padding:0 0 18px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:"";position:absolute;left:-23px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--panel);border:2px solid var(--blue);box-shadow:0 0 0 3px var(--bg)}
+.tl-item.done::before{background:var(--blue)}
+.tl-item .tt{font-size:13px;font-weight:600}
+.tl-item .td{font-size:11.5px;color:var(--ink-3);margin-top:1px}
+
+/* meeting row */
+.mtg{display:flex;gap:14px;padding:14px;border:1px solid var(--line);border-radius:11px;background:var(--panel-2);cursor:pointer;transition:.15s}
+
+.mtg:hover{border-color:var(--blue-soft-border);transform:translateX(2px)}
+.mtg .time{text-align:center;flex-shrink:0;width:58px}
+.mtg .time .hr{font-family:var(--serif);font-size:17px;font-weight:600}
+.mtg .time .ap{font-size:10px;color:var(--ink-3)}
+.mtg .body{flex:1;min-width:0}
+.mtg .body .cn{font-size:14px;font-weight:600}
+.mtg .body .cd{font-size:12px;color:var(--ink-3);margin-top:2px}
+
+/* nudge */
+.nudge{display:flex;gap:13px;padding:15px;border-radius:11px;border:1px solid var(--blue-soft-border);background:linear-gradient(120deg,var(--panel-2),var(--panel));position:relative;overflow:hidden}
+.nudge::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--blue),var(--cyan))}
+.nudge .ni{width:34px;height:34px;border-radius:9px;background:var(--blue-soft);display:grid;place-items:center;flex-shrink:0;color:var(--blue-2)}
+.nudge .nt{font-size:12.5px;font-weight:600;color:var(--ink)}
+.nudge .nr{font-size:12px;color:var(--ink-2);margin-top:4px}
+.nudge .nrec{font-size:12px;color:var(--blue);margin-top:7px;display:flex;gap:6px;align-items:flex-start}
+
+/* tabs */
+.tabs{display:flex;gap:3px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+.tab{padding:10px 15px;font-size:13px;font-weight:600;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--ink-2)}
+.tab.active{color:var(--blue-2);border-bottom-color:var(--blue-2)}
+
+/* redline */
+.redline{font-family:var(--mono);font-size:12.5px;line-height:1.7}
+.del{background:var(--red-soft);color:var(--red);text-decoration:line-through;padding:1px 3px;border-radius:3px}
+.ins{background:var(--green-soft);color:var(--green);padding:1px 3px;border-radius:3px}
+
+/* chip steps */
+.steps{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--ink-3)}
+.step .dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--panel-3);border:1px solid var(--line-2);font-size:11px}
+.step.done{color:var(--green)}.step.done .dot{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.step.active{color:var(--blue-2)}.step.active .dot{background:var(--blue-soft);border-color:var(--blue);color:var(--blue-2)}
+.step-arrow{width:30px;height:2px;background:var(--line-2);margin:0 6px}
+
+/* agent node */
+.agent-flow{display:flex;flex-direction:column;gap:0}
+.agent-node{display:flex;gap:14px;padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);transition:.15s;cursor:pointer}
+.agent-node:hover{border-color:var(--blue-soft-border);background:var(--panel-3)}
+.agent-node.sel{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),0 8px 24px var(--blue-glow)}
+.agent-ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:var(--blue-soft);color:var(--blue-2);border:1px solid var(--blue-soft-border)}
+.agent-conn{position:relative;width:2px;height:26px;background:var(--line-2);margin-left:35px;overflow:visible}
+.agent-conn.flowing{background:linear-gradient(var(--blue),var(--cyan))}
+.packet{position:absolute;left:50%;top:0;transform:translate(-50%,-4px);width:0;height:0;opacity:0;background:var(--blue-2);border-radius:30px;box-shadow:0 0 14px var(--blue-2);white-space:nowrap;font-size:9.5px;font-weight:600;color:#ffffff;display:grid;place-items:center;font-family:var(--sans)}
+.packet.run{animation:packetMove 1s ease forwards}
+@keyframes packetMove{
+  0%{opacity:0;top:-2px;width:11px;height:11px}
+  15%{opacity:1;width:11px;height:11px}
+  100%{opacity:1;top:26px;width:11px;height:11px}
+}
+.agent-node{transition:.25s}
+.agent-node.active{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),0 8px 26px var(--blue-glow);background:var(--panel-3)}
+.agent-node.active .agent-ic{animation:logoPulse 1s infinite}
+.agent-node.done{border-color:var(--green-border)}
+.agent-node.done .agent-ic{background:var(--green-soft);color:var(--green)}
+.agent-stat{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--panel-3);color:var(--ink-3);border:1px solid var(--line-2)}
+.agent-stat.running{background:var(--blue-soft);color:var(--blue-2);border-color:var(--blue-soft-border)}
+.agent-stat.done{background:var(--green-soft);color:var(--green);border-color:var(--green-border)}
+.ks-row.hit{background:var(--blue-soft);border-radius:7px;transition:.3s}
+.log-line{animation:fade .3s}
+.log-line .ok{color:var(--green)}.log-line .ar{color:var(--blue-2)}.log-line .ag{color:var(--ink)}
+.agent-conn .a{display:block}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(13,27,46,.45);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:30px}
+.modal-bg.show{display:flex;animation:fade .25s}
+.modal{background:var(--panel);border:1px solid var(--line-2);border-radius:16px;max-width:680px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+
+/* toast */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--panel-2);border:1px solid var(--line-2);border-left:3px solid var(--blue);border-radius:11px;padding:13px 16px;box-shadow:var(--shadow-lg);min-width:280px;max-width:360px;animation:slideIn .3s;display:flex;gap:11px}
+@keyframes slideIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+.toast .ti{font-size:13px;font-weight:600}
+.toast .tx{font-size:12px;color:var(--ink-2);margin-top:2px}
+
+/* copilot */
+.copilot-fab{position:fixed;bottom:26px;right:26px;z-index:90;width:56px;height:56px;border-radius:50%;background:linear-gradient(140deg,var(--blue),var(--cyan));display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 34px var(--blue-glow),0 4px 12px rgba(13,27,46,.18);transition:.2s}
+.copilot-fab:hover{transform:scale(1.06)}
+.copilot-panel{position:fixed;bottom:26px;right:26px;z-index:95;width:380px;height:560px;background:var(--panel);border:1px solid var(--line-2);border-radius:18px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden}
+.copilot-panel.show{display:flex;animation:fade .25s}
+.cp-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px;background:linear-gradient(135deg,var(--panel-2),var(--panel))}
+.cp-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.cp-msg{display:flex;gap:10px;max-width:90%}
+.cp-msg.user{align-self:flex-end;flex-direction:row-reverse}
+.cp-bub{padding:11px 14px;border-radius:13px;font-size:13px;line-height:1.55}
+.cp-msg.ai .cp-bub{background:var(--panel-2);border:1px solid var(--line);border-top-left-radius:4px}
+.cp-msg.user .cp-bub{background:var(--blue-soft);border:1px solid var(--blue-soft-border);border-top-right-radius:4px;color:var(--ink)}
+.cp-foot{padding:14px;border-top:1px solid var(--line);display:flex;gap:9px}
+.cp-foot input{flex:1;background:var(--panel-2);border:1px solid var(--line-2);border-radius:9px;padding:10px 13px;color:var(--ink);font-family:var(--sans);font-size:13px;outline:none}
+.cp-chip{font-size:11.5px;padding:6px 11px;border-radius:20px;background:var(--panel-2);border:1px solid var(--line-2);cursor:pointer;color:var(--ink-2);transition:.15s}
+.cp-chip:hover{background:var(--blue-soft);color:var(--blue);border-color:var(--blue-soft-border)}
+
+.expand-head{display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 14px;border-radius:9px;background:var(--panel-2);border:1px solid var(--line)}
+.expand-head:hover{border-color:var(--blue-soft-border)}
+.expand-body{padding:14px;font-size:12.5px;color:var(--ink-2);line-height:1.7;display:none;border:1px solid var(--line);border-top:none;border-radius:0 0 9px 9px;background:var(--panel)}
+.expand.open .expand-body{display:block}
+.expand.open .chev{transform:rotate(90deg)}
+.chev{transition:.2s;color:var(--ink-3)}
+
+.flag{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:6px}
+.divider{height:1px;background:var(--line);margin:18px 0}
+
+.note-card{background:var(--panel-2);border:1px solid var(--line);border-radius:11px;padding:14px;font-size:12.5px;color:var(--ink-2);line-height:1.7}
+.note-card .nh{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-bottom:7px}
+
+.conf{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:var(--ink-3)}
+.conf .bar{width:54px;height:5px;border-radius:5px;background:var(--panel-3);overflow:hidden}
+.conf .bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--cyan))}
+
+.empty{text-align:center;padding:50px;color:var(--ink-3)}
+
+/* ---------- Splash / Company Picker ---------- */
+.splash{
+  position:fixed;inset:0;z-index:500;display:none;align-items:flex-start;justify-content:center;
+  overflow-y:auto;padding:48px 24px;
+  background:
+    radial-gradient(1000px 500px at 80% -10%,rgba(74,134,212,.16),transparent 60%),
+    radial-gradient(800px 500px at 0% 110%,rgba(70,196,214,.08),transparent 55%),
+    var(--bg);
+}
+.splash-inner{max-width:880px;width:100%;animation:fade .5s ease}
+.splash-brand{display:flex;align-items:center;gap:13px;margin-bottom:34px}
+.splash-brand .logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(140deg,var(--blue),var(--cyan));display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:24px;color:#ffffff;box-shadow:0 8px 22px var(--blue-glow)}
+.splash-brand .bn{font-family:var(--serif);font-size:22px;font-weight:600}
+.splash-brand .bt{font-size:11px;color:var(--ink-3);letter-spacing:.8px;text-transform:uppercase}
+.splash-h{font-family:var(--serif);font-size:32px;font-weight:600;letter-spacing:.2px;margin-bottom:8px}
+.splash-sub{color:var(--ink-2);font-size:14px;max-width:600px;line-height:1.65;margin-bottom:26px}
+.pick-search{display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--line-2);border-radius:13px;padding:8px 8px 8px 16px;box-shadow:var(--shadow);color:var(--ink-3)}
+.pick-search svg{width:18px;height:18px;flex-shrink:0}
+.pick-search input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:var(--sans);font-size:14.5px;padding:8px 0}
+.pick-or{display:none}
+.pf-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.pf-stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 16px}
+.pf-stat-n{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--blue-2);line-height:1}
+.pf-stat-l{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;margin-top:6px;font-weight:600}
+.pf-list{display:flex;flex-direction:column;gap:9px}
+.pf-row{display:flex;align-items:center;gap:15px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;cursor:pointer;transition:.16s}
+.pf-row:hover{border-color:var(--blue);background:var(--panel-2);transform:translateX(3px);box-shadow:0 10px 26px var(--blue-glow)}
+.pf-row:hover .pf-go{opacity:1;transform:translateX(0)}
+.pf-main{flex:1;min-width:0}
+.pf-meta{text-align:right;min-width:78px}
+.pf-exp,.pf-rate,.pf-last{font-size:13.5px;font-weight:600;color:var(--ink)}
+.pf-rate{color:var(--green)}
+.pf-sub{font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.pf-flagcol{min-width:140px;text-align:right}
+.pf-flag{display:inline-block;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:20px}
+.pf-flag.high{background:var(--red-soft);color:var(--red);border:1px solid var(--red-border)}
+.pf-flag.med{background:var(--amber-soft);color:#92400e;border:1px solid var(--amber-border)}
+.pf-flag.low{background:var(--green-soft);color:var(--green);border:1px solid var(--green-border)}
+.pf-go{color:var(--blue-2);opacity:.3;transform:translateX(-4px);transition:.16s;flex-shrink:0}
+.pf-go svg{width:18px;height:18px}
+.pc-logo{width:40px;height:40px;border-radius:10px;background:var(--blue-soft);border:1px solid var(--blue-soft-border);display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--blue-2);flex-shrink:0}
+.pc-n{font-size:14px;font-weight:600;line-height:1.2}
+.pc-s{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+@media(max-width:760px){.pf-meta,.pf-flagcol{display:none}.pf-stats{grid-template-columns:repeat(2,1fr)}}
+
+/* ---- Scenario chooser ---- */
+.sc-list{display:flex;flex-direction:column;gap:11px}
+.sc-card{display:flex;align-items:center;gap:15px;padding:16px 18px;background:var(--panel);border:1px solid var(--line);border-radius:13px;cursor:pointer;transition:.16s}
+.sc-card:hover{border-color:var(--blue);background:var(--panel-2);transform:translateX(3px);box-shadow:0 10px 26px var(--blue-glow)}
+.sc-card:hover .pf-go{opacity:1;transform:translateX(0)}
+.sc-full{border-color:var(--blue-soft-border);background:linear-gradient(120deg,var(--panel-2),var(--panel))}
+.sc-ic{width:44px;height:44px;border-radius:11px;background:var(--blue-soft);border:1px solid var(--blue-soft-border);display:grid;place-items:center;color:var(--blue-2);flex-shrink:0;font-size:19px}
+.sc-t{font-size:15px;font-weight:600}
+.sc-d{font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.55}
+.sc-ask{font-size:12px;color:var(--blue);margin-top:7px;display:flex;align-items:center;gap:6px}
+.sc-meta{font-size:11px;color:var(--ink-3);margin-top:6px}
+.splash-foot{margin-top:30px;text-align:center;font-size:12px;color:var(--ink-3);display:flex;align-items:center;justify-content:center;gap:7px}
+.splash-foot svg{width:14px;height:14px;color:var(--blue-2)}
+
+/* ---------- Generation screen ---------- */
+.gen-inner{max-width:560px;width:100%;margin-top:40px;animation:fade .4s}
+.pulse-logo{animation:logoPulse 1.4s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 8px 22px var(--blue-glow)}50%{box-shadow:0 8px 34px rgba(74,134,212,.5)}}
+.gen-h{text-align:center;color:var(--ink-3);font-size:13px;text-transform:uppercase;letter-spacing:1.2px;margin:30px 0 6px}
+.gen-company{text-align:center;font-family:var(--serif);font-size:30px;font-weight:600;margin-bottom:30px}
+.gen-steps{display:flex;flex-direction:column;gap:9px}
+.gen-step{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid var(--line);border-radius:11px;background:var(--panel);opacity:.45;transition:.3s}
+.gen-step.active{opacity:1;border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),0 8px 22px var(--blue-glow)}
+.gen-step.done{opacity:1;border-color:var(--line-2)}
+.gen-step .gs-dot{width:30px;height:30px;border-radius:8px;background:var(--blue-soft);display:grid;place-items:center;color:var(--blue-2);flex-shrink:0;font-size:14px}
+.gen-step.active .gs-dot{animation:logoPulse 1s infinite}
+.gen-step.done .gs-dot{background:var(--green-soft);color:var(--green)}
+.gs-name{font-size:13px;font-weight:600}
+.gs-live{font-size:11.5px;color:var(--ink-3);margin-top:1px;min-height:14px}
+.gs-tick{width:18px;height:18px;color:var(--green);opacity:0;transition:.3s}
+.gen-step.done .gs-tick{opacity:1}
+.gen-step .gs-tick svg{width:18px;height:18px}
+.gen-step.active .gs-dot svg{width:15px;height:15px}
+.gen-live-note{text-align:center;font-size:12.5px;color:var(--ink-2);margin-top:24px}
+</style>
+</head>
+<body>
+<div id="splash" class="splash"></div>
+<div class="app" id="appShell" style="display:none">
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <div class="bn">Meridian</div>
+        <div class="bt">RM Co-Pilot</div>
+      </div>
+    </div>
+
+    <div class="nav-group">Operations</div>
+    <div class="nav-item active" data-view="cockpit">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Daily Cockpit
+    </div>
+    <div class="nav-item" data-view="corporate">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/><path d="M9 9v.01M9 13v.01M9 17v.01"/></svg>
+      Corporate One-View
+    </div>
+    <div class="nav-item" data-view="prep">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Meeting Prep
+    </div>
+    <div class="nav-item" data-view="meeting">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4"/></svg>
+      Meeting Capture
+    </div>
+
+    <div class="nav-group">Intelligence</div>
+    <div class="nav-item" data-view="deviation">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13l2 2 4-4"/></svg>
+      Clause & Deviation
+      <span class="badge">3</span>
+    </div>
+    <div class="nav-item" data-view="approval">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      Approval Workflow
+      <span class="badge red">2</span>
+    </div>
+    <div class="nav-item" data-view="document">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+      T&amp;C Documents
+    </div>
+
+    <div class="nav-group">System</div>
+    <div class="nav-item" data-view="hood">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Under the Hood
+    </div>
+    <div class="nav-item" data-view="demo">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Day-in-the-Life
+    </div>
+
+    <div class="nav-item" onclick="showPicker()" style="margin-top:auto">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/><path d="M9 9v.01M9 13v.01"/></svg>
+      Switch Client
+    </div>
+    <div class="side-foot">
+      <div class="avatar">AR</div>
+      <div>
+        <div class="nm">Ananya Rao</div>
+        <div class="rl">Sr. RM · Large Corp</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="pgTitle">Daily Cockpit</h1>
+        <div class="crumb" id="pgCrumb">Operations · Thursday, 28 May 2026 · Mumbai Large Corporate Desk</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input placeholder="Search clients, deals, clauses…">
+      </div>
+      <div class="icon-btn" onclick="toast('Notifications','3 approvals awaiting your review.')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <div id="viewHost"></div>
+  </main>
+</div>
+
+<!-- Copilot -->
+<div class="copilot-fab" onclick="toggleCopilot()" id="cpFab">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M12 2l1.9 5.5L19 8l-4 3.5 1.2 5.5L12 14l-4.2 3 1.2-5.5L5 8l5.1-.5z"/></svg>
+</div>
+<div class="copilot-panel" id="cpPanel">
+  <div class="cp-head">
+    <div class="spark-ring"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--blue-2)" stroke-width="2"><path d="M12 2l1.9 5.5L19 8l-4 3.5 1.2 5.5L12 14l-4.2 3 1.2-5.5L5 8l5.1-.5z"/></svg></div>
+    <div style="flex:1">
+      <div style="font-size:13.5px;font-weight:600">Meridian Copilot</div>
+      <div style="font-size:11px;color:var(--ink-3)" id="cpCtx">Context: loading…</div>
+    </div>
+    <div class="icon-btn" style="width:30px;height:30px" onclick="toggleCopilot()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </div>
+  </div>
+  <div class="cp-body" id="cpBody">
+    <div class="cp-msg ai"><div class="cp-bub">Good morning, Ananya. You have 4 meetings today and 2 approvals pending past SLA. Your top client's capex announcement is your highest-value trigger — want me to prep the brief?</div></div>
+  </div>
+  <div style="padding:0 14px 10px;display:flex;gap:7px;flex-wrap:wrap" id="cpChips">
+    <div class="cp-chip" onclick="cpAsk('Prep the brief')">Prep brief</div>
+    <div class="cp-chip" onclick="cpAsk('Summarize pending approvals')">Pending approvals</div>
+    <div class="cp-chip" onclick="cpAsk('What deviations need routing?')">Deviations</div>
+  </div>
+  <div class="cp-foot">
+    <input id="cpInput" placeholder="Ask Meridian…" onkeydown="if(event.key==='Enter')cpSend()">
+    <div class="btn primary sm" onclick="cpSend()">Send</div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()"><div class="modal" id="modalBox"></div></div>
+
+<script>
+/* ============================================================
+   MERIDIAN — Real Company Dataset + Engagement Scenarios
+   ------------------------------------------------------------
+   SINGLE SOURCE OF TRUTH. Every screen renders from the
+   selected company + selected engagement scenario.
+   Financials/triggers are REAL (FY26, sourced from public
+   filings & results, May 2026). Banking relationship specifics
+   (exposure, facility rates, transcript) are illustrative.
+   ============================================================ */
+
+/* ---- helpers ---- */
+function fmtCr(n){ if(typeof n==='string') return n; return "₹"+Math.round(n).toLocaleString('en-IN')+" Cr"; }
+
+/* ---- Reusable clause templates. A "deviation" instance fills in numbers. ---- */
+// Each trigger references which clauses it touches.
+
+const COMPANIES = [
+  /* ============================ SUZLON ENERGY ============================ */
+  {
+    id:"CIF-88241", name:"Suzlon Energy Ltd", short:"Suzlon", logo:"SU", color:"#3fbf8f",
+    sector:"Renewable Energy · Wind", group:"Suzlon Group", rating:"BBB+", relYrs:9,
+    fin:{ revenue:"₹16,679 Cr", revenueFY:"FY26 (+54% YoY)", ebitda:"₹2,830 Cr (17%)", pat:"₹3,163 Cr (+53%)",
+          netWorth:"₹9,464 Cr", netCash:"₹2,384 Cr", deRatio:"Net cash", rocE:"—" },
+    exposure:"₹1,240 Cr", utilization:72, npa:"Standard", sentiment:78,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹450 Cr", used:"₹324 Cr", rate:"11.25%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹320 Cr", used:"₹320 Cr", rate:"10.90%", status:"Active"},
+      {type:"Bank Guarantee", limit:"₹260 Cr", used:"₹181 Cr", rate:"1.10% comm.", status:"Active"},
+      {type:"Letter of Credit", limit:"₹110 Cr", used:"₹62 Cr", rate:"0.85% comm.", status:"Active"},
+    ],
+    products:["Cash Management","Forex/Treasury","Trade Finance","Bank Guarantees","Supply Chain Finance"],
+    contacts:[{n:"Himanshu Mody",r:"Group CFO",e:"primary"},{n:"Ashwani Kumar",r:"VP – Treasury",e:""},{n:"J. Chalasani",r:"Group Executive – EPC",e:""}],
+    realNews:[
+      {t:"Suzlon FY26 net profit jumps 53% to ₹3,163 Cr; revenue ₹16,679 Cr", d:"2 days ago", src:"BSE / Q4 Results", impact:"high"},
+      {t:"Order book at 5.9 GW (66% PSU & C&I); S144 platform crosses 9 GW cumulative intake", d:"2 days ago", src:"Investor Call", impact:"high"},
+      {t:"Working-capital needs rising on PSU contract mix; ~₹600 Cr annual capex guided", d:"3 days ago", src:"Earnings Call", impact:"medium"},
+    ],
+    compBank:"Axis Bank",
+    notes:"Debt-free, net cash ₹2,384 Cr — strong counterparty. Order book shift to PSU/EPC contracts is stretching working capital. CFO leveraging clean balance sheet to push pricing; Axis quoting aggressively on the CC line. Key opportunity: BG/LC limits for the growing EPC + PSU order book.",
+    triggers:[
+      { key:"wc-expansion", icon:"trend", tag:"Opportunity", tagClass:"green", conf:90,
+        title:"PSU/EPC order mix stretching working capital",
+        what:"Suzlon's 5.9 GW order book is now 66% PSU & C&I. EPC contracts elongate the working-capital cycle; management flagged rising WC needs on the Q4 call.",
+        rec:"Propose a ₹250–300 Cr enhancement of the CC + BG/LC limits to fund the PSU/EPC order ramp.",
+        ask:"Enhance working-capital & non-fund limits by ₹250–300 Cr for the EPC/PSU order book",
+        clauses:["limit","collateral"], priority:"Priority", oppText:"₹250–300 Cr limit enhancement" },
+      { key:"pricing", icon:"risk", tag:"Action Required", tagClass:"amber", conf:97,
+        title:"Axis Bank quoting below market on the CC line",
+        what:"With a debt-free balance sheet and ₹2,384 Cr net cash, Suzlon has strong leverage. Axis is quoting ~10.25% vs our current 11.25% on the ₹450 Cr cash-credit line.",
+        rec:"Take a repricing case to Credit Head; defend the relationship before the renewal.",
+        ask:"Reduce CC interest rate from 11.25% to 10.40%",
+        clauses:["rate"], priority:"Priority", oppText:"Defend ₹324 Cr drawn balance" },
+      { key:"bg-capacity", icon:"capex", tag:"Cross-sell", tagClass:"blue", conf:84,
+        title:"BG/LC capacity for green-steel & PSU EPC orders",
+        what:"Suzlon won captive-wind orders for green-steel (e.g. AM/NS) and large PSU EPC projects, all BG/LC-intensive. Current BG utilization is 70%.",
+        rec:"Cross-sell an enhanced BG/LC facility and structured trade finance ahead of order execution.",
+        ask:"Enhance Bank Guarantee limit and relax collateral cover for EPC bid/performance bonds",
+        clauses:["collateral","limit"], priority:"Secondary", oppText:"₹150 Cr BG enhancement" },
+    ],
+  },
+
+  /* ============================ BHARAT FORGE ============================ */
+  {
+    id:"CIF-77103", name:"Bharat Forge Ltd", short:"Bharat Forge", logo:"BF", color:"#4a86d4",
+    sector:"Auto Components · Forging & Defence", group:"Kalyani Group", rating:"AA-", relYrs:11,
+    fin:{ revenue:"₹16,812 Cr", revenueFY:"FY26 (+11% YoY)", ebitda:"₹2,921 Cr (17.4%)", pat:"₹1,079 Cr (+15%)",
+          netWorth:"—", netCash:"Net debt ₹2,150 Cr", deRatio:"0.6x", rocE:"—" },
+    exposure:"₹980 Cr", utilization:64, npa:"Standard", sentiment:72,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹380 Cr", used:"₹243 Cr", rate:"10.40%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹300 Cr", used:"₹300 Cr", rate:"9.95%", status:"Active"},
+      {type:"Bank Guarantee", limit:"₹180 Cr", used:"₹118 Cr", rate:"1.05% comm.", status:"Active"},
+      {type:"Export Packing Credit", limit:"₹120 Cr", used:"₹71 Cr", rate:"8.90%", status:"Active"},
+    ],
+    products:["Forex/Treasury","Export Finance","Term Lending","Bank Guarantees","Cash Management"],
+    contacts:[{n:"Kishore Saletore",r:"Executive Director & CFO",e:"primary"},{n:"Subodh Tandale",r:"Head – Defence",e:""},{n:"Treasury Desk",r:"Corporate Treasury",e:""}],
+    realNews:[
+      {t:"Bharat Forge FY26 consolidated revenue ₹16,812 Cr; defence order book ₹10,961 Cr", d:"3 weeks ago", src:"Q4 Results", impact:"high"},
+      {t:"New dedicated aerospace forging & machining facility under construction", d:"3 weeks ago", src:"Earnings Call", impact:"high"},
+      {t:"US tariffs on auto components create export-margin uncertainty; ~25% FY27 India growth targeted", d:"3 weeks ago", src:"Management Guidance", impact:"medium"},
+    ],
+    compBank:"HDFC Bank",
+    notes:"Defence order book ₹10,961 Cr is the structural story — long-gestation, BG-intensive. New aerospace facility needs term funding. Standalone auto exports pressured by US tariffs; client will want FX hedging and competitive export-credit pricing. Net debt/equity comfortable at 0.6x.",
+    triggers:[
+      { key:"aero-capex", icon:"capex", tag:"Opportunity", tagClass:"green", conf:91,
+        title:"New aerospace forging facility needs term financing",
+        what:"Bharat Forge is building a dedicated aerospace forging & machining facility backed by long-term customer commitments. This is a multi-year capex requiring structured term debt.",
+        rec:"Position a ₹400–500 Cr structured term loan for the aerospace capex at today's meeting.",
+        ask:"Sanction a ₹400–500 Cr capex term loan for the aerospace facility",
+        clauses:["limit","covenant"], priority:"Priority", oppText:"₹400–500 Cr aerospace term loan" },
+      { key:"defence-bg", icon:"trend", tag:"Opportunity", tagClass:"green", conf:88,
+        title:"₹10,961 Cr defence order book — BG-intensive execution",
+        what:"Defence revenue grew 46% YoY; the order book demands large performance & advance bank guarantees over multi-year execution.",
+        rec:"Enhance the BG limit and relax collateral cover for defence performance bonds.",
+        ask:"Enhance Bank Guarantee limit by ₹200 Cr and relax collateral cover 1.4x→1.25x",
+        clauses:["collateral","limit"], priority:"Priority", oppText:"₹200 Cr BG enhancement" },
+      { key:"export-fx", icon:"risk", tag:"Action Required", tagClass:"amber", conf:85,
+        title:"US tariffs pressuring export receivables & margins",
+        what:"US tariffs on auto components and a weaker NA truck cycle pressure standalone exports. Client needs competitive export-credit pricing and FX hedging on USD receivables.",
+        rec:"Offer a structured FX forward programme + reprice export packing credit to retain wallet.",
+        ask:"Reduce export packing credit rate and extend SCF credit period 60→90 days for tariff-hit vendors",
+        clauses:["rate","creditperiod"], priority:"Secondary", oppText:"Protect ₹71 Cr EPC exposure" },
+    ],
+  },
+
+  /* ============================ ADANI PORTS ============================ */
+  {
+    id:"CIF-91552", name:"Adani Ports & SEZ Ltd", short:"Adani Ports", logo:"AP", color:"#8c7fd6",
+    sector:"Infrastructure · Ports & Logistics", group:"Adani Group", rating:"AA", relYrs:8,
+    fin:{ revenue:"₹38,736 Cr", revenueFY:"FY26 (+25% YoY)", ebitda:"₹22,851 Cr (59%)", pat:"₹12,782 Cr (+16%)",
+          netWorth:"—", netCash:"Net debt/EBITDA 1.9x", deRatio:"1.9x ND/EBITDA", rocE:"23%" },
+    exposure:"₹2,150 Cr", utilization:81, npa:"Standard", sentiment:80,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹500 Cr", used:"₹405 Cr", rate:"10.80%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹900 Cr", used:"₹900 Cr", rate:"10.25%", status:"Active"},
+      {type:"Bank Guarantee", limit:"₹500 Cr", used:"₹360 Cr", rate:"1.00% comm.", status:"Active"},
+      {type:"Letter of Credit", limit:"₹250 Cr", used:"₹138 Cr", rate:"0.80% comm.", status:"Active"},
+    ],
+    products:["Project Finance","Cash Management","Forex/Treasury","Trade Finance","Bank Guarantees"],
+    contacts:[{n:"D. Muthukumaran",r:"Group CFO",e:"primary"},{n:"Ashwani Gupta",r:"Whole-time Director & CEO",e:""},{n:"Treasury Desk",r:"Corporate Treasury",e:""}],
+    realNews:[
+      {t:"APSEZ FY26 revenue ₹38,736 Cr (+25%); first Indian operator to cross 500 MMT cargo", d:"1 month ago", src:"Q4 Results", impact:"high"},
+      {t:"FY27 capex guided ₹12,000–14,000 Cr; targeting 1 billion tonnes cargo by 2030", d:"1 month ago", src:"Investor Call", impact:"high"},
+      {t:"CareEdge Global assigned BBB+/Stable international rating; ND/EBITDA at 1.9x", d:"1 month ago", src:"Rating Action", impact:"medium"},
+    ],
+    compBank:"ICICI Bank",
+    notes:"₹12,000–14,000 Cr FY27 capex for capacity to 1 bn tonnes by 2030 — a major project-finance opportunity. RoCE 23%, capex to be funded via internal accruals + selective debt. Strong negotiating position; will push pricing and covenant flexibility given investment-grade profile.",
+    triggers:[
+      { key:"capex-pf", icon:"capex", tag:"Opportunity", tagClass:"green", conf:92,
+        title:"₹12,000–14,000 Cr FY27 capex — project finance mandate",
+        what:"APSEZ guided FY27 capex of ₹12,000–14,000 Cr toward 1 billion tonnes cargo by 2030. A large, multi-year project-finance and term-debt opportunity.",
+        rec:"Position a ₹700–900 Cr project term loan tranche; tie pricing to the broader mandate.",
+        ask:"Sanction a ₹700–900 Cr project-finance term loan for port-capacity expansion",
+        clauses:["limit","covenant"], priority:"Priority", oppText:"₹700–900 Cr project finance" },
+      { key:"pricing", icon:"risk", tag:"Action Required", tagClass:"amber", conf:95,
+        title:"ICICI competing on pricing for the capex mandate",
+        what:"With 23% RoCE and BBB+ international rating, APSEZ commands fine pricing. ICICI is quoting below our 10.25% term-loan rate to win the capex tranche.",
+        rec:"Take a below-floor pricing case to Credit Head to retain the mandate.",
+        ask:"Reduce term-loan rate from 10.25% to 9.60% to match competitive quote",
+        clauses:["rate"], priority:"Priority", oppText:"Defend ₹900 Cr TL + capex mandate" },
+      { key:"marine-bg", icon:"trend", tag:"Cross-sell", tagClass:"blue", conf:83,
+        title:"Marine & logistics scale-up — trade-finance cross-sell",
+        what:"Marine revenue +134%, logistics +55% in FY26. Fleet of 136 vessels and 12 logistics parks expanding — BG/LC and trade-finance intensive.",
+        rec:"Cross-sell enhanced BG/LC and supply-chain finance across the logistics network.",
+        ask:"Enhance BG/LC limits by ₹200 Cr and extend SCF credit period for logistics partners",
+        clauses:["limit","creditperiod"], priority:"Secondary", oppText:"₹200 Cr BG/LC + SCF" },
+    ],
+  },
+
+  /* ============================ TATA CHEMICALS ============================ */
+  {
+    id:"CIF-66420", name:"Tata Chemicals Ltd", short:"Tata Chemicals", logo:"TC", color:"#46c4d6",
+    sector:"Specialty Chemicals · Soda Ash", group:"Tata Group", rating:"AA+", relYrs:12,
+    fin:{ revenue:"₹3,438 Cr", revenueFY:"Q4 FY26 (−2% YoY)", ebitda:"₹274 Cr", pat:"—",
+          netWorth:"—", netCash:"Moderate leverage", deRatio:"—", rocE:"—" },
+    exposure:"₹740 Cr", utilization:55, npa:"Standard", sentiment:70,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹300 Cr", used:"₹165 Cr", rate:"10.10%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹220 Cr", used:"₹220 Cr", rate:"9.85%", status:"Active"},
+      {type:"Bank Guarantee", limit:"₹120 Cr", used:"₹58 Cr", rate:"1.00% comm.", status:"Active"},
+      {type:"Letter of Credit", limit:"₹100 Cr", used:"₹44 Cr", rate:"0.80% comm.", status:"Active"},
+    ],
+    products:["Forex/Treasury","Trade Finance","Term Lending","Cash Management"],
+    contacts:[{n:"Nandakumar Tirumalai",r:"CFO",e:"primary"},{n:"R. Mukundan",r:"MD & CEO",e:""},{n:"Treasury Desk",r:"Corporate Treasury",e:""}],
+    realNews:[
+      {t:"Tata Chemicals Q4 FY26 revenue ₹3,438 Cr (−2%); EBITDA ₹274 Cr amid soda-ash overcapacity", d:"3 weeks ago", src:"Q4 Results", impact:"high"},
+      {t:"₹775 Cr silica plant at Cuddalore — diversification beyond soda ash", d:"3 weeks ago", src:"Capex Announcement", impact:"high"},
+      {t:"Global soda-ash overcapacity & Middle-East supply disruption pressuring margins", d:"3 weeks ago", src:"Earnings Call", impact:"medium"},
+    ],
+    compBank:"Kotak Mahindra",
+    notes:"Margins under pressure from global soda-ash overcapacity; pivoting to specialty (silica). ₹775 Cr Cuddalore silica plant is the growth story and needs term funding. AA+ rated, Tata Group pedigree — will expect best-in-class pricing. Imported feedstock exposure → FX hedging opportunity.",
+    triggers:[
+      { key:"silica-capex", icon:"capex", tag:"Opportunity", tagClass:"green", conf:90,
+        title:"₹775 Cr Cuddalore silica plant needs term funding",
+        what:"Tata Chemicals is investing ₹775 Cr in a specialty silica plant at Cuddalore to diversify beyond pressured soda ash. A clean term-financing opportunity.",
+        rec:"Position a ₹350–450 Cr capex term loan for the silica plant.",
+        ask:"Sanction a ₹350–450 Cr term loan for the Cuddalore silica plant",
+        clauses:["limit","covenant"], priority:"Priority", oppText:"₹350–450 Cr silica term loan" },
+      { key:"margin-fx", icon:"risk", tag:"Action Required", tagClass:"amber", conf:86,
+        title:"Soda-ash margin pressure + imported feedstock FX risk",
+        what:"Global soda-ash overcapacity and Middle-East supply disruption are compressing margins. Imported feedstock creates USD exposure the client wants hedged.",
+        rec:"Offer a structured FX hedging programme and support working-capital pricing through the down-cycle.",
+        ask:"Reduce CC rate 10.10%→9.40% and provide structured FX forward cover",
+        clauses:["rate"], priority:"Priority", oppText:"Defend ₹165 Cr drawn balance" },
+      { key:"trade-finance", icon:"trend", tag:"Cross-sell", tagClass:"blue", conf:80,
+        title:"Specialty exports — trade finance & SCF",
+        what:"As specialty (silica, nutritional) export volumes grow, the client needs LC/trade-finance support and extended vendor terms.",
+        rec:"Cross-sell trade finance and a supply-chain finance programme.",
+        ask:"Extend SCF credit period 60→90 days and enhance LC limit by ₹80 Cr",
+        clauses:["creditperiod","limit"], priority:"Secondary", oppText:"₹80 Cr LC + SCF" },
+    ],
+  },
+
+  /* ============================ ULTRATECH CEMENT ============================ */
+  {
+    id:"CIF-50118", name:"UltraTech Cement Ltd", short:"UltraTech", logo:"UT", color:"#c08a2c",
+    sector:"Building Materials · Cement", group:"Aditya Birla Group", rating:"AAA", relYrs:14,
+    fin:{ revenue:"₹87,384 Cr", revenueFY:"FY26 (+17% YoY)", ebitda:"₹17,598 Cr (+32%)", pat:"₹8,166 Cr",
+          netWorth:"—", netCash:"ND/EBITDA 0.94x", deRatio:"0.94x", rocE:"—" },
+    exposure:"₹1,620 Cr", utilization:58, npa:"Standard", sentiment:82,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹600 Cr", used:"₹348 Cr", rate:"9.90%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹620 Cr", used:"₹620 Cr", rate:"9.55%", status:"Active"},
+      {type:"Bank Guarantee", limit:"₹250 Cr", used:"₹142 Cr", rate:"0.95% comm.", status:"Active"},
+      {type:"Letter of Credit", limit:"₹150 Cr", used:"₹86 Cr", rate:"0.75% comm.", status:"Active"},
+    ],
+    products:["Cash Management","Forex/Treasury","Term Lending","Trade Finance","Supply Chain Finance"],
+    contacts:[{n:"Atul Daga",r:"ED & CFO",e:"primary"},{n:"K. C. Jhanwar",r:"MD",e:""},{n:"Treasury Desk",r:"Corporate Treasury",e:""}],
+    realNews:[
+      {t:"UltraTech FY26 revenue ₹87,384 Cr (+17%); PAT crosses ₹8,000 Cr first time; ND/EBITDA 0.94x", d:"1 month ago", src:"Q4 Results", impact:"high"},
+      {t:"Crossed 200 MTPA capacity; targeting 242.5 MTPA by FY28 — ₹8,000–10,000 Cr annual capex", d:"1 month ago", src:"Investor Call", impact:"high"},
+      {t:"New ₹1,800 Cr foray into wires & cables; petcoke/fuel price volatility a watchout", d:"1 month ago", src:"Earnings Call", impact:"medium"},
+    ],
+    compBank:"State Bank of India",
+    notes:"AAA-rated sector leader, ND/EBITDA just 0.94x — pristine credit. ₹8,000–10,000 Cr annual capex toward 242.5 MTPA by FY28 plus a new ₹1,800 Cr wires & cables business. Will command the finest pricing in the market; relationship is about volume and capex mandates, not credit risk.",
+    triggers:[
+      { key:"capacity-capex", icon:"capex", tag:"Opportunity", tagClass:"green", conf:93,
+        title:"₹8,000–10,000 Cr annual capex toward 242.5 MTPA",
+        what:"UltraTech crossed 200 MTPA and targets 242.5 MTPA by FY28, guiding ₹8,000–10,000 Cr annual capex. Large, recurring term-financing opportunity for a AAA name.",
+        rec:"Position a ₹800 Cr–1,000 Cr capex term-loan tranche at fine pricing to win the mandate.",
+        ask:"Sanction a ₹800–1,000 Cr capex term loan for grinding-unit expansion",
+        clauses:["limit","covenant"], priority:"Priority", oppText:"₹800–1,000 Cr capex TL" },
+      { key:"new-business", icon:"trend", tag:"Cross-sell", tagClass:"blue", conf:85,
+        title:"₹1,800 Cr wires & cables foray — new working capital",
+        what:"UltraTech approved a ₹1,800 Cr investment into wires & cables — a new business line needing fresh working capital and trade-finance setup.",
+        rec:"Cross-sell working-capital and SCF facilities for the new W&C vertical.",
+        ask:"Set up a ₹200 Cr working-capital line and SCF programme for the wires & cables business",
+        clauses:["limit","creditperiod"], priority:"Secondary", oppText:"₹200 Cr new WC line" },
+      { key:"pricing", icon:"risk", tag:"Action Required", tagClass:"amber", conf:90,
+        title:"SBI undercutting on the capex mandate",
+        what:"As a AAA borrower, UltraTech extracts the finest terms. SBI is quoting below our 9.55% term-loan rate to capture the multi-year capex pipeline.",
+        rec:"Take a sharp pricing case to Credit Head — the relationship volume justifies it.",
+        ask:"Reduce term-loan rate from 9.55% to 9.00% to retain the capex mandate",
+        clauses:["rate"], priority:"Priority", oppText:"Defend ₹620 Cr TL + pipeline" },
+    ],
+  },
+
+  /* ============================ LARSEN & TOUBRO ============================ */
+  {
+    id:"CIF-42007", name:"Larsen & Toubro Ltd", short:"L&T", logo:"LT", color:"#5d9cec",
+    sector:"Engineering · Infrastructure & Construction", group:"L&T Group", rating:"AAA", relYrs:13,
+    fin:{ revenue:"₹2,55,000 Cr+", revenueFY:"FY26 (+12% YoY)", ebitda:"—", pat:"₹15,500 Cr+",
+          netWorth:"—", netCash:"Strong", deRatio:"—", rocE:"—" },
+    exposure:"₹2,480 Cr", utilization:69, npa:"Standard", sentiment:80,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹700 Cr", used:"₹483 Cr", rate:"9.85%", status:"Active"},
+      {type:"Bank Guarantee", limit:"₹1,200 Cr", used:"₹890 Cr", rate:"0.95% comm.", status:"Active"},
+      {type:"Letter of Credit", limit:"₹400 Cr", used:"₹248 Cr", rate:"0.75% comm.", status:"Active"},
+      {type:"Term Loan", limit:"₹180 Cr", used:"₹180 Cr", rate:"9.40%", status:"Active"},
+    ],
+    products:["Bank Guarantees","Trade Finance","Forex/Treasury","Cash Management","Letters of Credit"],
+    contacts:[{n:"R. Shankar Raman",r:"CFO",e:"primary"},{n:"S. N. Subrahmanyan",r:"Chairman & MD",e:""},{n:"Treasury Desk",r:"Group Treasury",e:""}],
+    realNews:[
+      {t:"L&T FY26 order book all-time high ₹7.40 lakh Cr (+28% YoY); Q4 inflows ₹89,772 Cr", d:"3 weeks ago", src:"Q4 Results", impact:"high"},
+      {t:"International orders 67% of inflows; Middle-East execution delays hit revenue guidance", d:"3 weeks ago", src:"Earnings Call", impact:"high"},
+      {t:"FY27 guidance 10–12% order-inflow & revenue growth; large metals order from JSW Steel", d:"3 weeks ago", src:"Management Guidance", impact:"medium"},
+    ],
+    compBank:"ICICI Bank",
+    notes:"₹7.40 lakh Cr order book (+28%) is enormous and intensely BG/LC-intensive — non-fund limits are the core of this relationship. 67% international inflows → heavy FX and cross-border trade-finance need. Middle-East delays a watchout. AAA credit; competition is on non-fund pricing and BG capacity, not term debt.",
+    triggers:[
+      { key:"bg-capacity", icon:"capex", tag:"Opportunity", tagClass:"green", conf:93,
+        title:"₹7.40 lakh Cr order book — massive BG/LC demand",
+        what:"L&T's record order book (+28% YoY, 67% international) requires enormous performance, advance and retention bank guarantees. BG utilization is already 74%.",
+        rec:"Propose a ₹500 Cr BG limit enhancement and relax collateral cover for the order book.",
+        ask:"Enhance Bank Guarantee limit by ₹500 Cr and relax collateral cover 1.4x→1.25x",
+        clauses:["limit","collateral"], priority:"Priority", oppText:"₹500 Cr BG enhancement" },
+      { key:"fx-international", icon:"trend", tag:"Opportunity", tagClass:"green", conf:87,
+        title:"67% international inflows — large FX & trade-finance need",
+        what:"Two-thirds of inflows are international (heavily Middle East). The client needs structured FX hedging and cross-border LC/trade finance at scale.",
+        rec:"Cross-sell a structured FX programme and enhanced LC limits for international projects.",
+        ask:"Enhance LC limit by ₹200 Cr and provide a structured FX hedging programme",
+        clauses:["limit","rate"], priority:"Secondary", oppText:"₹200 Cr LC + FX programme" },
+      { key:"me-delay", icon:"risk", tag:"Action Required", tagClass:"amber", conf:82,
+        title:"Middle-East execution delays stretching working capital",
+        what:"Geopolitical disruption in the Middle East delayed project execution and missed FY26 revenue guidance, stretching the working-capital cycle on affected projects.",
+        rec:"Support with a temporary WC enhancement and credit-period flexibility on impacted contracts.",
+        ask:"Extend credit period 60→90 days on Middle-East project receivables and reprice CC",
+        clauses:["creditperiod","rate"], priority:"Secondary", oppText:"Bridge ₹483 Cr WC cycle" },
+    ],
+  },
+
+  /* ============================ APOLLO TYRES ============================ */
+  {
+    id:"CIF-38844", name:"Apollo Tyres Ltd", short:"Apollo Tyres", logo:"AT", color:"#48b3a0",
+    sector:"Auto Components · Tyres", group:"Apollo Group", rating:"AA-", relYrs:9,
+    fin:{ revenue:"₹28,471 Cr", revenueFY:"FY26 (+9% YoY)", ebitda:"₹4,000 Cr+ (14.6% Q4)", pat:"—",
+          netWorth:"—", netCash:"ND/EBITDA 0.4x", deRatio:"0.4x", rocE:"—" },
+    exposure:"₹610 Cr", utilization:60, npa:"Standard", sentiment:76,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹280 Cr", used:"₹168 Cr", rate:"10.30%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹200 Cr", used:"₹200 Cr", rate:"9.90%", status:"Active"},
+      {type:"Bank Guarantee", limit:"₹80 Cr", used:"₹44 Cr", rate:"1.05% comm.", status:"Active"},
+      {type:"Export Packing Credit", limit:"₹90 Cr", used:"₹52 Cr", rate:"8.95%", status:"Active"},
+    ],
+    products:["Forex/Treasury","Export Finance","Term Lending","Cash Management"],
+    contacts:[{n:"Gaurav Kumar",r:"CFO",e:"primary"},{n:"Neeraj Kanwar",r:"Vice Chairman & MD",e:""},{n:"Treasury Desk",r:"Corporate Treasury",e:""}],
+    realNews:[
+      {t:"Apollo Tyres FY26 revenue ₹28,471 Cr (+9%); Q4 PAT ₹631 Cr (+242% YoY)", d:"2 weeks ago", src:"Q4 Results", impact:"high"},
+      {t:"Net debt cut ₹900 Cr; ND/EBITDA improved to 0.4x — strong deleveraging", d:"2 weeks ago", src:"Earnings Call", impact:"high"},
+      {t:"Truck-bus radials +20%; Europe premiumization; growth capex planned over 2–3 years", d:"2 weeks ago", src:"Management Guidance", impact:"medium"},
+    ],
+    compBank:"Axis Bank",
+    notes:"Strong deleveraging — ND/EBITDA down to 0.4x, improving credit profile. Growth capex planned over 2–3 years now that the balance sheet is repaired. Europe operations need FX hedging; India TBR demand strong. Will leverage improved metrics to negotiate sharper pricing.",
+    triggers:[
+      { key:"growth-capex", icon:"capex", tag:"Opportunity", tagClass:"green", conf:88,
+        title:"Growth capex resuming post-deleveraging",
+        what:"With ND/EBITDA down to 0.4x, Apollo flagged growth capex over the next 2–3 years to expand capacity for strong India TBR and European demand.",
+        rec:"Position a ₹250–300 Cr capex term loan for the new investment cycle.",
+        ask:"Sanction a ₹250–300 Cr capex term loan for capacity expansion",
+        clauses:["limit","covenant"], priority:"Priority", oppText:"₹250–300 Cr capex TL" },
+      { key:"pricing", icon:"risk", tag:"Action Required", tagClass:"amber", conf:89,
+        title:"Improved credit metrics → client pushing for repricing",
+        what:"After cutting net debt ₹900 Cr and reaching 0.4x ND/EBITDA, Apollo is asking banks to reflect the stronger profile. Axis is quoting below our 10.30% CC rate.",
+        rec:"Take a repricing case to Credit Head reflecting the improved rating trajectory.",
+        ask:"Reduce CC rate from 10.30% to 9.70% reflecting improved leverage",
+        clauses:["rate"], priority:"Priority", oppText:"Defend ₹168 Cr drawn balance" },
+      { key:"europe-fx", icon:"trend", tag:"Cross-sell", tagClass:"blue", conf:81,
+        title:"European operations — FX & trade-finance cross-sell",
+        what:"Europe revenue is a meaningful share with premiumization upside; EUR/USD exposure on operations and exports needs structured hedging.",
+        rec:"Cross-sell a structured FX forward programme and export trade finance.",
+        ask:"Provide structured FX cover and reduce export packing credit rate",
+        clauses:["rate","creditperiod"], priority:"Secondary", oppText:"Hedge European exposure" },
+    ],
+  },
+
+  /* ============================ DR REDDY'S ============================ */
+  {
+    id:"CIF-29551", name:"Dr. Reddy's Laboratories", short:"Dr. Reddy's", logo:"DR", color:"#a07be3",
+    sector:"Pharmaceuticals · Generics & Biosimilars", group:"Dr. Reddy's", rating:"AA", relYrs:10,
+    fin:{ revenue:"₹33,500 Cr+", revenueFY:"FY26 (~+11% YoY)", ebitda:"~26% margin", pat:"—",
+          netWorth:"—", netCash:"Net cash ₹3,271 Cr", deRatio:"Net cash", rocE:"—" },
+    exposure:"₹890 Cr", utilization:62, npa:"Standard", sentiment:74,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹340 Cr", used:"₹211 Cr", rate:"10.20%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹240 Cr", used:"₹240 Cr", rate:"9.80%", status:"Active"},
+      {type:"Export Packing Credit", limit:"₹180 Cr", used:"₹104 Cr", rate:"8.85%", status:"Active"},
+      {type:"Letter of Credit", limit:"₹120 Cr", used:"₹61 Cr", rate:"0.80% comm.", status:"Active"},
+    ],
+    products:["Forex/Treasury","Export Finance","Term Lending","Trade Finance","Cash Management"],
+    contacts:[{n:"M. V. Narasimhan",r:"CFO",e:"primary"},{n:"Erez Israeli",r:"CEO",e:""},{n:"Treasury Desk",r:"Corporate Treasury",e:""}],
+    realNews:[
+      {t:"Dr. Reddy's FY26 capex ₹2,302 Cr; net cash surplus ₹3,271 Cr; ~₹2,000 Cr capex guided FY27", d:"2 weeks ago", src:"Q4 Earnings Call", impact:"high"},
+      {t:"FY27 capex focused on biosimilars & product-specific investments", d:"2 weeks ago", src:"Management Guidance", impact:"high"},
+      {t:"USD revenue hedged $462M at ₹91.37–93.46/$; US price erosion on key products a watchout", d:"2 weeks ago", src:"Earnings Call", impact:"medium"},
+    ],
+    compBank:"Kotak Mahindra",
+    notes:"Net cash ₹3,271 Cr — very strong counterparty. FY27 capex ~₹2,000 Cr toward biosimilars (high-margin pipeline). Large USD exposure already hedged $462M — active treasury relationship. US generic price erosion pressures NA; client values FX and competitive export-credit pricing.",
+    triggers:[
+      { key:"biosimilar-capex", icon:"capex", tag:"Opportunity", tagClass:"green", conf:89,
+        title:"~₹2,000 Cr FY27 capex toward biosimilars",
+        what:"Dr. Reddy's guided ~₹2,000 Cr FY27 capex, weighted to biosimilars and product-specific investments — a high-value, long-gestation financing opportunity.",
+        rec:"Position a ₹300–400 Cr capex term loan for the biosimilar build-out.",
+        ask:"Sanction a ₹300–400 Cr term loan for biosimilar capacity",
+        clauses:["limit","covenant"], priority:"Priority", oppText:"₹300–400 Cr biosimilar TL" },
+      { key:"fx-treasury", icon:"trend", tag:"Opportunity", tagClass:"green", conf:90,
+        title:"$462M USD exposure — active FX/treasury mandate",
+        what:"Dr. Reddy's hedges large USD revenues ($462M via forwards & risk-reversals). A deep, recurring treasury relationship with room to expand structured solutions.",
+        rec:"Deepen the FX hedging mandate and cross-sell trade finance on the export book.",
+        ask:"Expand structured FX programme and reduce export packing credit rate",
+        clauses:["rate"], priority:"Priority", oppText:"Expand FX mandate on $462M" },
+      { key:"us-erosion", icon:"risk", tag:"Action Required", tagClass:"amber", conf:83,
+        title:"US generic price erosion pressuring NA receivables",
+        what:"Price erosion on key US products (e.g. Lenalidomide) pressures North America revenue and working capital on the export receivables cycle.",
+        rec:"Support with credit-period flexibility and competitive export financing.",
+        ask:"Extend export credit period 60→90 days and reprice the CC line",
+        clauses:["creditperiod","rate"], priority:"Secondary", oppText:"Bridge NA receivables cycle" },
+    ],
+  },
+
+  /* ============================ JSW STEEL ============================ */
+  {
+    id:"CIF-71290", name:"JSW Steel Ltd", short:"JSW Steel", logo:"JS", color:"#4a86d4",
+    sector:"Metals · Steel", group:"JSW Group", rating:"AA", relYrs:10,
+    fin:{ revenue:"₹1,80,000 Cr+", revenueFY:"FY26", ebitda:"₹8,634 Cr (Q4)", pat:"—",
+          netWorth:"—", netCash:"Net debt ₹53,870 Cr", deRatio:"—", rocE:"—" },
+    exposure:"₹1,980 Cr", utilization:77, npa:"Standard", sentiment:75,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹650 Cr", used:"₹500 Cr", rate:"10.50%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹850 Cr", used:"₹850 Cr", rate:"10.10%", status:"Active"},
+      {type:"Letter of Credit", limit:"₹350 Cr", used:"₹214 Cr", rate:"0.80% comm.", status:"Active"},
+      {type:"Bank Guarantee", limit:"₹130 Cr", used:"₹78 Cr", rate:"1.00% comm.", status:"Active"},
+    ],
+    products:["Project Finance","Forex/Treasury","Trade Finance","Term Lending","Letters of Credit"],
+    contacts:[{n:"Jayant Acharya",r:"Jt. MD & CEO",e:""},{n:"Rajeev Pai",r:"CFO",e:"primary"},{n:"Treasury Desk",r:"Corporate Treasury",e:""}],
+    realNews:[
+      {t:"JSW Steel FY26 capex ₹15,595 Cr; FY27 guided ₹22,000–24,000 Cr", d:"2 weeks ago", src:"Q4 Results", impact:"high"},
+      {t:"Net debt cut ₹26,477 Cr QoQ to ₹53,870 Cr after BPSL slump-sale & deleveraging", d:"2 weeks ago", src:"Earnings Call", impact:"high"},
+      {t:"Targeting 50 MTPA crude steel by 2031; awarded large expansion EPC order to L&T", d:"2 weeks ago", src:"Capex Update", impact:"medium"},
+    ],
+    compBank:"State Bank of India",
+    notes:"Massive FY27 capex ₹22,000–24,000 Cr toward 50 MTPA by 2031 — a flagship project-finance opportunity. Just deleveraged sharply (net debt down ₹26,477 Cr) via BPSL sale + ₹14,000 Cr fundraise approved. Imported coking-coal exposure → LC and FX needs. Competition fierce on the capex mandate pricing.",
+    triggers:[
+      { key:"capex-pf", icon:"capex", tag:"Opportunity", tagClass:"green", conf:92,
+        title:"₹22,000–24,000 Cr FY27 capex — 50 MTPA expansion",
+        what:"JSW guided FY27 capex of ₹22,000–24,000 Cr toward 50 MTPA crude steel by 2031 (Ballari, Paradip). A flagship multi-year project-finance opportunity.",
+        rec:"Position a ₹800 Cr–1,000 Cr project term-loan tranche for the expansion.",
+        ask:"Sanction a ₹800–1,000 Cr project-finance term loan for the 50 MTPA expansion",
+        clauses:["limit","covenant"], priority:"Priority", oppText:"₹800–1,000 Cr project finance" },
+      { key:"coal-lc", icon:"trend", tag:"Opportunity", tagClass:"green", conf:86,
+        title:"Imported coking coal — LC & FX intensive",
+        what:"Steel production depends on imported coking coal, requiring large LC limits and USD hedging on raw-material procurement.",
+        rec:"Enhance LC limits and cross-sell a structured commodity/FX hedging programme.",
+        ask:"Enhance LC limit by ₹250 Cr and provide commodity/FX hedging on coal imports",
+        clauses:["limit","rate"], priority:"Priority", oppText:"₹250 Cr LC + hedging" },
+      { key:"pricing", icon:"risk", tag:"Action Required", tagClass:"amber", conf:88,
+        title:"SBI competing hard on the capex-mandate pricing",
+        what:"Post-deleveraging, JSW's improved profile lets it push pricing. SBI is quoting below our 10.10% term-loan rate to anchor the ₹22–24k Cr capex programme.",
+        rec:"Take a competitive pricing case to Credit Head to retain the mandate.",
+        ask:"Reduce term-loan rate from 10.10% to 9.50% to match the capex-mandate quote",
+        clauses:["rate"], priority:"Priority", oppText:"Defend ₹850 Cr TL + mandate" },
+    ],
+  },
+
+  /* ============================ PI INDUSTRIES ============================ */
+  {
+    id:"CIF-60733", name:"PI Industries Ltd", short:"PI Industries", logo:"PI", color:"#3fbf8f",
+    sector:"Agrochemicals · CSM & Pharma", group:"PI Industries", rating:"AA-", relYrs:7,
+    fin:{ revenue:"₹6,714 Cr", revenueFY:"FY26 (−16% YoY)", ebitda:"25% margin", pat:"—",
+          netWorth:"—", netCash:"Net cash ₹3,427 Cr", deRatio:"Net cash", rocE:"—" },
+    exposure:"₹520 Cr", utilization:54, npa:"Standard", sentiment:73,
+    facilities:[
+      {type:"Working Capital (CC)", limit:"₹240 Cr", used:"₹130 Cr", rate:"10.25%", status:"Active"},
+      {type:"Term Loan – Capex", limit:"₹160 Cr", used:"₹160 Cr", rate:"9.85%", status:"Active"},
+      {type:"Export Packing Credit", limit:"₹140 Cr", used:"₹78 Cr", rate:"8.90%", status:"Active"},
+      {type:"Letter of Credit", limit:"₹90 Cr", used:"₹41 Cr", rate:"0.80% comm.", status:"Active"},
+    ],
+    products:["Forex/Treasury","Export Finance","Term Lending","Trade Finance"],
+    contacts:[{n:"Subhransu Mishra",r:"CFO",e:"primary"},{n:"Mayank Singhal",r:"Vice Chairman & MD",e:""},{n:"Treasury Desk",r:"Corporate Treasury",e:""}],
+    realNews:[
+      {t:"PI Industries FY26 revenue ₹6,714 Cr (−16%); EBITDA margin held at 25%; net cash ₹3,427 Cr", d:"1 week ago", src:"Q4 Results", impact:"high"},
+      {t:"FY26 capex ₹1,151 Cr across five sites; three multipurpose plants under construction", d:"1 week ago", src:"Investor Presentation", impact:"high"},
+      {t:"Pharma segment scaling (active customers 77→86); export-cycle weakness a watchout", d:"1 week ago", src:"Earnings Call", impact:"medium"},
+    ],
+    compBank:"HDFC Bank",
+    notes:"Effectively debt-free (net cash ₹3,427 Cr) — excellent counterparty despite a soft export year. Building capacity across five sites with three multipurpose plants under construction. Diversifying into pharma CDMO. Large export book → FX and trade-finance intensive. Will expect fine pricing given the clean balance sheet.",
+    triggers:[
+      { key:"plant-capex", icon:"capex", tag:"Opportunity", tagClass:"green", conf:88,
+        title:"Three multipurpose plants under construction",
+        what:"PI is building three multipurpose plants across five sites (FY26 capex ₹1,151 Cr) for its CSM and pharma pipeline — a clear term-financing opportunity.",
+        rec:"Position a ₹200–300 Cr capex term loan for the plant build-out.",
+        ask:"Sanction a ₹200–300 Cr capex term loan for the new multipurpose plants",
+        clauses:["limit","covenant"], priority:"Priority", oppText:"₹200–300 Cr plant TL" },
+      { key:"export-fx", icon:"risk", tag:"Action Required", tagClass:"amber", conf:84,
+        title:"Export-cycle weakness pressuring receivables",
+        what:"Revenue fell 16% on a difficult agrochemical export cycle, stretching the export-receivables timeline and USD exposure.",
+        rec:"Support with FX hedging and credit-period flexibility through the down-cycle.",
+        ask:"Extend export credit period 60→90 days and provide structured FX cover",
+        clauses:["creditperiod","rate"], priority:"Priority", oppText:"Bridge export receivables" },
+      { key:"pharma-cross", icon:"trend", tag:"Cross-sell", tagClass:"blue", conf:80,
+        title:"Pharma CDMO scaling — trade-finance cross-sell",
+        what:"The pharma segment is scaling (active customers 77→86, enquiries nearly doubled), needing LC/trade-finance support as it grows.",
+        rec:"Cross-sell LC and SCF facilities for the growing pharma CDMO business.",
+        ask:"Enhance LC limit by ₹60 Cr and set up an SCF programme for pharma vendors",
+        clauses:["limit","creditperiod"], priority:"Secondary", oppText:"₹60 Cr LC + SCF" },
+    ],
+  },
+];
+
+/* ---- Clause library: how each clause type renders as a deviation ---- */
+function buildDeviation(clauseType, c){
+  const f = c.facilities;
+  const ccRate = parseFloat(f[0].rate);
+  const tlRate = parseFloat((f.find(x=>x.type.includes('Term'))||f[1]).rate);
+  switch(clauseType){
+    case 'rate': {
+      const newRate = (ccRate-0.85).toFixed(2);
+      return { id:"DV-RATE", clause:"Clause 4.2 — Interest Rate (Working Capital)",
+        original:`Interest on the Cash Credit facility shall be charged at ${f[0].rate} per annum (Repo + spread), reset quarterly, with a floor of ${(ccRate-0.25).toFixed(2)}% for borrowers rated ${c.rating}.`,
+        modified:`Interest on the Cash Credit facility shall be charged at ${newRate}% per annum (Repo + revised spread), reset quarterly.`,
+        severity:"Medium", severityClass:"amber",
+        explanation:`Requested ${newRate}% is below the standard internal floor for ${c.rating} borrowers. Requires a pricing-floor override sanction.`,
+        commercial:`NII impact on the ${f[0].used} drawn balance, offset by relationship retention and the prospective mandate. Competitor ${c.compBank} quoting below market.`,
+        policy:"Triggers Credit Policy §7.3 (Pricing Floor Override). Below-floor pricing needs Credit Head sanction + documented rationale.",
+        owner:"Credit Head", route:"Credit", conf:91 };
+    }
+    case 'creditperiod':
+      return { id:"DV-CP", clause:"Clause 6.1 — Credit Period (Supply Chain / Receivables)",
+        original:"The maximum permissible credit period extended to approved counterparties shall not exceed 60 days from invoice date.",
+        modified:"The maximum permissible credit period extended to approved counterparties shall not exceed 90 days from invoice date.",
+        severity:"High", severityClass:"red",
+        explanation:"Extension from 60 to 90 days raises tenor risk ~50% and elongates the receivables/exposure-at-default duration.",
+        commercial:"Higher funding cost on extended tenor; improves client stickiness. Recommend a 25 bps reprice as mitigant.",
+        policy:"Triggers Credit Policy §9.1 (Tenor Limits) and Risk Framework §4.4 (Duration). Dual sign-off: Credit + Risk.",
+        owner:"Credit + Risk", route:"Credit+Risk", conf:88 };
+    case 'covenant':
+      return { id:"DV-COV", clause:"Clause 9.4 — Financial Covenant (Leverage)",
+        original:"The Borrower shall maintain Total Debt to EBITDA not exceeding 3.00x, tested quarterly. Breach is an Event of Default.",
+        modified:"The Borrower shall maintain Total Debt to EBITDA not exceeding 3.50x for the quarters ending Sep-2026 and Dec-2026, reverting to 3.00x thereafter.",
+        severity:"High", severityClass:"red",
+        explanation:"Temporary covenant relaxation to 3.50x accommodates the capex-phase leverage spike. Material change to the default trigger; requires Risk Committee review.",
+        commercial:"No direct revenue impact; protects the existing term loan's performing status through the capex ramp.",
+        policy:"Triggers Risk Framework §6.2 (Material Covenant Amendment). Mandatory Risk Committee approval.",
+        owner:"Risk Committee", route:"Risk", conf:84 };
+    case 'collateral':
+      return { id:"DV-COL", clause:"Clause 11.2 — Security & Collateral Cover",
+        original:"The Borrower shall maintain minimum security cover of 1.40x of the outstanding facility through a first pari-passu charge on fixed assets.",
+        modified:"The Borrower shall maintain minimum security cover of 1.25x of the outstanding facility through a first pari-passu charge on fixed assets.",
+        severity:"Medium", severityClass:"amber",
+        explanation:"Reduction from 1.40x to 1.25x lowers the secured-recovery buffer ~11%. Within delegated authority for investment-grade with positive trend.",
+        commercial:`No P&L impact; marginal increase in unsecured exposure. Competitive parity with ${c.compBank}.`,
+        policy:"Triggers Credit Policy §11.5 (Security Dilution). Credit Head delegated authority for IG names.",
+        owner:"Credit Head", route:"Credit", conf:86 };
+    case 'limit':
+      return { id:"DV-LIM", clause:"Clause 3.1 — Facility Limits (Sanctioned Amount)",
+        original:`The aggregate sanctioned limit shall not exceed the amounts set out in Schedule I (currently ${c.exposure}).`,
+        modified:`The aggregate sanctioned limit shall be enhanced to accommodate the requested incremental facility, subject to fresh credit appraisal.`,
+        severity:"High", severityClass:"red",
+        explanation:"A limit enhancement increases total exposure and requires fresh appraisal of debt-servicing capacity and security against the new amount.",
+        commercial:`Incremental NII and fee income from the new facility; deepens wallet share. Anchors the relationship against ${c.compBank}.`,
+        policy:"Triggers Credit Policy §5.2 (Limit Enhancement) and the exposure-ceiling matrix. Sanction per the delegation grid.",
+        owner:"Credit Committee", route:"Credit", conf:87 };
+  }
+}
+
+</script>
+<script>
+/* ============================================================
+   MERIDIAN — Data Layer (real companies + scenario-driven)
+   applyCompany(company, scenarioKey) builds the ACTIVE state
+   from ONE selected engagement scenario — the single source of
+   truth every screen renders from.
+   ============================================================ */
+
+const RM = { name:"Ananya Rao", role:"Senior Relationship Manager", desk:"Mumbai Large Corporate Desk", id:"RM-MUM-0142" };
+
+const AGENTS = [
+  {id:"copilot", name:"RM Copilot Agent", role:"Orchestrator & daily prioritization", icon:"compass",
+   input:["RM calendar","Portfolio CIF data","Market triggers","Pending workflow states"],
+   objective:"Prioritize the RM's day, surface high-value triggers, and orchestrate downstream agents based on events.",
+   retrieved:["Portfolio CIFs","Today's meetings","Pending approvals","Market triggers"],
+   logic:"Ranks clients by (exposure × trigger-severity × time-sensitivity). Generates nudges and dispatches the Corporate Intelligence Agent on each high-priority client.",
+   output:["Prioritized cockpit","AI nudges","Agent dispatch instructions"]},
+  {id:"corp", name:"Corporate Intelligence Agent", role:"Builds 360° corporate context", icon:"building",
+   input:["CIF master","Facility/limit data","External news feeds","BSE/NSE filings"],
+   objective:"Assemble a real-time corporate one-view: financials, exposure, events, sentiment.",
+   retrieved:["Company financials","Exposure & facilities","News events","Relationship history"],
+   logic:"RAG over internal CIF + external news. Entity-resolves filings to portfolio names. Computes relationship sentiment from interaction history + news polarity.",
+   output:["Corporate profile","Relationship sentiment","Opportunity flags"]},
+  {id:"prep", name:"Meeting Preparation Agent", role:"Generates pre-meeting brief", icon:"clipboard",
+   input:["Corporate one-view","Open negotiations","Product catalogue","Prior MoMs"],
+   objective:"Produce a contextual meeting brief, agenda, talking points and negotiation watchouts.",
+   retrieved:["Company profile","Selected trigger","Product fit","Prior meeting notes"],
+   logic:"Synthesizes the selected engagement into a structured brief. Cross-references the product catalogue against the client's financial state.",
+   output:["Meeting brief","Agenda + talking points","Negotiation watchouts","Product recs"]},
+  {id:"conv", name:"Conversation Intelligence Agent", role:"Analyzes meeting transcripts", icon:"mic",
+   input:["Meeting transcript","RM notes","Voice recording (ASR)"],
+   objective:"Extract negotiation requests, action items, commitments, pricing asks and sentiment.",
+   retrieved:["Transcript","Standard T&C reference","Negotiation taxonomy"],
+   logic:"Classifies each utterance against a negotiation taxonomy (pricing / tenor / covenant / collateral / limit). Tags deviations and routes to the Policy Agent.",
+   output:["Meeting summary","Negotiation asks","Commitments","Sentiment"]},
+  {id:"policy", name:"Policy & Deviation Agent", role:"Detects T&C deviations", icon:"shield",
+   input:["Negotiation asks","Standard T&C template","Credit Policy","Risk Framework"],
+   objective:"Compare asks against standard T&C, identify impacted clauses, assess severity & routing.",
+   retrieved:["T&C template v4.2","Credit Policy §5,§7,§9,§11","Risk Framework §4,§6","Comparable approvals"],
+   logic:"Clause-level diff between standard template and requested terms. Maps each deviation to its triggering policy §, computes severity & commercial impact, recommends approval owner.",
+   output:["Deviations","Redline comparison","Severity & routing","Deviation memos"]},
+  {id:"approve", name:"Approval Orchestration Agent", role:"Routes & tracks approvals", icon:"route",
+   input:["Deviation memos","Approval matrix","Reviewer availability","SLA config"],
+   objective:"Auto-generate approval memos and route to the correct authority with SLA tracking.",
+   retrieved:["Approval matrix","Credit/Risk delegations","SLA rules","Historical comparables"],
+   logic:"Maps each deviation owner to an approver via the delegation matrix. Generates memo, starts SLA timer, escalates on breach, captures comments, maintains audit trail.",
+   output:["Approval workflows","SLA timers","Escalations","Audit trail"]},
+  {id:"doc", name:"Document Generation Agent", role:"Produces final T&C documents", icon:"file",
+   input:["Approved deviations","T&C template","Approval lineage"],
+   objective:"Merge approved clauses into a clean, customer-ready revised T&C with audit lineage.",
+   retrieved:["Approved clause set","Template v4.2","Approval IDs & sign-offs"],
+   logic:"Merges only approved/conditionally-approved clauses, regenerates numbering, attaches negotiation + approval summaries, versions the document and locks the audit trail.",
+   output:["Revised T&C","Negotiation summary","Approval audit trail"]},
+];
+
+const KNOWLEDGE_SOURCES = [
+  {n:"Corporate Profile / CIF Master", t:"Internal DB", count:"10 CIFs"},
+  {n:"Standard T&C Template", t:"Document v4.2", count:"42 clauses"},
+  {n:"Credit Policy Manual", t:"Policy Doc", count:"§1–§14"},
+  {n:"Risk Framework", t:"Policy Doc", count:"§1–§9"},
+  {n:"Historical Approvals", t:"Workflow DB", count:"1,284 records"},
+  {n:"Meeting Transcripts", t:"Conversation Store", count:"312 records"},
+  {n:"External Company News", t:"News/Filings API", count:"Live feed"},
+  {n:"Product Catalogue", t:"Reference Data", count:"38 products"},
+];
+
+const DEMO_STEPS = [
+  {k:"login", t:"Morning Login", d:"RM opens the cockpit. AI has reprioritized the day and surfaced this client's real triggers.", view:"cockpit", icon:"sun"},
+  {k:"prep", t:"Meeting Preparation", d:"RM opens the one-view. AI generates the brief for the selected engagement.", view:"prep", icon:"clipboard"},
+  {k:"meet", t:"Client Meeting & Capture", d:"RM uploads the transcript. Conversation Intelligence extracts the negotiation asks.", view:"meeting", icon:"mic"},
+  {k:"dev", t:"Deviation Analysis", d:"Policy Agent compares the asks to standard T&C — deviations with redline & routing.", view:"deviation", icon:"shield"},
+  {k:"approve", t:"Approval Workflow", d:"Memos auto-routed to Credit & Risk with SLA tracking.", view:"approval", icon:"route"},
+  {k:"doc", t:"Final Document", d:"Approved deviations merged into a revised T&C with full audit lineage.", view:"document", icon:"file"},
+];
+
+let D = {
+  rm: RM, agents: AGENTS, knowledgeSources: KNOWLEDGE_SOURCES,
+  company:null, scenario:null, scenarioKey:null,
+  meetings:[], nudges:[], approvalsPending:[], followups:[], approvalWorkflow:[], documents:[],
+  deviations:[], transcript:"", convAnalysis:null,
+};
+
+// SLA / stage presets cycled across the deviations of a scenario
+const STAGE_PRESETS = [
+  {stage:"Approved",           stageIdx:4, sla:"Closed",        slaClass:"green", revStatus:"Approved",      revComment:"Within delegated authority. Approved. Ensure documents amended before disbursement."},
+  {stage:"Under Review",       stageIdx:1, sla:"4h remaining",  slaClass:"amber", revStatus:"Reviewing",     revComment:"Reviewing relationship P&L contribution. Need confirmation of mandate probability from RM."},
+  {stage:"Clarification Needed",stageIdx:2,sla:"12h remaining", slaClass:"blue",  revStatus:"Clarification", revComment:"Conditionally acceptable subject to a 25 bps reprice. Need concentration breakdown before sign-off."},
+  {stage:"Escalated",          stageIdx:3, sla:"Overdue 2h",    slaClass:"red",   revStatus:"Escalated",     revComment:"Material change — escalating to committee. Recommend conditioning on monthly reporting."},
+];
+
+function scenariosFor(company){
+  // returns [{key:'full', label, ...}, ...triggers]
+  const full = {
+    key:"full", kind:"full", icon:"clipboard", tag:"Full Review", tagClass:"violet",
+    title:"Full Relationship Review",
+    what:`Comprehensive quarterly review with ${company.short} covering all open items together — financing the growth agenda, defending pricing, and the supporting facility terms.`,
+    rec:"Run the complete engagement: all negotiation points discussed in one meeting.",
+    ask:"Multiple asks across pricing, limits, covenant and collateral",
+    // union of all clause types used by the triggers, de-duped, in canonical order
+    clauses:dedupeClauses(company.triggers.flatMap(t=>t.clauses)),
+    priority:"Priority", oppText:"Full engagement",
+  };
+  return [full, ...company.triggers];
+}
+function dedupeClauses(arr){
+  const order=["rate","creditperiod","covenant","collateral","limit"];
+  return order.filter(x=>arr.includes(x));
+}
+
+function applyCompany(company, scenarioKey){
+  const scenarios = scenariosFor(company);
+  const scenario = scenarios.find(s=>s.key===scenarioKey) || scenarios[0];
+  const co = company.short;
+  D.company = company;
+  D.companyMeta = { name:company.name, shortName:company.short };
+  D.scenario = scenario;
+  D.scenarioKey = scenario.key;
+  D.scenarios = scenarios;
+
+  // ---- Adapter: expose the real company through the field names the views use ----
+  const ccRate = parseFloat(company.facilities[0].rate);
+  D.client = {
+    id:company.id, name:company.name, sector:company.sector, group:company.group,
+    rating:company.rating, ratingTrend:"up", relationshipYrs:company.relYrs,
+    sentiment:"Positive", sentimentScore:company.sentiment,
+    turnover:company.fin.revenue, revenue:company.fin.revenue,
+    ebitda:company.fin.ebitda, networth:company.fin.netWorth&&company.fin.netWorth!=="—"?company.fin.netWorth:company.fin.netCash,
+    debtEquity:company.fin.deRatio||"—",
+    exposure:company.exposure, utilization:company.utilization, npa:company.npa,
+    logo:company.logo, logoColor:company.color, facilities:company.facilities, products:company.products,
+    news:company.realNews, contacts:company.contacts, notes:company.notes,
+    compBank:company.compBank, newRate:(ccRate-0.85).toFixed(2),
+    // scenario-derived opportunity text
+    oppText:scenario.oppText, oppLow:scenario.oppText, oppHigh:"",
+    fin:company.fin,
+    fl:{ product:"structured treasury & hedging", capexReason:scenario.title.toLowerCase(), driver:company.sector.split('·').slice(-1)[0].trim() },
+  };
+
+  // ----- Deviations: built ONLY from the selected scenario's clauses -----
+  D.deviations = scenario.clauses.map(ct=>buildDeviation(ct, company));
+
+  // ----- Approval workflows: one per deviation, varied stages -----
+  D.approvalWorkflow = D.deviations.map((dv,i)=>{
+    const ps = STAGE_PRESETS[i % STAGE_PRESETS.length];
+    const reviewerName = dv.route.includes("Risk") ? "Shreya Banerjee" : "Vikram Iyer";
+    const reviewerRole = dv.route.includes("Risk") ? "Risk Head" : "Credit Head";
+    return {
+      id:"AP-20"+(41+i),
+      title:dv.clause.split('—')[1].trim()+" — "+co+" ("+dv.clause.split('—')[0].trim()+")",
+      stage:ps.stage, stageIdx:ps.stageIdx, risk:dv.severity==="High"?"High":"Medium", route:dv.route,
+      sla:ps.sla, slaClass:ps.slaClass,
+      memo:dv.explanation+" "+dv.commercial,
+      reviewers:[{n:reviewerName, r:reviewerRole, status:ps.revStatus, comment:ps.revComment, time:(i+1)+"h ago"}],
+      history:[
+        {s:"Submitted", t:"Today 10:1"+i, by:"A. Rao (RM)", done:true},
+        {s:"Auto-routed to "+dv.route, t:"Today 10:1"+i, by:"Approval Agent", done:true},
+        {s:ps.stage==="Approved"?"Under Review":ps.stage, t:"Today 1"+(2+i)+":30", by:reviewerName, done:ps.stageIdx>1},
+        {s:ps.stage==="Approved"?"Approved":"Decision", t:ps.stage==="Approved"?"Today 13:50":"Pending", by:ps.stage==="Approved"?reviewerName:"—", done:ps.stage==="Approved"},
+      ],
+    };
+  });
+
+  // ----- Transcript + conversation analysis from the scenario -----
+  D.transcript = buildTranscript(company, scenario);
+  D.convAnalysis = buildConvAnalysis(company, scenario);
+
+  // ----- Meetings (today) — selected client at 09:30, others fill the day -----
+  const others = COMPANIES.filter(x=>x.id!==company.id);
+  D.meetings = [
+    {id:"m1", hr:"09:30", ap:"AM", client:company.name, topic:scenario.kind==="full"?"Full Relationship Review":scenario.title, type:"In-person", priority:"high", prepped:true, key:"active"},
+    {id:"m2", hr:"11:45", ap:"AM", client:others[0].name, topic:"WC Limit Renewal Discussion", type:"Video Call", priority:"medium", prepped:true, key:"other"},
+    {id:"m3", hr:"02:30", ap:"PM", client:others[1].name, topic:"FX Hedging Programme Pitch", type:"In-person", priority:"medium", prepped:false, key:"other"},
+    {id:"m4", hr:"04:15", ap:"PM", client:others[2].name, topic:"BG Facility Enhancement", type:"Video Call", priority:"low", prepped:false, key:"other"},
+  ];
+
+  // ----- Nudges = the company's real triggers (the cockpit entry points) -----
+  D.nudges = company.triggers.map(t=>({
+    key:t.key, icon:t.icon, title:t.title, reason:t.what, rec:t.rec, conf:t.conf, tag:t.tag, tagClass:t.tagClass,
+  }));
+
+  // ----- Pending approvals snapshot (top 2 of current workflow) -----
+  D.approvalsPending = D.approvalWorkflow.filter(w=>w.stage!=="Approved").slice(0,2).map(w=>({
+    id:w.id, client:company.name, item:w.title.split(' — ')[0], stage:w.stage, owner:w.route+" – "+w.reviewers[0].n.split(' ').map(x=>x[0]).join('.'), sla:w.sla, slaClass:w.slaClass, risk:w.risk,
+  }));
+
+  // ----- Follow-ups -----
+  D.followups = [
+    {client:co, task:"Circulate "+(scenario.kind==='full'?'review':scenario.title.split(' ').slice(0,3).join(' '))+" MoM to Credit team", due:"Today", done:false},
+    {client:co, task:"Request updated financial projections", due:"30 May", done:false},
+    {client:co, task:"Confirm documentation checklist", due:"Tomorrow", done:false},
+    {client:co, task:"Follow up on "+company.compBank+" counter-offer", due:"30 May", done:true},
+  ];
+
+  // ----- Documents -----
+  const cifShort = co.replace(/[^A-Za-z]/g,'').slice(0,3).toUpperCase();
+  D.documents = [
+    {id:"DOC-"+cifShort+"-21", name:co+" — Revised T&C v2.1", status:"Pending Final Approval", date:"28 May 2026", clauses:42, modified:D.deviations.length, ver:"2.1"},
+    {id:"DOC-"+cifShort+"-20", name:co+" — Master T&C v2.0", status:"Active", date:"15 Jan 2026", clauses:42, modified:0, ver:"2.0"},
+  ];
+}
+
+function buildTranscript(company, scenario){
+  const cfo = company.contacts.find(x=>x.e==="primary") || company.contacts[0];
+  const cfoName = cfo.n, cfoFirst = cfoName.split(' ')[0];
+  const tr = company.contacts[1] || company.contacts[0];
+  const trName = tr.n, trFirst = trName.split(' ')[0];
+  const opening = scenario.kind==="full"
+    ? `Good morning ${cfoFirst}, ${trFirst}. Thanks for the time — this is our full quarterly relationship review, so let's cover everything: the growth financing, pricing, and the supporting terms.`
+    : `Good morning ${cfoFirst}, ${trFirst}. Thanks for the time. I wanted to focus today on ${scenario.title.toLowerCase()}.`;
+
+  // build clause-specific dialogue blocks
+  const blocks = {
+    rate:`[Pricing] ${cfoName} (CFO): On pricing — ${company.compBank} has come back to us below your current ${company.facilities[0].rate} on the working-capital line. Given our profile, I'd like that rate brought down. That's a priority for us.\n\nAnanya Rao (RM): I hear you. A below-floor rate needs Credit sign-off given your ${company.rating} rating, but the relationship matters — I'll take it back internally.`,
+    creditperiod:`[Credit period] ${trName} (Treasury): We also need the credit period on receivables/SCF extended from 60 to 90 days — the cycle is stretching with the current order/working-capital position.\n\nAnanya Rao (RM): Understood. Extending 60 to 90 days is a policy deviation on tenor risk — that goes to Credit and Risk both. I'll flag it.`,
+    covenant:`[Covenant] ${cfoName} (CFO): With the capex, we may temporarily breach the debt-to-EBITDA covenant of 3.0x — we'd want it relaxed to 3.5x for two quarters, or a waiver.\n\nAnanya Rao (RM): That's material — it'll need Risk Committee review, not just Credit. I'll build the case with your projections.`,
+    collateral:`[Collateral] ${trName} (Treasury): On security cover, we're at 1.4 times. For the incremental facility we'd like 1.25 times, in line with what we're offered elsewhere.\n\nAnanya Rao (RM): Reducing cover to 1.25x is within delegated authority for your rating — I can take that forward.`,
+    limit:`[Limit] ${cfoName} (CFO): The big one is the limit. With ${scenario.oppText}, our current sanctioned limits won't be enough. We need an enhancement to fund the growth.\n\nAnanya Rao (RM): Agreed — a limit enhancement needs fresh credit appraisal, but this is exactly the conversation we want to have. I'll initiate it.`,
+  };
+  const order = ["limit","rate","creditperiod","covenant","collateral"];
+  const used = order.filter(o=>scenario.clauses.includes(o));
+  const body = used.map(o=>blocks[o]).join("\n\n");
+  const close = `Ananya Rao (RM): Let me summarize the asks, route them through our approvals, and revert with a revised term sheet within the week.\n\n${cfoName} (CFO): Perfect. Make it competitive and ${company.short} will keep growing this relationship with you.`;
+  return `${opening}\n\n${body}\n\n${close}`;
+}
+
+function buildConvAnalysis(company, scenario){
+  const askLabels = {
+    rate:`Reduce WC interest rate from ${company.facilities[0].rate}`,
+    creditperiod:"Extend credit period 60 → 90 days",
+    covenant:"Relax debt/EBITDA covenant 3.0x → 3.5x (2 qtrs)",
+    collateral:"Reduce collateral cover 1.40x → 1.25x",
+    limit:`Enhance sanctioned limit (${scenario.oppText})`,
+  };
+  const asks = scenario.clauses.map((c,i)=>({ ask:askLabels[c], priority:i<2?"Priority":"Secondary", dev:true }));
+  const summary = scenario.kind==="full"
+    ? `Full relationship review with ${company.short}'s ${company.contacts.find(x=>x.e==='primary').r} and Treasury. All open items were tabled together: ${scenario.clauses.map(c=>({rate:'pricing',creditperiod:'credit period',covenant:'covenant',collateral:'collateral',limit:'limit enhancement'}[c])).join(', ')}. ${scenario.clauses.length} deviations identified. Sentiment positive, with competitive pressure from ${company.compBank}.`
+    : `Focused meeting with ${company.short} on "${scenario.title}". ${scenario.what} ${asks.length} negotiation ask(s) detected, mapping to ${scenario.clauses.length} clause deviation(s). Competitive pressure from ${company.compBank} noted.`;
+  return {
+    summary,
+    sentiment:{label:"Positive · Competitive pressure", score:company.sentiment},
+    asks,
+    commitments:[
+      "RM to route the agreed asks through Credit/Risk approvals",
+      "RM to build the supporting case using the latest projections",
+      "RM to revert with a revised term sheet within the week",
+    ],
+    actions:[
+      {a:"Circulate meeting MoM to Credit team", owner:"RM", due:"Today"},
+      {a:"Request updated financial projections from "+company.short, owner:"RM", due:"30 May"},
+      {a:"Initiate deviation analysis on the negotiated clauses", owner:"AI / RM", due:"Today"},
+    ],
+    competitive:`${company.compBank} is competing on this relationship (see profile). Risk of wallet migration if terms are not made competitive.`,
+  };
+}
+
+</script>
+<script>
+/* ============================================================
+   MERIDIAN — Views (render functions)
+   ============================================================ */
+
+// ---- Icon helper ----
+function ic(name, cls){
+  const I = {
+    spark:'<path d="M12 2l1.9 5.5L19 8l-4 3.5 1.2 5.5L12 14l-4.2 3 1.2-5.5L5 8l5.1-.5z"/>',
+    capex:'<path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/>',
+    trend:'<path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/>',
+    risk:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    compass:'<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
+    building:'<path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/>',
+    clipboard:'<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>',
+    mic:'<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/>',
+    shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    route:'<circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M6 16V8a4 4 0 0 1 4-4h4"/>',
+    file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+    check:'<path d="M20 6 9 17l-5-5"/>',
+    clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+    arrow:'<path d="M5 12h14M12 5l7 7-7 7"/>',
+    download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+    send:'<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
+    user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    eye:'<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+    search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  };
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="${cls||''}" style="width:1em;height:1em">${I[name]||''}</svg>`;
+}
+
+
+/* ===================== 1. DAILY COCKPIT ===================== */
+function viewCockpit(){
+  const stats = [
+    {lbl:"Portfolio Exposure", num:"₹5.11k Cr", delta:"+8.2% QoQ", up:true},
+    {lbl:"Active Negotiations", num:String(D.deviations.length), delta:D.company.short, up:true},
+    {lbl:"Pending Approvals", num:"2", delta:"1 overdue SLA", up:false},
+    {lbl:"Avg. TAT (deviation→doc)", num:"2.4 days", delta:"−61% vs manual", up:true},
+  ];
+  return `
+  <div class="page">
+    <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:22px">
+      <div>
+        <div class="eyebrow">${ic('spark')} AI-Reprioritized · 06:00 IST</div>
+        <div class="section-title">Good morning, Ananya</div>
+        <div class="section-sub">Your day has been reprioritized around 1 high-value market trigger and 2 approvals nearing SLA breach.</div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px">
+      ${stats.map(s=>`<div class="card stat">
+        <div class="lbl">${s.lbl}</div>
+        <div class="num">${s.num}</div>
+        <div class="delta ${s.up?'up':'down'}">${s.up?'▲':'▼'} ${s.delta}</div>
+      </div>`).join('')}
+    </div>
+
+    <div class="row" style="align-items:flex-start">
+      <div class="col" style="flex:1.6">
+        <!-- AI Nudges -->
+        <div class="card ai-card">
+          <div class="card-h">
+            <span class="ai-badge">${ic('spark','spark')} AI Nudges</span>
+            <h3 style="margin-left:2px">Triggers &amp; Recommendations</h3>
+            <div class="spacer"></div>
+            <span class="tag">Updated 4m ago</span>
+          </div>
+          <div class="card-pad col" style="gap:13px">
+            <div class="nudge" style="border-color:var(--blue-soft-border);background:linear-gradient(120deg,var(--panel-3),var(--panel))">
+              <div class="ni" style="background:rgba(140,127,214,.15);color:var(--violet)">${ic('clipboard')}</div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:9px"><div class="nt">Full Relationship Review</div><span class="tag violet">All points together</span>${D.scenarioKey==='full'?('<span class="tag green">'+ic('check')+' Active</span>'):''}</div>
+                <div class="nr">Cover every open item in one meeting — financing, pricing, covenant and collateral. Prep, deviations, approvals and the document reflect the full engagement.</div>
+                <div style="margin-top:9px"><div class="btn sm ${D.scenarioKey==='full'?'':'primary'}" onclick="selectScenario('full')">${D.scenarioKey==='full'?'✓ Selected — open prep':'Run full review'}</div></div>
+              </div>
+            </div>
+            ${D.nudges.map(n=>`
+              <div class="nudge" ${D.scenarioKey===n.key?'style="border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)"':''}>
+                <div class="ni">${ic(n.icon)}</div>
+                <div style="flex:1">
+                  <div style="display:flex;align-items:center;gap:9px"><div class="nt">${n.title}</div><span class="tag ${n.tagClass}">${n.tag}</span>${D.scenarioKey===n.key?'<span class="tag blue">'+ic('check')+' Active</span>':''}</div>
+                  <div class="nr">${n.reason}</div>
+                  <div class="nrec">${ic('arrow')} <span><b style="color:var(--blue)">Recommended:</b> ${n.rec}</span></div>
+                  <div style="margin-top:9px;display:flex;align-items:center;gap:12px">
+                    <div class="conf">Confidence <div class="bar"><span style="width:${n.conf}%"></span></div> ${n.conf}%</div>
+                    <div class="btn sm ${D.scenarioKey===n.key?'':'primary'}" onclick="selectScenario('${n.key}')">${D.scenarioKey===n.key?'✓ Selected — open prep':'Act on this trigger'}</div>
+                  </div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <!-- Today's meetings -->
+        <div class="card">
+          <div class="card-h">
+            <h3>Today's Schedule</h3><span class="sub">· 4 meetings</span>
+            <div class="spacer"></div>
+            <span class="tag blue">${ic('clock')} Reprioritized by AI</span>
+          </div>
+          <div class="card-pad col" style="gap:11px">
+            ${D.meetings.map(m=>`
+              <div class="mtg" onclick="openClient('${m.key}')">
+                <div class="time"><div class="hr">${m.hr}</div><div class="ap">${m.ap}</div></div>
+                <div class="body">
+                  <div style="display:flex;align-items:center;gap:8px"><div class="cn">${m.client}</div>
+                    ${m.priority==='high'?'<span class="tag red">High priority</span>':m.priority==='medium'?'<span class="tag amber">Medium</span>':'<span class="tag">Routine</span>'}
+                  </div>
+                  <div class="cd">${m.topic} · ${m.type}</div>
+                </div>
+                <div style="align-self:center">
+                  ${m.prepped?'<span class="tag green">'+ic('check')+' Brief ready</span>':'<span class="btn sm" onclick="event.stopPropagation();go(\'prep\')">Prep now</span>'}
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:1">
+        <!-- Pending approvals -->
+        <div class="card">
+          <div class="card-h"><h3>Pending Approvals</h3><div class="spacer"></div><span class="tag red"><span class="pulse"></span>1 overdue</span></div>
+          <div class="card-pad col" style="gap:11px">
+            ${D.approvalsPending.map(a=>`
+              <div class="note-card" style="cursor:pointer" onclick="go('approval')">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="mono" style="font-size:11px;color:var(--ink-3)">${a.id}</span>
+                  <span class="tag ${a.slaClass}">${a.sla}</span>
+                </div>
+                <div style="font-weight:600;color:var(--ink);margin:6px 0 3px">${a.client}</div>
+                <div style="font-size:12px">${a.item}</div>
+                <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11.5px;color:var(--ink-3)">
+                  <span>${a.stage}</span><span>${a.owner}</span>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <!-- Follow-ups -->
+        <div class="card">
+          <div class="card-h"><h3>Follow-up Tracker</h3></div>
+          <div class="card-pad col" style="gap:9px">
+            ${D.followups.map(f=>`
+              <div style="display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)">
+                <div style="width:18px;height:18px;border-radius:5px;border:1.5px solid ${f.done?'var(--green)':'var(--line-2)'};background:${f.done?'rgba(63,191,143,.15)':'transparent'};display:grid;place-items:center;flex-shrink:0;margin-top:1px;color:var(--green)">${f.done?ic('check'):''}</div>
+                <div style="flex:1">
+                  <div style="font-size:12.5px;font-weight:500;${f.done?'color:var(--ink-3);text-decoration:line-through':''}">${f.task}</div>
+                  <div style="font-size:11px;color:var(--ink-3);margin-top:1px">${f.client} · Due ${f.due}</div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ===================== 2. CORPORATE ONE-VIEW ===================== */
+function viewCorporate(){
+  const c = D.client;
+  return `
+  <div class="page">
+    <div class="card ai-card" style="margin-bottom:18px">
+      <div class="card-pad" style="display:flex;gap:18px;align-items:center">
+        <div style="width:58px;height:58px;border-radius:14px;background:${c.logoColor};display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:24px;color:#ffffff;flex-shrink:0">${c.logo}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px"><div style="font-family:var(--serif);font-size:24px;font-weight:600">${c.name}</div><span class="tag green">${ic('check')} ${c.npa}</span></div>
+          <div style="color:var(--ink-2);font-size:13px;margin-top:2px">${c.sector} · ${c.group} · CIF ${c.id} · Relationship since ${2026-c.relationshipYrs} (${c.relationshipYrs} yrs)</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px">Total Exposure</div>
+          <div style="font-family:var(--serif);font-size:26px;font-weight:600;color:var(--blue-2)">${c.exposure}</div>
+          <div style="font-size:11.5px;color:var(--ink-3)">${c.utilization}% utilized</div>
+        </div>
+        <div style="text-align:center;padding-left:18px;border-left:1px solid var(--line)">
+          <div style="font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px">Risk Rating</div>
+          <div style="font-family:var(--serif);font-size:26px;font-weight:600;color:var(--green)">${c.rating}</div>
+          <div style="font-size:11.5px;color:var(--green)">▲ Stable–positive</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI relationship summary -->
+    <div class="card ai-card" style="margin-bottom:18px">
+      <div class="card-h"><span class="ai-badge">${ic('spark','spark')} Corporate Intelligence Agent</span><h3>AI Relationship Summary</h3>
+        <div class="spacer"></div><div class="conf">Confidence <div class="bar"><span style="width:89%"></span></div> 89%</div></div>
+      <div class="card-pad" style="font-size:13.5px;line-height:1.75;color:var(--ink-2)">
+        ${`${c.relationshipYrs}-year relationship with ${c.name} (${c.group}), rated ${c.rating}. FY26 revenue ${c.fin.revenue}, ${c.fin.ebitda?('EBITDA '+c.fin.ebitda+', '):''}${c.fin.netCash||c.fin.deRatio}. Total exposure ${c.exposure} at ${c.utilization}% utilization; sentiment ${c.sentimentScore}/100. <b style="color:var(--ink)">Active engagement: ${D.scenario.title}.</b> ${D.scenario.what} ${c.compBank} is competing on this relationship. Recommended action: ${D.scenario.rec}`}
+        <div class="row" style="margin-top:16px;gap:14px">
+          <div class="note-card" style="flex:1"><div class="nh" style="color:var(--green)">${ic('trend')} Opportunity</div>${D.scenario.oppText} · ${D.scenario.ask}</div>
+          <div class="note-card" style="flex:1"><div class="nh" style="color:var(--red)">${ic('risk')} Risk Watchouts</div>Competitive pressure from ${c.compBank}; ${c.notes.split('.').slice(-2)[0]||'sector-specific risks'}.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs" id="corpTabs">
+      <div class="tab active" onclick="corpTab(this,'overview')">Overview &amp; Financials</div>
+      <div class="tab" onclick="corpTab(this,'facilities')">Facilities &amp; Limits</div>
+      <div class="tab" onclick="corpTab(this,'timeline')">Relationship Timeline</div>
+      <div class="tab" onclick="corpTab(this,'news')">Developments</div>
+      <div class="tab" onclick="corpTab(this,'notes')">RM Notes &amp; Contacts</div>
+    </div>
+
+    <div id="corpTabBody"></div>
+  </div>`;
+}
+
+function corpTabBody(tab){
+  const c = D.client;
+  if(tab==='overview') return `
+    <div class="row">
+      <div class="card" style="flex:1">
+        <div class="card-h"><h3>Financial Snapshot</h3><span class="sub">FY2025–26 (provisional)</span></div>
+        <div class="card-pad">
+          <div class="kv"><span class="k">Annual Turnover</span><span class="v">${c.turnover}</span></div>
+          <div class="kv"><span class="k">EBITDA</span><span class="v">${c.ebitda}</span></div>
+          <div class="kv"><span class="k">Net Worth</span><span class="v">${c.networth}</span></div>
+          <div class="kv"><span class="k">Leverage</span><span class="v">${c.debtEquity}</span></div>
+          <div class="kv"><span class="k">Net Cash / Position</span><span class="v">${c.fin.netCash||'—'}</span></div>
+          <div class="kv"><span class="k">External Rating</span><span class="v">CRISIL ${c.rating} / Stable</span></div>
+        </div>
+      </div>
+      <div class="card" style="flex:1">
+        <div class="card-h"><h3>Banking Relationship</h3></div>
+        <div class="card-pad">
+          <div class="kv"><span class="k">Total Sanctioned Limits</span><span class="v">${D.sumLimits}</span></div>
+          <div class="kv"><span class="k">Total Utilized</span><span class="v">${c.utilization}% of limits</span></div>
+          <div class="kv"><span class="k">Products in Use</span><span class="v">${c.products.length}</span></div>
+          <div style="margin:14px 0 6px;font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px">Products</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">${c.products.map(p=>`<span class="tag blue">${p}</span>`).join('')}</div>
+          <div style="margin-top:16px"><div style="font-size:11.5px;color:var(--ink-3);margin-bottom:6px">Limit utilization</div><div class="meter"><span style="width:${c.utilization}%"></span></div></div>
+        </div>
+      </div>
+    </div>`;
+  if(tab==='facilities') return `
+    <div class="card">
+      <div class="card-h"><h3>Existing Facilities &amp; Limits</h3><div class="spacer"></div><span class="tag">4 active facilities</span></div>
+      <table><thead><tr><th>Facility</th><th>Sanctioned</th><th>Outstanding</th><th>Pricing</th><th>Status</th></tr></thead>
+      <tbody>${c.facilities.map(f=>`<tr><td style="color:var(--ink);font-weight:600">${f.type}</td><td>${f.limit}</td><td>${f.used}</td><td class="mono">${f.rate}</td><td><span class="tag green">${f.status}</span></td></tr>`).join('')}</tbody></table>
+    </div>`;
+  if(tab==='timeline') return `
+    <div class="card"><div class="card-h"><h3>Relationship Timeline</h3></div><div class="card-pad">
+      <div class="tl">
+        <div class="tl-item done"><div class="tt">Relationship onboarded</div><div class="td">${2026-c.relationshipYrs} · Initial WC facility</div></div>
+        <div class="tl-item done"><div class="tt">Capex term loan sanctioned</div><div class="td">${2026-Math.max(2,c.relationshipYrs-4)} · ${c.facilities[1].limit} · 7-yr tenor</div></div>
+        <div class="tl-item done"><div class="tt">SCF programme launched</div><div class="td">${2026-Math.max(1,c.relationshipYrs-6)} · vendor financing, 60-day period</div></div>
+        <div class="tl-item done"><div class="tt">Covenant waiver (precedent)</div><div class="td">2024 · 1-qtr leverage waiver, approved by Risk Committee</div></div>
+        <div class="tl-item done"><div class="tt">${D.scenario.kind==='full'?'Full Relationship Review':D.scenario.title}</div><div class="td">28 May 2026 · ${D.deviations.length} negotiation ask(s) raised (current)</div></div>
+        <div class="tl-item"><div class="tt">Active engagement decision</div><div class="td">Expected Jun 2026 · ${D.scenario.oppText}</div></div>
+      </div>
+    </div></div>`;
+  if(tab==='news') return `
+    <div class="card"><div class="card-h"><span class="ai-badge">${ic('spark','spark')} Live</span><h3>Latest Developments</h3></div><div class="card-pad col" style="gap:11px">
+      ${c.news.map(n=>`<div class="note-card" style="display:flex;gap:12px;align-items:flex-start">
+        <span class="flag" style="background:${n.impact==='high'?'var(--red)':'var(--amber)'};margin-top:5px"></span>
+        <div style="flex:1"><div style="font-weight:600;color:var(--ink)">${n.t}</div><div style="font-size:11.5px;color:var(--ink-3);margin-top:3px">${n.src} · ${n.d}</div></div>
+        <span class="tag ${n.impact==='high'?'red':'amber'}">${n.impact} impact</span>
+      </div>`).join('')}
+    </div></div>`;
+  if(tab==='notes') return `
+    <div class="row">
+      <div class="card" style="flex:1.4"><div class="card-h"><h3>Internal RM Notes</h3><div class="spacer"></div><span class="sub">Last edited by A. Rao</span></div>
+        <div class="card-pad"><div class="note-card" style="border-left:3px solid var(--blue)">${c.notes}</div></div></div>
+      <div class="card" style="flex:1"><div class="card-h"><h3>Key Contacts</h3></div><div class="card-pad col" style="gap:10px">
+        ${c.contacts.map(ct=>`<div style="display:flex;gap:11px;align-items:center"><div class="avatar" style="background:linear-gradient(135deg,#3a6db5,#5d8ed1)">${ct.n.split(' ').map(x=>x[0]).join('')}</div><div><div style="font-weight:600;font-size:13px">${ct.n}</div><div style="font-size:11.5px;color:var(--ink-3)">${ct.r}${ct.e==='primary'?' · Primary':''}</div></div></div>`).join('')}
+      </div></div>
+    </div>`;
+}
+
+/* ===================== 3. MEETING PREP ===================== */
+function viewPrep(){
+  const c = D.client;
+  const sc = D.scenario;
+  const clauseTalk = {
+    rate:{t:"Address pricing head-on",d:`${c.compBank} is quoting below our ${c.facilities[0].rate}. Frame total relationship value; below-floor needs Credit Head sanction.`},
+    creditperiod:{t:"Credit-period extension",d:"Client wants 60→90 days; this changes tenor risk and needs dual Credit + Risk sign-off."},
+    covenant:{t:"Covenant flexibility",d:"Leverage waiver (3.0x→3.5x) is material — Risk Committee only. Bring projections to build the case."},
+    collateral:{t:"Collateral cover",d:"Reduction 1.4x→1.25x is within delegated authority for this rating — can be agreed in-room subject to documentation."},
+    limit:{t:"Position the limit enhancement",d:`${sc.oppText}. Needs fresh credit appraisal — initiate today to anchor the relationship.`},
+  };
+  const tps = [
+    {t:`Open on ${sc.kind==='full'?'the full relationship agenda':sc.title}`, d:sc.what},
+    {t:"Reaffirm the relationship", d:`${c.relationshipYrs}-yr partnership, ${c.fin.revenue} FY26 revenue, ${c.rating} rated. Position Meridian as the growth-financing partner.`},
+    ...sc.clauses.map(cl=>clauseTalk[cl]),
+  ];
+  const recProduct = {
+    rate:{p:"Repricing within delegated grid",f:`Defend vs ${c.compBank}`,fit:88},
+    creditperiod:{p:"Supply Chain Finance programme",f:"Extended vendor terms",fit:82},
+    covenant:{p:"Structured capex term loan",f:"With covenant calibration",fit:90},
+    collateral:{p:"Security restructuring",f:"Competitive cover terms",fit:84},
+    limit:{p:"Incremental facility / term loan",f:sc.oppText,fit:93},
+  };
+  const recs = sc.clauses.slice(0,3).map(cl=>recProduct[cl]);
+  return `
+  <div class="page">
+    <div class="eyebrow">${ic('clipboard')} Meeting Preparation Agent · ${sc.kind==='full'?'Full Review':'Trigger: '+sc.title}</div>
+    <div class="section-title">Meeting Brief — ${c.name}</div>
+    <div class="section-sub">09:30 AM · ${sc.kind==='full'?'Full Relationship Review':sc.title} · In-person. Generated from the corporate one-view, the selected engagement, and the product catalogue.</div>
+
+    <div class="row" style="margin-top:20px;align-items:flex-start">
+      <div class="col" style="flex:1.5">
+        <div class="card ai-card">
+          <div class="card-h"><span class="ai-badge">${ic('spark','spark')} AI Brief</span><h3>Context &amp; Objectives</h3></div>
+          <div class="card-pad" style="font-size:13.5px;line-height:1.75;color:var(--ink-2)">
+            ${sc.what} The objective is to <b style="color:var(--ink)">advance "${sc.ask}"</b> while defending the relationship against ${c.compBank}. This engagement maps to ${sc.clauses.length} clause deviation(s) that will route through Credit/Risk. Recommended action: ${sc.rec}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h3>Suggested Agenda &amp; Talking Points</h3></div>
+          <div class="card-pad col" style="gap:0">
+            ${tps.map((p,i)=>`<div style="display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)">
+              <div style="width:24px;height:24px;border-radius:50%;background:var(--blue-soft);border:1px solid var(--blue-soft-border);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--blue-2);flex-shrink:0">${i+1}</div>
+              <div><div style="font-weight:600;font-size:13px">${p.t}</div>${p.d?`<div style="font-size:12px;color:var(--ink-3);margin-top:2px">${p.d}</div>`:''}</div>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:1">
+        <div class="card" style="border-color:rgba(220,166,74,.3)">
+          <div class="card-h"><h3 style="color:var(--amber)">${ic('risk')} Negotiation Watchouts</h3></div>
+          <div class="card-pad col" style="gap:10px">
+            ${D.deviations.map(dv=>`<div class="note-card" style="border-left:3px solid var(--${dv.severityClass})"><div style="font-weight:600;color:var(--ink)">${dv.clause.split('—')[1].trim()} · ${dv.severity}</div><div style="margin-top:4px">${dv.explanation} Routes to ${dv.owner}.</div></div>`).join('')}
+          </div>
+        </div>
+
+        <div class="card ai-card">
+          <div class="card-h"><span class="ai-badge">${ic('spark','spark')}</span><h3>Product Recommendations</h3></div>
+          <div class="card-pad col" style="gap:9px">
+            ${recs.map(r=>`<div class="note-card"><div style="display:flex;justify-content:space-between"><div style="font-weight:600;color:var(--ink)">${r.p}</div><span class="tag blue">${r.fit}% fit</span></div><div style="font-size:11.5px;color:var(--ink-3);margin-top:3px">${r.f}</div></div>`).join('')}
+          </div>
+        </div>
+
+        <div class="card-pad" style="display:flex;gap:10px">
+          <div class="btn primary" style="flex:1;justify-content:center" onclick="go('meeting')">${ic('mic')} Start Meeting Capture</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ===================== 4. MEETING CAPTURE ===================== */
+let transcriptAnalyzed = false;
+function viewMeeting(){
+  return `
+  <div class="page">
+    <div class="eyebrow">${ic('mic')} Conversation Intelligence Agent</div>
+    <div class="section-title">Meeting Execution &amp; Capture</div>
+    <div class="section-sub">${D.client.name} · Q2 Relationship Review · 28 May 2026, 09:30 AM. Capture the conversation, then let AI extract negotiations, commitments and deviations.</div>
+
+    <div class="row" style="margin-top:20px;align-items:flex-start">
+      <div class="col" style="flex:1.3">
+        <div class="card">
+          <div class="card-h"><h3>Capture Method</h3><div class="spacer"></div><span class="tag blue"><span class="pulse"></span>Live transcription ready</span></div>
+          <div class="card-pad">
+            <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:16px">
+              ${[{i:'mic',t:'Voice Recording',s:'Record live'},{i:'file',t:'Upload Transcript',s:'.txt / .docx'},{i:'clipboard',t:'Manual Notes',s:'Type / paste'}].map(m=>`
+                <div class="note-card" style="text-align:center;cursor:pointer" onclick="toast('Capture','${m.t} selected — using demo transcript.')">
+                  <div style="width:38px;height:38px;border-radius:10px;background:var(--blue-soft);display:grid;place-items:center;margin:0 auto 9px;color:var(--blue-2);font-size:18px">${ic(m.i)}</div>
+                  <div style="font-weight:600;color:var(--ink);font-size:12.5px">${m.t}</div>
+                  <div style="font-size:11px;color:var(--ink-3)">${m.s}</div>
+                </div>`).join('')}
+            </div>
+            <div style="font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Meeting Transcript · 09:58 duration</div>
+            <div class="note-card mono" style="max-height:340px;overflow-y:auto;font-size:11.5px;line-height:1.7;white-space:pre-wrap">${D.transcript}</div>
+            <div style="display:flex;gap:10px;margin-top:14px">
+              <div class="btn primary" id="analyzeBtn" onclick="analyzeTranscript()">${ic('spark')} Analyze with AI</div>
+              <div class="btn ghost">${ic('download')} Export transcript</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:1" id="analysisPanel">
+        <div class="card ai-card">
+          <div class="card-h"><span class="ai-badge">${ic('spark','spark')}</span><h3>AI Analysis</h3></div>
+          <div class="card-pad empty" id="analysisEmpty">
+            <div style="font-size:32px;opacity:.4;margin-bottom:10px">${ic('spark')}</div>
+            Run analysis to extract the meeting summary, negotiation asks, commitments and detected deviations.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAnalysis(){
+  const a = D.convAnalysis;
+  return `
+    <div class="card ai-card">
+      <div class="card-h"><span class="ai-badge">${ic('spark','spark')}</span><h3>Meeting Summary</h3><div class="spacer"></div><span class="tag green">${a.sentiment.label}</span></div>
+      <div class="card-pad" style="font-size:13px;line-height:1.7;color:var(--ink-2)">${a.summary}
+        <div style="margin-top:12px"><div style="font-size:11.5px;color:var(--ink-3);margin-bottom:5px">Relationship sentiment</div><div class="meter"><span style="width:${a.sentiment.score}%"></span></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Negotiation Asks Detected</h3><div class="spacer"></div><span class="tag amber">${D.deviations.length} deviation${D.deviations.length>1?'s':''}</span></div>
+      <div class="card-pad col" style="gap:9px">
+        ${a.asks.map(k=>`<div class="note-card" style="display:flex;align-items:center;gap:10px">
+          <span class="flag" style="background:${k.priority==='Priority'?'var(--red)':'var(--amber)'}"></span>
+          <div style="flex:1;font-size:12.5px;color:var(--ink)">${k.ask}</div>
+          <span class="tag ${k.priority==='Priority'?'red':'amber'}">${k.priority}</span>
+          ${k.dev?'<span class="tag blue">Deviation</span>':''}
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="row">
+      <div class="card" style="flex:1"><div class="card-h"><h3>RM Commitments</h3></div><div class="card-pad col" style="gap:8px">
+        ${a.commitments.map(c=>`<div style="display:flex;gap:9px;font-size:12.5px;color:var(--ink-2)"><span style="color:var(--green);flex-shrink:0">${ic('check')}</span>${c}</div>`).join('')}
+      </div></div>
+    </div>
+    <div class="card"><div class="card-h"><h3>Follow-up Actions</h3></div>
+      <table><tbody>${a.actions.map(x=>`<tr><td style="color:var(--ink);font-weight:500">${x.a}</td><td><span class="tag">${x.owner}</span></td><td style="text-align:right;color:var(--ink-3)">Due ${x.due}</td></tr>`).join('')}</tbody></table>
+    </div>
+    <div class="note-card" style="border-left:3px solid var(--red)"><div class="nh" style="color:var(--red)">${ic('risk')} Competitive Intelligence</div>${a.competitive}</div>
+    <div class="btn primary" style="justify-content:center" onclick="go('deviation')">${ic('shield')} Run Deviation Analysis →</div>
+  `;
+}
+
+/* ===================== 5. CLAUSE & DEVIATION ENGINE ===================== */
+function viewDeviation(){
+  return `
+  <div class="page">
+    <div class="eyebrow">${ic('shield')} Policy &amp; Deviation Agent · Most critical module</div>
+    <div class="section-title">Clause &amp; Deviation Engine</div>
+    <div class="section-sub">Standard T&amp;C template v4.2 compared against negotiated client requests. Each deviation is mapped to its triggering policy, scored for severity, and routed for approval.</div>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);margin:20px 0 18px">
+      ${[{l:'Clauses Impacted',n:String(D.deviations.length),c:'var(--blue-2)'},{l:'High Severity',n:String(D.deviations.filter(d=>d.severity==='High').length),c:'var(--red)'},{l:'Dual Sign-off',n:String(D.deviations.filter(d=>d.route.includes('+')).length),c:'var(--violet)'},{l:'Credit Authority',n:String(D.deviations.filter(d=>d.route==='Credit').length),c:'var(--green)'}].map(s=>`<div class="card stat"><div class="lbl">${s.l}</div><div class="num" style="color:${s.c}">${s.n}</div></div>`).join('')}
+    </div>
+
+    <div class="col">
+      ${D.deviations.map((d,i)=>`
+        <div class="card">
+          <div class="card-h">
+            <span class="tag ${d.severityClass}">${d.severity} severity</span>
+            <h3>${d.clause}</h3>
+            <div class="spacer"></div>
+            <span class="conf">Confidence <div class="bar"><span style="width:${d.conf}%"></span></div> ${d.conf}%</span>
+          </div>
+          <div class="card-pad">
+            <div class="row" style="gap:14px">
+              <div style="flex:1">
+                <div style="font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px">Original Clause</div>
+                <div class="note-card redline">${d.original}</div>
+              </div>
+              <div style="align-self:center;color:var(--blue-2);font-size:20px">${ic('arrow')}</div>
+              <div style="flex:1">
+                <div style="font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px">AI-Generated Revised Clause</div>
+                <div class="note-card redline" style="border-color:rgba(63,191,143,.3)">${d.modified}</div>
+              </div>
+            </div>
+
+            <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px">
+              <div class="note-card"><div class="nh" style="color:var(--blue)">${ic('spark')} AI Explanation</div>${d.explanation}</div>
+              <div class="note-card"><div class="nh">Commercial Implication</div>${d.commercial}</div>
+              <div class="note-card"><div class="nh" style="color:#e6bd74">Policy Implication</div>${d.policy}</div>
+              <div class="note-card"><div class="nh" style="color:#aaa0e3">Approval Routing</div>Owner: <b style="color:var(--ink)">${d.owner}</b> · Route to <span class="tag violet">${d.route}</span><div style="margin-top:9px"><span class="btn sm primary" onclick="go('approval')">Route to approval →</span></div></div>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ===================== 6. APPROVAL WORKFLOW ===================== */
+function viewApproval(){
+  const stages=['Submitted','Under Review','Clarification','Approved'];
+  return `
+  <div class="page">
+    <div class="eyebrow">${ic('route')} Approval Orchestration Agent</div>
+    <div class="section-title">Credit &amp; Risk Approval Workflow</div>
+    <div class="section-sub">Auto-generated approval memos routed to the correct authority via the delegation matrix, with SLA tracking, reviewer comments and a full audit trail.</div>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);margin:20px 0 18px">
+      ${[{l:'Approved',n:String(D.approvalWorkflow.filter(w=>w.stage==='Approved').length),c:'var(--green)'},{l:'Clarification',n:String(D.approvalWorkflow.filter(w=>w.stage==='Clarification Needed').length),c:'var(--blue-2)'},{l:'Escalated',n:String(D.approvalWorkflow.filter(w=>w.stage==='Escalated').length),c:'var(--red)'},{l:'In Review',n:String(D.approvalWorkflow.filter(w=>w.stage==='Under Review').length),c:'var(--amber)'}].map(s=>`<div class="card stat"><div class="lbl">${s.l}</div><div class="num" style="color:${s.c}">${s.n}</div></div>`).join('')}
+    </div>
+
+    <div class="col">
+      ${D.approvalWorkflow.map(w=>`
+        <div class="card">
+          <div class="card-h">
+            <span class="mono" style="font-size:11px;color:var(--ink-3)">${w.id}</span>
+            <h3>${w.title}</h3>
+            <div class="spacer"></div>
+            <span class="tag ${w.risk==='High'?'red':'amber'}">${w.risk} risk</span>
+            <span class="tag violet">${w.route}</span>
+            <span class="tag ${w.slaClass}">${w.sla}</span>
+          </div>
+          <div class="card-pad">
+            <div class="steps" style="margin-bottom:18px">
+              ${stages.map((s,i)=>`
+                <div class="step ${i<w.stageIdx?'done':i===w.stageIdx?'active':''}"><div class="dot">${i<w.stageIdx?ic('check'):i+1}</div>${s}</div>
+                ${i<stages.length-1?'<div class="step-arrow"></div>':''}
+              `).join('')}
+            </div>
+
+            <div class="row" style="gap:14px;align-items:flex-start">
+              <div style="flex:1.2">
+                <div class="note-card ai-card" style="margin-bottom:12px"><div class="nh" style="color:var(--blue)">${ic('spark')} AI Approval Memo</div>${w.memo}</div>
+                <div style="font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Reviewer Comments</div>
+                <div class="col" style="gap:9px">
+                  ${w.reviewers.map(r=>`<div class="note-card">
+                    <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">
+                      <div class="avatar" style="width:26px;height:26px;font-size:10px">${r.n.split(' ').map(x=>x[0]).join('')}</div>
+                      <div style="flex:1"><div style="font-size:12.5px;font-weight:600;color:var(--ink)">${r.n}</div><div style="font-size:11px;color:var(--ink-3)">${r.r} · ${r.time}</div></div>
+                      <span class="tag ${r.status==='Approved'?'green':r.status==='Escalated'?'red':r.status==='Clarification'?'amber':'blue'}">${r.status}</span>
+                    </div>
+                    <div style="font-size:12.5px;color:var(--ink-2)">"${r.comment}"</div>
+                  </div>`).join('')}
+                </div>
+              </div>
+              <div style="flex:.8">
+                <div style="font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Audit Trail</div>
+                <div class="note-card"><div class="tl" style="padding-left:22px">
+                  ${w.history.map(h=>`<div class="tl-item ${h.done?'done':''}"><div class="tt" style="font-size:12px">${h.s}</div><div class="td">${h.t} · ${h.by}</div></div>`).join('')}
+                </div></div>
+              </div>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="card-pad" style="display:flex;justify-content:center"><div class="btn primary" onclick="go('document')">${ic('file')} Generate Revised T&C from Approvals →</div></div>
+  </div>`;
+}
+
+/* ===================== 7. T&C DOCUMENTS ===================== */
+function viewDocument(){
+  return `
+  <div class="page">
+    <div class="eyebrow">${ic('file')} Document Generation Agent</div>
+    <div class="section-title">Final T&amp;C Document Generation</div>
+    <div class="section-sub">Approved deviations are merged into a clean, customer-ready document with full version history and approval lineage.</div>
+
+    <div class="row" style="margin-top:20px;align-items:flex-start">
+      <div class="col" style="flex:1.4">
+        <div class="card ai-card">
+          <div class="card-h"><span class="ai-badge">${ic('spark','spark')}</span><h3>${D.company.short} — Revised T&amp;C v2.1</h3><div class="spacer"></div><span class="tag amber">Pending final approval</span></div>
+          <div class="card-pad">
+            <div class="note-card" style="font-size:13px;line-height:1.8">
+              <div style="font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:4px">Revised Facility Terms &amp; Conditions</div>
+              <div style="font-size:11.5px;color:var(--ink-3);margin-bottom:14px">Document ${D.documents[0].id} · Version 2.1 · Generated 28 May 2026 · Supersedes v2.0 (15 Jan 2026)</div>
+              <div class="divider" style="margin:10px 0"></div>
+              ${D.deviations.map((dv,i)=>{ const w=D.approvalWorkflow[i]; const sc=w.stage==='Approved'?'green':w.stage==='Escalated'?'red':'amber'; return `<div style="display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--line)">
+                <div class="mono" style="color:var(--blue-2);flex-shrink:0;width:38px">${dv.clause.match(/[\d.]+/)[0]}</div>
+                <div style="flex:1"><div style="font-weight:600;color:var(--ink);font-size:12.5px">${dv.clause.split('—')[1].trim()}</div><div style="font-size:12px;color:var(--ink-2);margin-top:2px">${dv.modified.replace(/^[^:]*shall (be )?/,'').slice(0,90)}…</div></div>
+                <span class="tag ${sc}" style="align-self:center">${w.stage} · ${w.id}</span>
+              </div>`}).join('')}
+              <div style="font-size:12px;color:var(--ink-3);margin-top:14px">${42-D.deviations.length} unchanged clauses omitted from this view · Full document available on download.</div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:16px">
+              <div class="btn primary" onclick="toast('Document','Revised T&C v2.1 downloaded as PDF.')">${ic('download')} Download</div>
+              <div class="btn" onclick="openShareModal()">${ic('send')} Share with client</div>
+              <div class="btn ghost" onclick="toast('Engagement','Marked as closed once all approvals finalize.')">${ic('check')} Mark engagement closed</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="card" style="flex:1"><div class="card-h"><h3>Negotiation Summary</h3></div><div class="card-pad" style="font-size:12.5px;line-height:1.7;color:var(--ink-2)">${D.deviations.length} clause(s) negotiated in the ${D.scenario.kind==='full'?'full relationship review':'"'+D.scenario.title+'" engagement'}: ${D.deviations.map(d=>d.clause.split('—')[1].trim()).join(', ')}. Routed across ${[...new Set(D.deviations.map(d=>d.route))].join(' & ')}. Opportunity: ${D.scenario.oppText}. Defends the relationship against ${D.client.compBank}.</div></div>
+          <div class="card" style="flex:1"><div class="card-h"><h3>Approval Lineage</h3></div><div class="card-pad col" style="gap:7px">
+            ${D.approvalWorkflow.map(w=>{ const sc=w.stage==='Approved'?'green':w.stage==='Escalated'?'red':'amber'; return `<div style="display:flex;justify-content:space-between;font-size:12px"><span class="mono" style="color:var(--ink-3)">${w.id}</span><span class="tag ${sc}">${w.route} · ${w.stage}</span></div>`}).join('')}
+          </div></div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:1">
+        <div class="card"><div class="card-h"><h3>Document Library</h3></div>
+          <table><thead><tr><th>Document</th><th>Status</th></tr></thead><tbody>
+            ${D.documents.map(d=>`<tr onclick="toast('Document','Opening ${d.name}')"><td><div style="color:var(--ink);font-weight:600;font-size:12.5px">${d.name}</div><div style="font-size:11px;color:var(--ink-3)">v${d.ver} · ${d.clauses} clauses · ${d.modified} modified · ${d.date}</div></td><td><span class="tag ${d.status==='Active'?'green':'amber'}">${d.status}</span></td></tr>`).join('')}
+          </tbody></table>
+        </div>
+        <div class="card"><div class="card-h"><h3>Signing Status</h3></div><div class="card-pad">
+          <div class="tl">
+            <div class="tl-item done"><div class="tt">Document generated</div><div class="td">v2.1 · 28 May 2026</div></div>
+            <div class="tl-item active"><div class="tt">Internal approvals</div><div class="td">3 of 4 finalized</div></div>
+            <div class="tl-item"><div class="tt">Sent to client</div><div class="td">Pending</div></div>
+            <div class="tl-item"><div class="tt">Client e-signature</div><div class="td">Pending</div></div>
+            <div class="tl-item"><div class="tt">Engagement closed</div><div class="td">Pending</div></div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ===================== 8. UNDER THE HOOD ===================== */
+let selectedAgent = 'policy';
+let hoodRunning = false;
+
+// the data packet that visibly passes between agents
+const HANDOFFS = [
+  {from:"copilot", to:"corp",    packet:"High-priority client + selected trigger"},
+  {from:"corp",    to:"prep",    packet:"Corporate profile + sentiment + opportunity"},
+  {from:"prep",    to:"conv",    packet:"Meeting brief + negotiation watchouts"},
+  {from:"conv",    to:"policy",  packet:"negotiation asks + commitments"},
+  {from:"policy",  to:"approve", packet:"deviations + severity + routing"},
+  {from:"approve", to:"doc",     packet:"Approved/conditional clause set + lineage"},
+];
+
+function viewHood(){
+  return `
+  <div class="page">
+    <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:18px">
+      <div>
+        <div class="eyebrow">${ic('spark')} AI Orchestration Monitor</div>
+        <div class="section-title">Under the Hood</div>
+        <div class="section-sub">Watch Meridian's agents collaborate in real time — each agent fires, processes its inputs, and hands its structured output to the next agent in the chain.</div>
+      </div>
+      <div class="spacer" style="flex:1"></div>
+      <div class="btn primary" id="hoodRunBtn" onclick="runHood()">${ic('spark')} Run Live Simulation</div>
+      <div class="btn ghost" onclick="resetHood()">Reset</div>
+    </div>
+
+    <div class="row" style="align-items:flex-start">
+      <div class="col" style="flex:1.15">
+        <div class="card">
+          <div class="card-h"><h3>A · Live Agent Orchestration</h3><div class="spacer"></div><span class="tag blue" id="hoodStatus">Idle · click Run</span></div>
+          <div class="card-pad agent-flow" id="agentFlow">
+            ${D.agents.map((ag,i)=>`
+              <div class="agent-node" id="node-${ag.id}" onclick="selectAgent('${ag.id}')">
+                <div class="agent-ic">${ic(ag.icon)}</div>
+                <div style="flex:1"><div style="font-weight:600;font-size:13px">${ag.name}</div><div style="font-size:11.5px;color:var(--ink-3)">${ag.role}</div></div>
+                <span class="agent-stat" id="stat-${ag.id}">idle</span>
+              </div>
+              ${i<D.agents.length-1?`<div class="agent-conn" id="conn-${i}"><span class="packet" id="packet-${i}"></span></div>`:''}
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h3>Orchestration Log</h3><div class="spacer"></div><span class="sub">live handoffs</span></div>
+          <div class="card-pad" id="hoodLog" style="font-family:var(--mono);font-size:12px;line-height:1.9;max-height:220px;overflow-y:auto;color:var(--ink-3)">
+            <div style="color:var(--ink-3)">› Awaiting run. The log will show each agent firing and passing data to the next.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="flex:1.1" id="agentDetail"></div>
+
+      <div class="col" style="flex:.95">
+        <div class="card">
+          <div class="card-h"><h3>C · Knowledge Sources</h3></div>
+          <div class="card-pad col" style="gap:7px">
+            ${D.knowledgeSources.map(k=>`<div class="ks-row" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><div><div style="font-size:12.5px;font-weight:600">${k.n}</div><div style="font-size:11px;color:var(--ink-3)">${k.t}</div></div><span class="tag">${k.count}</span></div>`).join('')}
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(140,127,214,.3)">
+          <div class="card-h"><h3 style="color:var(--violet)">${ic('user')} E · Human-in-the-Loop</h3></div>
+          <div class="card-pad col" style="gap:9px">
+            ${[['RM review checkpoint','Brief & analysis confirmation','Required'],['Credit approval','Pricing & limit deviations','Required'],['Risk escalation','Material covenant changes','Required'],['Manual override','RM can override any AI routing','Available']].map(h=>`
+              <div class="note-card" style="border-left:3px solid var(--violet)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;color:var(--ink);font-size:12.5px">${h[0]}</span><span class="tag violet">${h[2]}</span></div><div style="font-size:11.5px;color:var(--ink-3);margin-top:3px">${h[1]}</div></div>`).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>D · Workflow Triggers</h3></div>
+          <div class="card-pad col" style="gap:8px">
+            ${[['Corporate event detected','capex'],['Meeting scheduled','clipboard'],['Transcript uploaded','mic'],['Deviation identified','shield'],['Approval required','route'],['Document generated','file']].map(t=>`
+              <div style="display:flex;gap:11px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)">
+                <div style="width:28px;height:28px;border-radius:8px;background:var(--blue-soft);display:grid;place-items:center;color:var(--blue-2);flex-shrink:0">${ic(t[1])}</div>
+                <div style="font-size:12px;font-weight:600">${t[0]}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function agentDetail(id){
+  const ag = D.agents.find(a=>a.id===id);
+  const tr = (typeof agentTrace==='function') ? agentTrace(id) : {inp:'',work:'',out:''};
+  return `
+    <div class="card ai-card">
+      <div class="card-h"><span class="ai-badge">${ic('spark','spark')} B · Agent I/O</span><h3>${ag.name}</h3></div>
+      <div class="card-pad col" style="gap:13px">
+        <div class="note-card"><div class="nh" style="color:var(--blue)">Objective / Prompt</div>${ag.objective}</div>
+        ${tr.inp?`<div class="note-card" style="border-left:3px solid var(--blue)">
+          <div class="nh" style="color:var(--blue)">Live artifacts · ${D.client.name}</div>
+          <div style="font-size:12px;line-height:1.7"><span style="color:var(--blue-2);font-weight:600">in ◂</span> ${tr.inp}<br><span style="color:var(--ink-3)">⚙ ${tr.work}</span><br><span style="color:var(--green);font-weight:600">out ▸</span> ${tr.out}</div>
+        </div>`:''}
+        <div class="row" style="gap:12px">
+          <div class="note-card" style="flex:1"><div class="nh">Input Context</div>${ag.input.map(x=>`<div style="display:flex;gap:7px;font-size:12px;margin:4px 0"><span style="color:var(--blue-2)">→</span>${x}</div>`).join('')}</div>
+          <div class="note-card" style="flex:1"><div class="nh" style="color:var(--green)">Structured Output</div>${ag.output.map(x=>`<div style="display:flex;gap:7px;font-size:12px;margin:4px 0"><span style="color:var(--green)">✓</span>${x}</div>`).join('')}</div>
+        </div>
+        <div class="note-card"><div class="nh" style="color:#e6bd74">Retrieved Data</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">${ag.retrieved.map(x=>`<span class="tag">${x}</span>`).join('')}</div></div>
+        <div class="note-card"><div class="nh">Processing Logic</div>${ag.logic}</div>
+      </div>
+    </div>
+    <div class="card" style="border-color:var(--blue-soft-border)">
+      <div class="card-h"><h3>F · Explainability Layer</h3></div>
+      <div class="card-pad col" style="gap:10px">
+        <div class="note-card"><div class="nh" style="color:var(--blue)">Why this output was generated</div>The ${ag.name} fired because its trigger condition was met in the active workflow. It synthesized the retrieved sources above against its objective, producing the structured output for the next agent in the chain.</div>
+        <div class="row" style="gap:10px">
+          <div class="note-card" style="flex:1"><div class="nh">Rule / Policy triggered</div>${id==='policy'?'Credit Policy §7.3, §9.1, §11.5 · Risk Framework §4.4, §6.2':id==='approve'?'Delegation Matrix · SLA Config · Escalation Rules':'Orchestration trigger config'}</div>
+          <div class="note-card" style="flex:1"><div class="nh">Confidence</div><div class="conf" style="margin-top:4px">Score <div class="bar"><span style="width:88%"></span></div> 88%</div><div style="font-size:11px;color:var(--ink-3);margin-top:6px">Grounded in ${ag.retrieved.length} retrieved sources</div></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ===================== 9. DAY IN THE LIFE ===================== */
+function viewDemo(){
+  return `
+  <div class="page">
+    <div class="eyebrow">${ic('spark')} Guided Walkthrough</div>
+    <div class="section-title">A Day in the Life of a Corporate Banking RM</div>
+    <div class="section-sub">Follow Ananya through one working day — from the morning trigger on ${D.company.short}'s capex announcement to a fully audited, customer-ready revised T&amp;C. Each step opens the live module.</div>
+
+    <div class="card ai-card" style="margin:20px 0 22px">
+      <div class="card-pad" style="display:flex;gap:18px;align-items:center">
+        <div style="width:48px;height:48px;border-radius:12px;background:var(--blue-soft);display:grid;place-items:center;color:var(--blue-2);font-size:22px">${ic('sun')}</div>
+        <div style="flex:1"><div style="font-family:var(--serif);font-size:18px;font-weight:600">The ${D.client.name} Engagement</div><div style="font-size:13px;color:var(--ink-2)">Trigger → Prep → Meeting → Deviation → Approval → Document. Six steps, one continuous AI-orchestrated workflow.</div></div>
+        <div class="btn primary" onclick="go('cockpit')">${ic('arrow')} Start from Cockpit</div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(2,1fr)">
+      ${DEMO_STEPS.map((s,i)=>`
+        <div class="card" style="cursor:pointer" onclick="go('${s.view}')">
+          <div class="card-pad" style="display:flex;gap:15px;align-items:flex-start">
+            <div style="position:relative;flex-shrink:0">
+              <div style="width:46px;height:46px;border-radius:12px;background:var(--blue-soft);border:1px solid var(--blue-soft-border);display:grid;place-items:center;color:var(--blue-2);font-size:20px">${ic(s.icon)}</div>
+              <div style="position:absolute;top:-7px;left:-7px;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#ffffff;display:grid;place-items:center;font-size:11px;font-weight:700">${i+1}</div>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:15px;font-weight:600">${s.t}</div>
+              <div style="font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.6">${s.d}</div>
+              <div style="margin-top:10px"><span class="tag blue">${ic('eye')} Open module →</span></div>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <div class="card" style="margin-top:18px"><div class="card-h"><h3>Outcome &amp; Impact</h3></div>
+      <div class="grid card-pad" style="grid-template-columns:repeat(4,1fr)">
+        ${[['Turnaround time','2.4 days','−61% vs manual'],['Clauses negotiated','4','side-by-side redline'],['Approvals orchestrated','4','auto-routed'],['RM effort saved','~6 hrs','per engagement']].map(o=>`<div style="text-align:center"><div style="font-family:var(--serif);font-size:26px;font-weight:600;color:var(--blue-2)">${o[1]}</div><div style="font-size:12px;font-weight:600;color:var(--ink)">${o[0]}</div><div style="font-size:11px;color:var(--ink-3)">${o[2]}</div></div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+</script>
+<script>
+/* ============================================================
+   MERIDIAN — App Controller (company-driven)
+   ============================================================ */
+
+const VIEWS = {
+  cockpit:   {title:"Daily Cockpit",            crumb:()=>"Operations · Thursday, 28 May 2026 · "+D.rm.desk, render:viewCockpit},
+  corporate: {title:"Corporate One-View",       crumb:()=>D.client.name+" · "+D.client.id, render:viewCorporate},
+  prep:      {title:"AI Meeting Preparation",   crumb:()=>D.client.name+" · Q2 Relationship Review", render:viewPrep},
+  meeting:   {title:"Meeting Capture",          crumb:()=>D.client.name+" · 09:30 AM", render:viewMeeting},
+  deviation: {title:"Clause & Deviation Engine",crumb:()=>"T&C v4.2 vs negotiated terms · "+D.client.name, render:viewDeviation},
+  approval:  {title:"Approval Workflow",        crumb:()=>"Credit & Risk · 4 active workflows", render:viewApproval},
+  document:  {title:"T&C Documents",            crumb:()=>D.client.name+" · Revised T&C v2.1", render:viewDocument},
+  hood:      {title:"Under the Hood",           crumb:()=>"AI Orchestration Monitor · 7 agents", render:viewHood},
+  demo:      {title:"Day in the Life",          crumb:()=>"Guided walkthrough · the "+D.company.short+" engagement", render:viewDemo},
+};
+
+let currentView = 'cockpit';
+let genToken = 0;
+
+function go(view){
+  if(!D.client) return; // nothing selected yet
+  currentView = view;
+  const v = VIEWS[view];
+  document.getElementById('pgTitle').textContent = v.title;
+  document.getElementById('pgCrumb').textContent = v.crumb();
+  document.getElementById('viewHost').innerHTML = v.render();
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===view));
+  document.querySelector('.main').scrollTop = 0;
+  if(view==='corporate'){ document.getElementById('corpTabBody').innerHTML = corpTabBody('overview'); }
+  if(view==='meeting' && transcriptAnalyzed){ injectAnalysis(); }
+  if(view==='hood'){ document.getElementById('agentDetail').innerHTML = agentDetail(selectedAgent); const log=document.getElementById('hoodLog'); if(log) log.dataset.cleared='0'; }
+}
+
+document.querySelectorAll('.nav-item').forEach(n=>{ n.addEventListener('click', ()=>go(n.dataset.view)); });
+
+function corpTab(el, tab){
+  el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('corpTabBody').innerHTML = corpTabBody(tab);
+}
+function openClient(key){ go('corporate'); }
+
+/* ---- Transcript analysis ---- */
+let transcriptAnalyzedReset = ()=>{ transcriptAnalyzed=false; };
+function analyzeTranscript(){
+  const btn = document.getElementById('analyzeBtn');
+  btn.innerHTML = '⏳ Analyzing transcript…'; btn.style.pointerEvents='none';
+  const steps = ['Transcribing & segmenting…','Classifying against negotiation taxonomy…','Detecting policy deviations…','Extracting commitments & actions…'];
+  let i=0;
+  const tick = setInterval(()=>{
+    if(i<steps.length){ btn.innerHTML = '⏳ '+steps[i]; i++; }
+    else{ clearInterval(tick); transcriptAnalyzed=true; injectAnalysis();
+      btn.innerHTML = '✓ Analysis complete';
+      toast('Conversation Intelligence', D.deviations.length+' negotiation ask(s) detected · '+D.deviations.length+' policy deviation(s) flagged.'); }
+  }, 650);
+}
+function injectAnalysis(){ const p=document.getElementById('analysisPanel'); if(p){ p.innerHTML = renderAnalysis(); } }
+
+/* ---- Under the hood ---- */
+function selectAgent(id){
+  selectedAgent = id;
+  document.querySelectorAll('.agent-node').forEach((n,idx)=>{ n.classList.toggle('sel', D.agents[idx].id===id); });
+  document.getElementById('agentDetail').innerHTML = agentDetail(id);
+}
+
+function hoodLogLine(html){
+  const log = document.getElementById('hoodLog'); if(!log) return;
+  if(log.dataset.cleared!=='1'){ log.innerHTML=''; log.dataset.cleared='1'; }
+  const d = document.createElement('div'); d.className='log-line'; d.innerHTML = html;
+  log.appendChild(d); log.scrollTop = log.scrollHeight;
+}
+
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+
+// Real artifacts each agent works on, derived from the SELECTED company's actual data in D.
+function agentTrace(id){
+  const c = D.client, co = D.company.short, ca = D.convAnalysis, sc = D.scenario, n = D.deviations.length;
+  switch(id){
+    case 'copilot': return {
+      inp:`Portfolio of 10 clients · today's 4 meetings · ${D.approvalsPending.length} pending approvals`,
+      work:`Ranked book by exposure × trigger severity × time-sensitivity. ${co} surfaced top on real FY26 triggers; engagement selected: "${sc.title}".`,
+      out:`Top client = ${c.name} (${c.exposure}). Dispatched Corporate Intelligence Agent.`,
+    };
+    case 'corp': return {
+      inp:`CIF ${c.id} · facility & limit data · external news/filings for "${c.name}"`,
+      work:`Resolved FY26 results to the portfolio name. Computed sentiment ${c.sentimentScore}/100. Flagged ${c.compBank} competitive pressure.`,
+      out:`Profile: ${c.fin.revenue} revenue, ${c.rating} rating, ${c.exposure} exposure · ${c.fin.netCash||c.fin.deRatio}.`,
+    };
+    case 'prep': return {
+      inp:`Corporate one-view + selected engagement (${sc.title}) + product catalogue (38)`,
+      work:`Built the brief for the selected engagement; ${sc.clauses.length} negotiation point(s) mapped to talking points and watchouts.`,
+      out:`Brief ready. Objective: ${sc.ask}.`,
+    };
+    case 'conv': return {
+      inp:`Meeting transcript (${D.transcript.length.toLocaleString()} chars) + RM notes`,
+      work:`Classified each utterance vs the negotiation taxonomy. Tagged ${n} ask(s), ${ca.commitments.length} commitments, sentiment ${ca.sentiment.score}.`,
+      out:`Asks: ${ca.asks.map(a=>a.ask).join(' · ')}.`,
+    };
+    case 'policy': return {
+      inp:`${n} negotiation ask(s) + Standard T&C template v4.2 + Credit Policy + Risk Framework`,
+      work:`Clause-level diff vs template. Each ask mapped to its triggering policy §, scored for severity, routed to an approval owner.`,
+      out:D.deviations.map(d=>`${d.clause.match(/[\d.]+/)[0]} [${d.severity}] → ${d.owner}`).join('  ·  '),
+    };
+    case 'approve': return {
+      inp:`${n} deviation memo(s) + approval/delegation matrix + SLA config`,
+      work:`Routed each memo to its authority via the delegation matrix; started SLA timers; escalated material items on breach.`,
+      out:D.approvalWorkflow.map(w=>`${w.id} ${w.stage}`).join('  ·  '),
+    };
+    case 'doc': return {
+      inp:`Approved/conditional clause set + T&C template v4.2 + approval lineage (${n} IDs)`,
+      work:`Merged only sanctioned clauses, regenerated numbering, attached summaries, versioned & locked the audit trail.`,
+      out:`${D.documents[0].name} · ${D.documents[0].clauses} clauses, ${D.documents[0].modified} modified.`,
+    };
+  }
+  return {inp:'', work:'', out:''};
+}
+
+async function runHood(){
+  if(hoodRunning) return;
+  if(!D.client) return;
+  hoodRunning = true;
+  resetHoodVisual();
+  const btn = document.getElementById('hoodRunBtn'); if(btn){ btn.style.pointerEvents='none'; btn.innerHTML='⏳ Running…'; }
+  const status = document.getElementById('hoodStatus');
+  const agentById = id => D.agents.find(a=>a.id===id);
+
+  hoodLogLine(`<span style="color:var(--ink-3)">Pipeline started for</span> <span class="ag">${D.client.name}</span> <span style="color:var(--ink-3)">— real data flowing through 7 agents.</span>`);
+
+  for(let i=0;i<D.agents.length;i++){
+    const ag = D.agents[i];
+    const tr = agentTrace(ag.id);
+    const node = document.getElementById('node-'+ag.id);
+    const stat = document.getElementById('stat-'+ag.id);
+    node && node.classList.add('active');
+    if(stat){ stat.textContent='running'; stat.className='agent-stat running'; }
+    if(status) status.textContent = ag.name+' · processing';
+    selectAgent(ag.id);
+    highlightKnowledge(i);
+    // INPUT
+    hoodLogLine(`<span class="ag">${ag.name}</span><br><span style="color:var(--ink-3)">&nbsp;&nbsp;in ◂</span> ${tr.inp}`);
+    await wait(800);
+    // PROCESSING
+    hoodLogLine(`<span style="color:var(--blue-2)">&nbsp;&nbsp;⚙ processing</span> <span style="color:var(--ink-3)">— ${tr.work}</span>`);
+    await wait(950);
+    // OUTPUT
+    hoodLogLine(`<span class="ok">&nbsp;&nbsp;out ▸</span> ${tr.out}`);
+    node && node.classList.remove('active'); node && node.classList.add('done');
+    if(stat){ stat.textContent='done'; stat.className='agent-stat done'; }
+    await wait(260);
+    // HANDOFF
+    if(i<D.agents.length-1){
+      const ho = HANDOFFS[i];
+      const conn = document.getElementById('conn-'+i);
+      const packet = document.getElementById('packet-'+i);
+      if(conn) conn.classList.add('flowing');
+      if(packet){ packet.classList.add('run'); }
+      hoodLogLine(`<span class="ar">&nbsp;&nbsp;→ handoff</span> <span style="color:var(--ink-3)">${agentById(ho.from).name.split(' ')[0]} passes</span> <i style="color:var(--blue-2)">"${ho.packet}"</i> <span style="color:var(--ink-3)">to ${agentById(ho.to).name.split(' ')[0]}</span>`);
+      await wait(1000);
+      if(packet) packet.classList.remove('run');
+    }
+  }
+  if(status) status.textContent = 'Complete · 7 agents, 6 handoffs';
+  hoodLogLine(`<span class="ok">●</span> <span class="ag">Pipeline complete for ${D.client.name}.</span> ${D.documents[0].name} generated with full audit lineage. 3 human checkpoints engaged (RM review, Credit, Risk).`);
+  if(btn){ btn.style.pointerEvents='auto'; btn.innerHTML=`${ic('spark')} Run Again`; }
+  hoodRunning = false;
+}
+
+function highlightKnowledge(i){
+  const rows = document.querySelectorAll('.ks-row');
+  rows.forEach(r=>r.classList.remove('hit'));
+  // map agent index to a knowledge source row
+  const map = [0,6,7,5,1,4,1];
+  const idx = map[i] ?? 0;
+  if(rows[idx]) rows[idx].classList.add('hit');
+}
+
+function resetHoodVisual(){
+  document.querySelectorAll('.agent-node').forEach(n=>n.classList.remove('active','done'));
+  document.querySelectorAll('.agent-stat').forEach(s=>{ s.textContent='idle'; s.className='agent-stat'; });
+  document.querySelectorAll('.agent-conn').forEach(c=>c.classList.remove('flowing'));
+  document.querySelectorAll('.packet').forEach(p=>p.classList.remove('run'));
+  document.querySelectorAll('.ks-row').forEach(r=>r.classList.remove('hit'));
+}
+function resetHood(){
+  if(hoodRunning) return;
+  resetHoodVisual();
+  const log = document.getElementById('hoodLog');
+  if(log){ log.dataset.cleared='0'; log.innerHTML='<div style="color:var(--ink-3)">› Awaiting run. The log will show each agent firing and passing data to the next.</div>'; }
+  const status = document.getElementById('hoodStatus'); if(status) status.textContent='Idle · click Run';
+}
+
+/* ---- Toast ---- */
+function toast(title, text){
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div'); el.className='toast';
+  el.innerHTML = `<div class="spark-ring" style="flex-shrink:0">${ic('spark')}</div><div><div class="ti">${title}</div><div class="tx">${text}</div></div>`;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.transition='.3s'; el.style.opacity='0'; el.style.transform='translateX(40px)'; setTimeout(()=>el.remove(),300); }, 4200);
+}
+
+/* ---- Share modal ---- */
+function openShareModal(){
+  const c = D.client; const cfo = c.contacts[0].n; const cfoFirst = cfo.split(' ')[0];
+  const dom = D.company.short.toLowerCase().replace(/[^a-z]/g,'')||'company';
+  document.getElementById('modalBox').innerHTML = `
+    <div class="card-h"><h3>Share Revised T&C v2.1 with ${c.name}</h3><div class="spacer"></div><div class="icon-btn" style="width:30px;height:30px" onclick="closeModal()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></div></div>
+    <div class="card-pad col" style="gap:14px">
+      <div class="note-card"><div class="nh">Recipient</div>${cfo} · Group CFO · ${cfoFirst.toLowerCase()}@${dom}.com</div>
+      <div class="note-card"><div class="nh">Email Draft (AI-generated)</div>
+        <div style="font-size:12.5px;line-height:1.7;color:var(--ink-2)">Dear ${cfoFirst},<br><br>Following our Q2 review, please find attached the revised facility terms reflecting the points we discussed. The collateral cover revision is confirmed; the pricing and credit-period adjustments are in final approval and we expect to confirm within the week.<br><br>We value the partnership and look forward to supporting the capex expansion.<br><br>Warm regards,<br>Ananya Rao<br>Senior Relationship Manager, Meridian Bank</div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <div class="btn ghost" onclick="closeModal()">Cancel</div>
+        <div class="btn primary" onclick="closeModal();toast('Sent','Revised T&C v2.1 shared with the ${D.company.short} CFO. Signing tracker updated.')">${ic('send')} Send to client</div>
+      </div>
+    </div>`;
+  document.getElementById('modalBg').classList.add('show');
+}
+function closeModal(){ document.getElementById('modalBg').classList.remove('show'); }
+
+/* ---- Copilot ---- */
+function toggleCopilot(){
+  const p = document.getElementById('cpPanel'), f=document.getElementById('cpFab');
+  const open = p.classList.toggle('show'); f.style.display = open?'none':'grid';
+}
+function cpAsk(q){ document.getElementById('cpInput').value=q; cpSend(); }
+function cpSend(){
+  const inp = document.getElementById('cpInput'); const q = inp.value.trim(); if(!q) return;
+  const body = document.getElementById('cpBody');
+  body.innerHTML += `<div class="cp-msg user"><div class="cp-bub">${q}</div></div>`;
+  inp.value=''; body.scrollTop = body.scrollHeight;
+  const ans = cpAnswer(q);
+  setTimeout(()=>{ body.innerHTML += `<div class="cp-msg ai"><div class="cp-bub">${ans}</div></div>`; body.scrollTop = body.scrollHeight; }, 500);
+}
+function cpAnswer(q){
+  const l = q.toLowerCase(); const co=D.company.short; const c=D.client;
+  if(l.includes('brief')||l.includes(co.toLowerCase().split(' ')[0])) return `${co} brief is ready in Meeting Prep for "${D.scenario.title}". Objective: ${D.scenario.ask}. ${D.deviations.length} clause deviation(s) flagged; defend the relationship against ${c.compBank}.`;
+  if(l.includes('approval')) return D.approvalWorkflow.map(w=>w.id+' ('+w.title.split(' — ')[0]+') — '+w.stage).join('; ')+'.';
+  if(l.includes('deviation')) return "4 deviations detected from the "+co+" meeting: rate (Credit), SCF credit period (Credit+Risk), leverage covenant (Risk Committee), collateral (Credit, approved). Open the Clause & Deviation Engine for the redline view.";
+  if(l.includes('document')||l.includes('t&c')) return "Revised T&C v2.1 is generated with 4 modified clauses. Collateral clause 11.2 is finalized; the other three await approval. You can download or share once Risk clears the covenant.";
+  return "I can help with meeting prep, deviation analysis, approval status, or document generation for "+co+". Try asking about pending approvals or deviations.";
+}
+function updateCopilotContext(){
+  const ctx = document.getElementById('cpCtx'); if(ctx) ctx.textContent = "Context: "+D.company.short+" · Q2 review";
+  const body = document.getElementById('cpBody');
+  if(body) body.innerHTML = `<div class="cp-msg ai"><div class="cp-bub">Good morning, Ananya. Engagement set for ${D.company.short}: <b>${D.scenario.title}</b>. ${D.deviations.length} clause deviation(s) will route through Credit/Risk. Want me to open the prep brief?</div></div>`;
+  const chips = document.getElementById('cpChips');
+  if(chips) chips.innerHTML = `<div class="cp-chip" onclick="cpAsk('Prep the ${D.company.short} brief')">Prep ${D.company.short} brief</div><div class="cp-chip" onclick="cpAsk('Summarize pending approvals')">Pending approvals</div><div class="cp-chip" onclick="cpAsk('What deviations need routing?')">Deviations</div>`;
+}
+
+/* ============================================================
+   COMPANY PICKER + LIVE GENERATION SEQUENCE
+   ============================================================ */
+let pendingCompany = null;
+
+function showPicker(){
+  document.getElementById('appShell').style.display='none';
+  document.getElementById('cpFab').style.display='none';
+  const flagTag = c => { const t=c.triggers[0]; return `<span class="pf-flag ${t.tagClass==='amber'?'med':t.tagClass==='green'?'low':'low'}">${c.triggers.length} live triggers</span>`; };
+  const rows = COMPANIES.map((c,idx)=>`<div class="pf-row" data-idx="${idx}">
+      <div class="pc-logo" style="background:${c.color}22;color:${c.color}">${c.logo}</div>
+      <div class="pf-main"><div class="pc-n">${c.name}</div><div class="pc-s">${c.sector} · ${c.id}</div></div>
+      <div class="pf-meta"><div class="pf-exp">${c.exposure}</div><div class="pf-sub">Exposure</div></div>
+      <div class="pf-meta"><div class="pf-rate">${c.rating}</div><div class="pf-sub">Rating</div></div>
+      <div class="pf-meta"><div class="pf-last">${c.fin.revenue}</div><div class="pf-sub">FY26 Rev</div></div>
+      <div class="pf-flagcol">${flagTag(c)}</div>
+      <div class="pf-go">${ic('arrow')}</div>
+    </div>`).join('');
+  const totalExp = COMPANIES.reduce((s,c)=>s+parseFloat(c.exposure.replace(/[^0-9.]/g,'')),0);
+  document.getElementById('splash').innerHTML = `
+    <div class="splash-inner">
+      <div class="splash-brand"><div class="logo">M</div><div><div class="bn">Meridian</div><div class="bt">RM Co-Pilot · Corporate Banking</div></div>
+        <div style="margin-left:auto;text-align:right"><div style="font-size:12.5px;font-weight:600">Ananya Rao</div><div style="font-size:11px;color:var(--ink-3)">Sr. RM · Mumbai Large Corporate Desk</div></div>
+      </div>
+      <div class="splash-h">Your Client Portfolio</div>
+      <div class="splash-sub">Select a corporate client, then choose how to engage — a full relationship review, or a specific real trigger. Your choice flows through every screen: prep, meeting, deviations, approvals and document.</div>
+      <div class="pf-stats">
+        <div class="pf-stat"><div class="pf-stat-n">10</div><div class="pf-stat-l">Active Clients</div></div>
+        <div class="pf-stat"><div class="pf-stat-n">₹${Math.round(totalExp).toLocaleString('en-IN')} Cr</div><div class="pf-stat-l">Total Exposure</div></div>
+        <div class="pf-stat"><div class="pf-stat-n">Real</div><div class="pf-stat-l">FY26 Data</div></div>
+        <div class="pf-stat"><div class="pf-stat-n">30</div><div class="pf-stat-l">Live Triggers</div></div>
+      </div>
+      <div class="pf-list">${rows}</div>
+      <div class="splash-foot">${ic('spark')} Financials & triggers sourced from public FY26 results (May 2026). Banking-relationship specifics are illustrative.</div>
+    </div>`;
+  document.getElementById('splash').style.display='flex';
+  document.querySelectorAll('.pf-row').forEach(row=>{
+    row.addEventListener('click', ()=>{ showScenarioChooser(COMPANIES[parseInt(row.dataset.idx,10)]); });
+  });
+}
+
+// ---- Step 2: choose engagement scenario for the picked company ----
+function showScenarioChooser(company){
+  pendingCompany = company;
+  const scenarios = scenariosFor(company);
+  const cards = scenarios.map((s,idx)=>{
+    const isFull = s.kind==='full';
+    return `<div class="sc-card ${isFull?'sc-full':''}" data-key="${s.key}">
+      <div class="sc-ic" style="${isFull?'background:rgba(140,127,214,.15);color:var(--violet)':''}">${ic(s.icon||'shield')}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:9px"><div class="sc-t">${s.title}</div><span class="tag ${s.tagClass}">${s.tag}</span></div>
+        <div class="sc-d">${s.what}</div>
+        <div class="sc-ask">${ic('arrow')} ${s.ask}</div>
+        <div class="sc-meta">${s.clauses.length} clause deviation${s.clauses.length>1?'s':''} · routes to ${[...new Set(s.clauses.map(cl=>buildDeviation(cl,company).route))].join(' / ')}</div>
+      </div>
+      <div class="pf-go">${ic('arrow')}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('splash').innerHTML = `
+    <div class="splash-inner">
+      <div class="splash-brand"><div class="logo" style="background:${company.color}">${company.logo}</div><div><div class="bn">${company.name}</div><div class="bt">${company.sector} · ${company.id}</div></div>
+        <div style="margin-left:auto"><div class="btn ghost" onclick="showPicker()">← Portfolio</div></div>
+      </div>
+      <div class="splash-h" style="font-size:26px">How would you like to engage?</div>
+      <div class="splash-sub">Pick the full relationship review to discuss everything at once, or act on a specific real trigger. Whatever you choose drives prep, the meeting transcript, deviations, approvals and the final document.</div>
+      <div class="sc-list">${cards}</div>
+      <div class="splash-foot">${ic('spark')} Real FY26 context for ${company.short} · ${company.realNews[0].t}</div>
+    </div>`;
+  document.querySelectorAll('.sc-card').forEach(card=>{
+    card.addEventListener('click', ()=>{ runGeneration(company, card.dataset.key); });
+  });
+}
+
+// ---- Step 3: animated generation, then apply + reveal ----
+async function runGeneration(company, scenarioKey){
+  const myToken = (++genToken);
+  const scenarios = scenariosFor(company);
+  const sc = scenarios.find(s=>s.key===scenarioKey);
+  document.getElementById('splash').innerHTML = renderGenScreen(company.name + " · " + sc.title);
+  const stepEls = ()=>document.querySelectorAll('.gen-step');
+  const setStep = (i,label)=>{ const els=stepEls(); els.forEach((e,idx)=>{ e.classList.toggle('done',idx<i); e.classList.toggle('active',idx===i); }); if(label&&els[i]){ const l=els[i].querySelector('.gs-live'); if(l) l.textContent=label; } };
+  const STEPS = [
+    "RM Copilot Agent — loading "+company.short+" context",
+    "Corporate Intelligence Agent — FY26 financials, exposure & news",
+    "Meeting Preparation Agent — brief for: "+sc.title,
+    "Conversation Intelligence Agent — building the meeting transcript",
+    "Policy & Deviation Agent — comparing "+sc.clauses.length+" clause(s) vs T&C v4.2",
+    "Approval Orchestration Agent — routing memos to Credit & Risk",
+    "Document Generation Agent — assembling revised T&C v2.1",
+  ];
+  for(let i=0;i<STEPS.length;i++){
+    if(myToken!==genToken) return;
+    setStep(i, STEPS[i]);
+    const note=document.getElementById('genLive'); if(note) note.textContent=STEPS[i];
+    await new Promise(r=>setTimeout(r, 480));
+  }
+  if(myToken!==genToken) return;
+  const note=document.getElementById('genLive'); if(note) note.textContent="Workspace ready.";
+
+  applyCompany(company, scenarioKey);
+  transcriptAnalyzed = false; selectedAgent = 'policy'; hoodRunning = false; currentView='cockpit';
+  await new Promise(r=>setTimeout(r, 500));
+  if(myToken!==genToken) return;
+
+  document.getElementById('splash').style.display='none';
+  document.getElementById('appShell').style.display='grid';
+  document.getElementById('cpFab').style.display='grid';
+  updateCopilotContext();
+  go('cockpit');
+  setTimeout(()=>toast('Meridian', company.short+' · '+sc.title+' — workspace ready across all screens.'), 600);
+}
+
+// ---- Re-select a scenario from inside the app (cockpit nudges) ----
+function selectScenario(key){
+  if(!D.company) return;
+  applyCompany(D.company, key);
+  transcriptAnalyzed = false; selectedAgent='policy';
+  updateCopilotContext();
+  const sc = D.scenario;
+  toast('Engagement set', D.company.short+' · '+sc.title+' now drives prep, deviations, approvals & document.');
+  go('prep');
+}
+
+function renderGenScreen(name){
+  const labels = ["RM Copilot Agent","Corporate Intelligence Agent","Meeting Preparation Agent","Conversation Intelligence Agent","Policy & Deviation Agent","Approval Orchestration Agent","Document Generation Agent"];
+  return `
+    <div class="gen-inner">
+      <div class="splash-brand" style="justify-content:center"><div class="logo pulse-logo">M</div><div><div class="bn">Meridian</div><div class="bt">Generating workspace</div></div></div>
+      <div class="gen-h">Building the relationship cockpit for</div>
+      <div class="gen-company">${name}</div>
+      <div class="gen-steps">
+        ${labels.map((l,idx)=>`<div class="gen-step">
+          <div class="gs-dot">${ic('spark')}</div>
+          <div style="flex:1"><div class="gs-name">${l}</div><div class="gs-live"></div></div>
+          <div class="gs-tick">${ic('check')}</div>
+        </div>`).join('')}
+      </div>
+      <div class="gen-live-note"><span class="pulse" style="width:7px;height:7px;border-radius:50%;background:var(--blue-2);display:inline-block;margin-right:7px"></span><span id="genLive">Connecting to intelligence services…</span></div>
+    </div>`;
+}
+
+/* ---- Boot ---- */
+showPicker();
+
+</script>
+</body>
+</html>

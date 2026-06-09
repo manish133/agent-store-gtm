@@ -1,0 +1,3147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QSR CEO Decision Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg-card: #111826;
+  --bg-card-2: #1a2335;
+  --border: #243049;
+  --border-soft: #1a2335;
+  --text: #e8ecf5;
+  --text-dim: #8b95a8;
+  --text-mute: #5a6378;
+  --accent: #facc15;     /* gold */
+  --accent-2: #f59e0b;
+  --green: #22c55e;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --purple: #a855f7;
+  --orange: #f97316;
+  --pink: #ec4899;
+  --teal: #14b8a6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(250,204,21,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 800px at 90% 100%, rgba(59,130,246,0.04) 0%, transparent 60%),
+    var(--bg);
+}
+
+/* ============ HEADER ============ */
+.header {
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-mark {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  color: #0a0e1a;
+  font-size: 20px;
+  box-shadow: 0 4px 20px rgba(250,204,21,0.25);
+}
+.brand-text h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.brand-text .sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 2px;
+  font-weight: 500;
+}
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.header-actions .scenario-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 6px 12px;
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  margin-right: 8px;
+}
+.header-actions .scenario-pill b { color: var(--accent); }
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn:hover { border-color: var(--accent); background: var(--bg-card-2); }
+.btn-primary {
+  background: var(--accent);
+  color: #0a0e1a;
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+.btn-danger { color: var(--red); }
+.btn-danger:hover { border-color: var(--red); }
+
+/* ============ TABS ============ */
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 32px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.tab {
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  position: relative;
+}
+.tab:hover { color: var(--text); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.tab .badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  background: var(--border);
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ============ MAIN GRID ============ */
+.main {
+  display: grid;
+  grid-template-columns: 320px 1fr 340px;
+  gap: 16px;
+  padding: 16px;
+  min-height: calc(100vh - 110px);
+}
+
+/* ============ PANELS ============ */
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  overflow: hidden;
+}
+.panel h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.panel .panel-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+/* ============ LEFT: LEVERS ============ */
+.lever-group {
+  margin-bottom: 18px;
+}
+.lever-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+.lever {
+  margin-bottom: 14px;
+}
+.lever-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.lever-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.lever-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(250,204,21,0.08);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.lever-value.delta-up { color: var(--green); background: rgba(34,197,94,0.1); }
+.lever-value.delta-down { color: var(--red); background: rgba(239,68,68,0.1); }
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--accent);
+  transition: transform 0.1s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+.lever-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 9px;
+  color: var(--text-mute);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.external-toggles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.toggle-chip {
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-card-2);
+  font-size: 10.5px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-dim);
+  text-align: center;
+  transition: all 0.15s;
+  user-select: none;
+}
+.toggle-chip.active {
+  border-color: var(--orange);
+  background: rgba(249,115,22,0.12);
+  color: var(--orange);
+}
+
+/* ============ CENTER: DASHBOARD ============ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--accent);
+}
+.kpi-card.green::before { background: var(--green); }
+.kpi-card.blue::before { background: var(--blue); }
+.kpi-card.purple::before { background: var(--purple); }
+.kpi-card.orange::before { background: var(--orange); }
+.kpi-card.pink::before { background: var(--pink); }
+.kpi-card.teal::before { background: var(--teal); }
+.kpi-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.kpi-value {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.kpi-unit {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 500;
+  margin-left: 3px;
+}
+.kpi-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 6px;
+  display: inline-block;
+}
+.kpi-delta.up { color: var(--green); }
+.kpi-delta.down { color: var(--red); }
+.kpi-delta.neutral { color: var(--text-mute); }
+
+.chart-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.chart-wrap {
+  position: relative;
+  height: 220px;
+}
+.chart-wrap.tall { height: 280px; }
+.full-width { grid-column: 1 / -1; }
+
+/* ============ KNOWLEDGE GRAPH ============ */
+#kg-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--bg-card-2);
+  border-radius: 8px;
+}
+.kg-node {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.kg-node:hover { filter: brightness(1.15); }
+.kg-node-text {
+  pointer-events: none;
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 600;
+  fill: white;
+  font-size: 9px;
+}
+.kg-edge {
+  transition: opacity 0.2s, stroke-width 0.2s;
+}
+.kg-edge.dim { opacity: 0.15; }
+.kg-edge.highlight { opacity: 1; stroke-width: 3; }
+
+/* ============ RIGHT: CAUSAL PATH ============ */
+.causal-step {
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.causal-step + .causal-step::before {
+  content: '↓';
+  position: absolute;
+  top: -14px;
+  left: 16px;
+  color: var(--text-mute);
+  font-size: 12px;
+}
+.causal-name {
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.causal-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+.causal-delta.up { color: var(--green); }
+.causal-delta.down { color: var(--red); }
+.causal-delta.neutral { color: var(--text-mute); }
+
+.risk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.risk-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--bg-card-2);
+  font-size: 11px;
+  border-left: 3px solid var(--text-mute);
+}
+.risk-item.warning { border-left-color: var(--orange); }
+.risk-item.danger { border-left-color: var(--red); background: rgba(239,68,68,0.05); }
+.risk-name { flex: 1; font-weight: 500; }
+.risk-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.risk-item.danger .risk-status { color: var(--red); }
+.risk-item.warning .risk-status { color: var(--orange); }
+.risk-item .risk-status { color: var(--green); }
+
+/* ============ SCENARIOS ============ */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.scenario-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  background: var(--bg-card-2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.scenario-card:hover { border-color: var(--accent); }
+.scenario-card.active { border-color: var(--accent); background: rgba(250,204,21,0.05); }
+.scenario-card .sc-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+.scenario-card .sc-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.scenario-card .sc-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-mute);
+}
+.scenario-card .sc-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 4px;
+}
+.scenario-card .sc-actions .btn { padding: 4px 8px; font-size: 10px; }
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.comparison-table th, .comparison-table td {
+  padding: 9px 10px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+.comparison-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.comparison-table th:not(:first-child),
+.comparison-table td:not(:first-child) { text-align: right; }
+.comparison-table td:first-child { font-weight: 600; }
+.comparison-table .best { color: var(--green); font-weight: 700; }
+.comparison-table .worst { color: var(--red); font-weight: 700; }
+.comparison-table tr.section-header td {
+  background: var(--bg-card-2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-align: left;
+}
+
+/* ============ DATA LINEAGE ============ */
+.lineage-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.lineage-node {
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.lineage-node + .lineage-node::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 22px;
+  width: 1px;
+  height: 7px;
+  background: var(--text-mute);
+}
+.lineage-icon {
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--blue);
+  border-radius: 4px;
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* Tab content visibility */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ============ HIDDEN PANELS ============ */
+.kg-tab-content, .scenarios-tab-content, .compare-tab-content, .pnl-tab-content {
+  padding: 16px;
+}
+.kg-full {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Modal for scenario save */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  width: 420px;
+  max-width: 90vw;
+}
+.modal h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.modal input[type="text"], .modal textarea {
+  width: 100%;
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.modal textarea { resize: vertical; min-height: 70px; }
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 2000;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  color: var(--text-mute);
+  font-size: 10px;
+  padding: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-mute); }
+
+@media (max-width: 1200px) {
+  .main { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============ ADMIN TAB ============ */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+}
+.admin-table th {
+  background: var(--bg-card-2);
+  text-align: left;
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.admin-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: middle;
+}
+.admin-table tr:hover td { background: rgba(250,204,21,0.03); }
+.admin-table .node-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.admin-table .pill-goal { background: rgba(34,197,94,0.15); color: #22c55e; }
+.admin-table .pill-kpi { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.admin-table .pill-driver { background: rgba(168,85,247,0.15); color: #a855f7; }
+.admin-table .pill-op { background: rgba(249,115,22,0.15); color: #f97316; }
+.admin-table .pill-lever { background: rgba(250,204,21,0.15); color: #facc15; }
+.admin-table .pill-live { background: rgba(34,197,94,0.15); color: #22c55e; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
+.admin-table .pill-doc { background: rgba(139,149,168,0.12); color: #8b95a8; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
+.admin-input, .admin-table input, .admin-table select {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 9px;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 12px;
+}
+.admin-table input[type="number"] {
+  font-family: 'JetBrains Mono', monospace;
+  width: 80px;
+}
+.admin-input:focus, .admin-table input:focus { outline: none; border-color: var(--accent); }
+.admin-btn-mini {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 10px;
+  font-family: inherit;
+}
+.admin-btn-mini:hover { color: var(--red); border-color: var(--red); }
+.admin-btn-mini.reset:hover { color: var(--accent); border-color: var(--accent); }
+.admin-subtab-btn { font-size: 11px; padding: 6px 12px; }
+.admin-subtab-btn.active { border-color: var(--accent); color: var(--accent); }
+
+.coef-group {
+  margin-bottom: 16px;
+}
+.coef-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border);
+}
+.coef-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 30px;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 11.5px;
+}
+.coef-label {
+  color: var(--text);
+}
+.coef-label .coef-default {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--text-mute);
+  margin-left: 6px;
+}
+.coef-row input {
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-align: right;
+}
+.coef-row input.modified {
+  border-color: var(--accent);
+  background: rgba(250,204,21,0.08);
+}
+
+/* ============ DIAGNOSTICS TAB ============ */
+.diag-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+}
+.diag-table th {
+  background: var(--bg-card-2);
+  text-align: left;
+  padding: 9px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.diag-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: middle;
+}
+.diag-table td.num {
+  font-family: 'JetBrains Mono', monospace;
+  text-align: right;
+}
+.diag-table tr:hover td { background: rgba(250,204,21,0.02); }
+.diag-table .sign-match {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.diag-table .sign-match.pos { background: rgba(34,197,94,0.15); color: var(--green); }
+.diag-table .sign-match.neg { background: rgba(239,68,68,0.15); color: var(--red); }
+.diag-table .sign-match.neut { background: rgba(139,149,168,0.12); color: var(--text-dim); }
+.verdict-fit, .verdict-weak, .verdict-noise {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+}
+.verdict-fit { background: rgba(34,197,94,0.15); color: var(--green); }
+.verdict-weak { background: rgba(245,158,11,0.15); color: var(--accent-2); }
+.verdict-noise { background: rgba(139,149,168,0.15); color: var(--text-dim); }
+.real-finding {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--bg-card-2);
+  border-left: 3px solid var(--green);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.real-finding .rf-icon {
+  width: 30px; height: 30px;
+  background: var(--green);
+  color: white;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.real-finding .rf-content { flex: 1; }
+.real-finding .rf-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.real-finding .rf-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.real-finding .rf-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 13px;
+}
+.need-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 12.5px;
+}
+.need-item:last-child { border-bottom: none; }
+.need-item .need-coef {
+  font-weight: 600;
+  color: var(--text);
+}
+.need-item .need-coef .need-current {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-mute);
+  margin-top: 2px;
+  font-weight: 500;
+}
+.need-item .need-desc { color: var(--text-dim); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="brand-mark">Q</div>
+    <div class="brand-text">
+      <h1>QSR CEO Decision Simulator</h1>
+      <div class="sub">Knowledge Graph · Causal Modeling · FY2025 Baseline</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <span class="scenario-pill">Active: <b id="active-scenario-name">Baseline</b></span>
+    <button class="btn" onclick="resetLevers()">↻ Reset</button>
+    <button class="btn" onclick="openSaveModal()">💾 Save Scenario</button>
+    <button class="btn" onclick="exportCSV()">↓ CSV</button>
+    <button class="btn btn-primary" onclick="exportPDF()">↓ PDF Report</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tab active" data-tab="dashboard">Dashboard</div>
+  <div class="tab" data-tab="kg">Knowledge Graph</div>
+  <div class="tab" data-tab="pnl">P&amp;L Detail</div>
+  <div class="tab" data-tab="scenarios">Scenarios <span class="badge" id="scenarios-badge">5</span></div>
+  <div class="tab" data-tab="compare">Compare</div>
+  <div class="tab" data-tab="diagnostics">📊 Diagnostics</div>
+  <div class="tab" data-tab="admin">⚙ Admin</div>
+</nav>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="tab-content active" id="tab-dashboard">
+<main class="main">
+
+  <!-- LEFT: LEVERS -->
+  <aside class="panel">
+    <h2>Decision Levers</h2>
+    <div class="panel-sub">Move sliders to simulate</div>
+
+    <div class="lever-group">
+      <div class="lever-group-title">Pricing &amp; Promotions</div>
+      <div class="lever" data-lever="price">
+        <div class="lever-head"><span class="lever-label">Pricing Δ</span><span class="lever-value">0%</span></div>
+        <input type="range" min="-10" max="20" step="0.5" value="0">
+        <div class="lever-meta"><span>-10%</span><span>+20%</span></div>
+      </div>
+      <div class="lever" data-lever="discount">
+        <div class="lever-head"><span class="lever-label">Discount %</span><span class="lever-value">10%</span></div>
+        <input type="range" min="0" max="30" step="0.5" value="10">
+        <div class="lever-meta"><span>0%</span><span>30%</span></div>
+      </div>
+      <div class="lever" data-lever="deliveryDiscount">
+        <div class="lever-head"><span class="lever-label">Delivery Platform Discount</span><span class="lever-value">5%</span></div>
+        <input type="range" min="0" max="25" step="0.5" value="5">
+        <div class="lever-meta"><span>0%</span><span>25%</span></div>
+      </div>
+      <div class="lever" data-lever="marketing">
+        <div class="lever-head"><span class="lever-label">Marketing Spend Δ</span><span class="lever-value">0%</span></div>
+        <input type="range" min="-50" max="200" step="5" value="0">
+        <div class="lever-meta"><span>-50%</span><span>+200%</span></div>
+      </div>
+    </div>
+
+    <div class="lever-group">
+      <div class="lever-group-title">Operations</div>
+      <div class="lever" data-lever="prepTime">
+        <div class="lever-head"><span class="lever-label">Prep Time Target</span><span class="lever-value">10.95 min</span></div>
+        <input type="range" min="6" max="16" step="0.05" value="10.95">
+        <div class="lever-meta"><span>6 min</span><span>16 min</span></div>
+      </div>
+      <div class="lever" data-lever="staffing">
+        <div class="lever-head"><span class="lever-label">Staffing Level Δ</span><span class="lever-value">0%</span></div>
+        <input type="range" min="-25" max="30" step="1" value="0">
+        <div class="lever-meta"><span>-25%</span><span>+30%</span></div>
+      </div>
+      <div class="lever" data-lever="training">
+        <div class="lever-head"><span class="lever-label">Training Investment</span><span class="lever-value">82%</span></div>
+        <input type="range" min="50" max="100" step="1" value="82">
+        <div class="lever-meta"><span>50%</span><span>100%</span></div>
+      </div>
+    </div>
+
+    <div class="lever-group">
+      <div class="lever-group-title">Supply Chain &amp; Menu</div>
+      <div class="lever" data-lever="menuInnov">
+        <div class="lever-head"><span class="lever-label">Menu Innovation Index</span><span class="lever-value">50</span></div>
+        <input type="range" min="0" max="100" step="1" value="50">
+        <div class="lever-meta"><span>None</span><span>Aggressive</span></div>
+      </div>
+      <div class="lever" data-lever="sourcing">
+        <div class="lever-head"><span class="lever-label">Sourcing Cost Optimization</span><span class="lever-value">0%</span></div>
+        <input type="range" min="-5" max="15" step="0.5" value="0">
+        <div class="lever-meta"><span>Premium</span><span>Aggressive</span></div>
+      </div>
+    </div>
+
+    <div class="lever-group">
+      <div class="lever-group-title">Expansion</div>
+      <div class="lever" data-lever="newStores">
+        <div class="lever-head"><span class="lever-label">New Store Openings</span><span class="lever-value">0</span></div>
+        <input type="range" min="0" max="20" step="1" value="0">
+        <div class="lever-meta"><span>0</span><span>20</span></div>
+      </div>
+    </div>
+
+    <div class="lever-group">
+      <div class="lever-group-title">External Factors</div>
+      <div class="external-toggles">
+        <div class="toggle-chip" data-ext="inflation">Food Inflation +</div>
+        <div class="toggle-chip" data-ext="fuel">Fuel Spike</div>
+        <div class="toggle-chip" data-ext="weather">Bad Weather</div>
+        <div class="toggle-chip" data-ext="festival">Festival Season</div>
+        <div class="toggle-chip" data-ext="competitor">Competitor Promo</div>
+        <div class="toggle-chip" data-ext="regulatory">Regulatory Tax</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CENTER: KPIs + CHARTS -->
+  <section>
+    <div class="kpi-grid" id="kpi-grid">
+      <div class="kpi-card green">
+        <div class="kpi-label">Revenue</div>
+        <div class="kpi-value" id="kpi-revenue">832</div><span class="kpi-unit">Cr ₹</span>
+        <div class="kpi-delta neutral" id="kpi-revenue-d">0.0%</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-label">EBITDA Margin</div>
+        <div class="kpi-value" id="kpi-ebitda">23.5</div><span class="kpi-unit">%</span>
+        <div class="kpi-delta neutral" id="kpi-ebitda-d">0.0 pp</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-label">Transactions</div>
+        <div class="kpi-value" id="kpi-tx">21.6</div><span class="kpi-unit">M</span>
+        <div class="kpi-delta neutral" id="kpi-tx-d">0.0%</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-label">Avg Order Value</div>
+        <div class="kpi-value" id="kpi-aov">350</div><span class="kpi-unit">₹</span>
+        <div class="kpi-delta neutral" id="kpi-aov-d">0.0%</div>
+      </div>
+      <div class="kpi-card pink">
+        <div class="kpi-label">CSAT</div>
+        <div class="kpi-value" id="kpi-csat">3.73</div><span class="kpi-unit">/5</span>
+        <div class="kpi-delta neutral" id="kpi-csat-d">0.00</div>
+      </div>
+      <div class="kpi-card teal">
+        <div class="kpi-label">Repeat Rate</div>
+        <div class="kpi-value" id="kpi-repeat">42.2</div><span class="kpi-unit">%</span>
+        <div class="kpi-delta neutral" id="kpi-repeat-d">0.0 pp</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Market Share</div>
+        <div class="kpi-value" id="kpi-share">19.0</div><span class="kpi-unit">%</span>
+        <div class="kpi-delta neutral" id="kpi-share-d">0.0 pp</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Food Cost</div>
+        <div class="kpi-value" id="kpi-foodcost">32.2</div><span class="kpi-unit">%</span>
+        <div class="kpi-delta neutral" id="kpi-foodcost-d">0.0 pp</div>
+      </div>
+    </div>
+
+    <div class="chart-row">
+      <div class="panel">
+        <h2>Revenue Trajectory</h2>
+        <div class="panel-sub">Baseline vs Simulated · Monthly</div>
+        <div class="chart-wrap"><canvas id="chart-revenue"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Cost Structure</h2>
+        <div class="panel-sub">% of Revenue</div>
+        <div class="chart-wrap"><canvas id="chart-costs"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Channel Performance</h2>
+      <div class="panel-sub">Revenue by sales channel · simulated</div>
+      <div class="chart-wrap"><canvas id="chart-channel"></canvas></div>
+    </div>
+  </section>
+
+  <!-- RIGHT: CAUSAL PATH + RISKS -->
+  <aside>
+    <div class="panel" style="margin-bottom: 16px;">
+      <h2>Causal Path</h2>
+      <div class="panel-sub">Top impact propagation</div>
+      <div id="causal-chain"></div>
+    </div>
+
+    <div class="panel" style="margin-bottom: 16px;">
+      <h2>Risk Monitor</h2>
+      <div class="panel-sub">Constraints &amp; alerts</div>
+      <div class="risk-list" id="risk-list"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Data Lineage</h2>
+      <div class="panel-sub">From source to KPI</div>
+      <div class="lineage-flow">
+        <div class="lineage-node"><div class="lineage-icon" style="background:#3b82f6">💳</div>POS System</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#8b5cf6">🛒</div>116K Transactions</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#14b8a6">📊</div>Daily Sales Aggregate</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#22c55e">📈</div>Revenue KPI</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#facc15;color:#0a0e1a">⚡</div>CEO Dashboard</div>
+      </div>
+    </div>
+  </aside>
+</main>
+</div>
+
+<!-- ============ KNOWLEDGE GRAPH TAB ============ -->
+<div class="tab-content" id="tab-kg">
+  <div class="kg-tab-content">
+    <div class="kg-full">
+      <h2 style="font-family:'Fraunces',serif; font-weight:700; font-size:20px; margin-bottom:4px;">Enterprise Knowledge Graph</h2>
+      <div class="panel-sub">Click a node to highlight its causal influence path · Edge thickness = sensitivity strength</div>
+      <svg id="kg-svg" viewBox="0 0 1200 700"></svg>
+      <div style="margin-top: 18px; display: flex; gap: 24px; flex-wrap: wrap; font-size: 11px; color: var(--text-dim);">
+        <span><span style="display:inline-block;width:10px;height:10px;background:#22c55e;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Strategic Objective</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#3b82f6;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>KPI / Outcome</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#a855f7;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Business Driver</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#f97316;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Operational Metric</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#facc15;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Decision Lever</span>
+        <span><span style="display:inline-block;width:18px;height:2px;background:#000;vertical-align:middle;margin-right:6px;"></span>Drives / Increases</span>
+        <span><span style="display:inline-block;width:18px;height:2px;background:#ef4444;vertical-align:middle;margin-right:6px;"></span>Reduces / Negative</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ P&L TAB ============ -->
+<div class="tab-content" id="tab-pnl">
+  <div class="pnl-tab-content">
+    <div class="panel">
+      <h2>Profit &amp; Loss Statement</h2>
+      <div class="panel-sub">Annual figures in INR Crores · Baseline vs Simulated</div>
+      <table class="comparison-table" id="pnl-table">
+        <thead>
+          <tr>
+            <th>Line Item</th>
+            <th>Baseline (Cr ₹)</th>
+            <th>% of Rev</th>
+            <th>Simulated (Cr ₹)</th>
+            <th>% of Rev</th>
+            <th>Variance</th>
+          </tr>
+        </thead>
+        <tbody id="pnl-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="chart-row" style="margin-top:16px;">
+      <div class="panel">
+        <h2>Waterfall: Revenue → EBITDA</h2>
+        <div class="panel-sub">Simulated scenario</div>
+        <div class="chart-wrap"><canvas id="chart-waterfall"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Margin Sensitivity</h2>
+        <div class="panel-sub">EBITDA % by lever</div>
+        <div class="chart-wrap"><canvas id="chart-sensitivity"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCENARIOS TAB ============ -->
+<div class="tab-content" id="tab-scenarios">
+  <div class="scenarios-tab-content">
+    <div class="panel">
+      <h2>Scenario Library</h2>
+      <div class="panel-sub">Pre-built templates and your saved scenarios · Click "Apply" to load</div>
+      <div class="scenario-grid" id="scenario-grid"></div>
+    </div>
+    <div class="panel" style="margin-top: 16px;">
+      <h2>Import / Export</h2>
+      <div class="panel-sub">Share scenarios with colleagues as JSON files</div>
+      <div style="display:flex; gap: 10px; margin-top: 10px;">
+        <button class="btn" onclick="exportAllScenarios()">↓ Export All Scenarios (JSON)</button>
+        <label class="btn" style="cursor:pointer;">
+          ↑ Import Scenarios
+          <input type="file" accept=".json" onchange="importScenarios(event)" style="display:none;">
+        </label>
+        <button class="btn btn-danger" onclick="clearSavedScenarios()">✕ Clear Saved</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COMPARE TAB ============ -->
+<div class="tab-content" id="tab-compare">
+  <div class="compare-tab-content">
+    <div class="panel">
+      <h2>Scenario Comparison</h2>
+      <div class="panel-sub">Side-by-side analysis · Best values highlighted green, worst red</div>
+      <div style="margin: 12px 0;">
+        <div id="compare-selector" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="comparison-table" id="compare-table"></table>
+      </div>
+    </div>
+    <div class="panel" style="margin-top: 16px;">
+      <h2>Visual Comparison</h2>
+      <div class="panel-sub">Key KPIs across selected scenarios</div>
+      <div class="chart-wrap tall"><canvas id="chart-compare"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DIAGNOSTICS TAB ============ -->
+<div class="tab-content" id="tab-diagnostics">
+  <div class="diag-tab-content" style="padding: 16px;">
+    <div class="panel" style="margin-bottom: 16px;">
+      <h2>Model Diagnostics</h2>
+      <div class="panel-sub">Statistical analysis of the FY2025 dataset · what we could fit, what we couldn't, and why</div>
+
+      <div style="background: rgba(239,68,68,0.06); border-left: 3px solid var(--red); padding: 12px 14px; margin-top: 14px; border-radius: 4px; font-size: 12.5px; color: var(--text);">
+        <b style="color: var(--red);">Headline finding:</b> The provided FY2025 file appears to be <b>synthetic / uniformly-distributed dummy data</b>. The variables are statistically <b>independent</b> of each other — none of the causal relationships we'd expect in a real QSR (e.g. prep-time → CSAT, training → attrition) are detectable in this data. <b>25 of 25 hypothesized relationships came back as statistical noise</b> (within-store correlation between −0.03 and +0.03, p &gt; 0.05). Only one real pattern is baked in: the <b>Q4 +30% festival lift</b>.
+        <div style="margin-top: 8px; color: var(--text-dim);">As a result, the simulator continues to use industry-heuristic coefficients (clearly labeled in the Admin tab), not regressions fit to this file. When real production data is available, the Admin tab's coefficients can be re-tuned directly.</div>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px;">
+      <div class="panel" style="text-align: center; padding: 16px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Hypotheses Tested</div>
+        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;">25</div>
+      </div>
+      <div class="panel" style="text-align: center; padding: 16px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Fit-able from Data</div>
+        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;color:var(--green);">0</div>
+      </div>
+      <div class="panel" style="text-align: center; padding: 16px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Statistical Noise</div>
+        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;color:var(--red);">25</div>
+      </div>
+      <div class="panel" style="text-align: center; padding: 16px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.08em;font-weight:600;text-transform:uppercase;margin-bottom:6px;">Real Patterns Found</div>
+        <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;color:var(--accent);">2</div>
+      </div>
+    </div>
+
+    <!-- Hypothesis Test Results -->
+    <div class="panel" style="margin-bottom: 16px;">
+      <h2>Hypothesis Test Results</h2>
+      <div class="panel-sub">Each row tests one expected causal relationship against the data using Pearson correlation with store-level fixed effects</div>
+      <div style="overflow-x: auto; margin-top: 12px;">
+        <table class="diag-table" id="hypothesis-table"></table>
+      </div>
+      <div style="font-size: 11px; color: var(--text-mute); margin-top: 10px;">
+        <b>Verdict legend:</b> <span class="verdict-fit">FIT-ABLE</span> = |r| &gt; 0.10, p &lt; 0.01 · <span class="verdict-weak">WEAK</span> = |r| &gt; 0.05, p &lt; 0.05 · <span class="verdict-noise">NOISE</span> = no detectable signal
+      </div>
+    </div>
+
+    <!-- Findings that ARE in the data -->
+    <div class="panel" style="margin-bottom: 16px;">
+      <h2>Findings That Are Real (Used by Simulator)</h2>
+      <div class="panel-sub">Patterns actually present in your FY2025 data — these inform the baseline</div>
+      <div style="margin-top: 14px;" id="real-findings"></div>
+    </div>
+
+    <!-- What's needed for real data -->
+    <div class="panel" style="margin-bottom: 16px;">
+      <h2>To Build a Fully Data-Driven Model</h2>
+      <div class="panel-sub">What your real production data would need for each coefficient to be fit-able</div>
+      <div style="margin-top: 14px;" id="data-needs"></div>
+    </div>
+
+    <!-- Methodology -->
+    <div class="panel">
+      <h2>Methodology</h2>
+      <div class="panel-sub">How the tests were run</div>
+      <div style="font-size: 12.5px; line-height: 1.7; color: var(--text); margin-top: 12px;">
+        <p style="margin-bottom: 10px;"><b style="color: var(--accent);">Panel construction.</b> Built a daily-store panel (2,920 rows = 365 days × 8 stores) by merging Sales, Operations, HR, Customer Experience, and Supply Chain sheets on Date + Store.</p>
+        <p style="margin-bottom: 10px;"><b style="color: var(--accent);">Hypothesis tests.</b> For each expected causal relationship, computed: (1) raw Pearson correlation, (2) within-store correlation (driver and outcome de-meaned by store) to control for store fixed effects, (3) OLS slope and standard error.</p>
+        <p style="margin-bottom: 10px;"><b style="color: var(--accent);">Verdict thresholds.</b> A relationship is "fit-able" only if the within-store |r| exceeds 0.10 with p &lt; 0.01 — a deliberately conservative bar to avoid false discoveries when running 25 simultaneous tests.</p>
+        <p style="margin-bottom: 10px;"><b style="color: var(--accent);">Definitional vs causal.</b> Two correlations exceed 0.10 in the raw data (Revenue ↔ AOV: r=+0.90, Orders ↔ AOV: r=−0.42), but both are mathematical identities (Revenue ≡ Orders × AOV) — not causal relationships and not used as model inputs.</p>
+        <p><b style="color: var(--accent);">Why heuristics still work.</b> The simulator's coefficients come from published QSR industry research (price elasticity, marketing reach, CSAT→repeat conversion). They're directionally correct and roughly right in magnitude — sufficient for what-if exploration and strategic conversation, but not for precise forecasting.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ ADMIN TAB ============ -->
+<div class="tab-content" id="tab-admin">
+  <div class="admin-tab-content" style="padding: 16px;">
+    <div class="panel" style="margin-bottom: 16px;">
+      <div style="display:flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+        <h2>Model Administration</h2>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn" onclick="exportModel()">↓ Export Model JSON</button>
+          <label class="btn" style="cursor:pointer;">
+            ↑ Import Model
+            <input type="file" accept=".json" onchange="importModel(event)" style="display:none;">
+          </label>
+          <button class="btn btn-danger" onclick="resetModelToDefaults()">↻ Reset All to Defaults</button>
+        </div>
+      </div>
+      <div class="panel-sub">Edit the Knowledge Graph structure and simulator coefficients. Changes flow through every tab.</div>
+      <div style="background: rgba(250,204,21,0.06); border-left: 3px solid var(--accent); padding: 10px 14px; margin-top: 12px; border-radius: 4px; font-size: 12px; color: var(--text-dim);">
+        <b style="color: var(--accent);">How this works:</b> Edge weights for lever→outcome paths drive the simulator directly. Coefficients handle non-linear effects (thresholds, capacity, externalities). All changes persist to localStorage.
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <!-- LEFT: Graph editor -->
+      <div class="panel">
+        <h2>Knowledge Graph Editor</h2>
+        <div class="panel-sub">Add or remove nodes and causal edges</div>
+
+        <div style="display: flex; gap: 6px; margin-top: 14px; margin-bottom: 8px;">
+          <button class="btn admin-subtab-btn active" data-subtab="nodes" onclick="switchAdminSubtab('nodes')">Nodes</button>
+          <button class="btn admin-subtab-btn" data-subtab="edges" onclick="switchAdminSubtab('edges')">Edges</button>
+        </div>
+
+        <!-- Nodes editor -->
+        <div id="admin-nodes-panel" class="admin-subtab-panel">
+          <table class="admin-table" id="admin-nodes-table"></table>
+          <div style="margin-top: 12px; padding: 12px; background: var(--bg-card-2); border-radius: 8px; border: 1px dashed var(--border);">
+            <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 8px;">Add New Node</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+              <input type="text" id="new-node-id" placeholder="ID (e.g., new_kpi)" class="admin-input">
+              <input type="text" id="new-node-label" placeholder="Label" class="admin-input">
+              <select id="new-node-type" class="admin-input">
+                <option value="goal">Strategic Goal (green)</option>
+                <option value="kpi" selected>KPI (blue)</option>
+                <option value="driver">Driver (purple)</option>
+                <option value="op">Operation (orange)</option>
+                <option value="lever">Lever (yellow)</option>
+              </select>
+              <button class="btn btn-primary" onclick="addNode()">+ Add Node</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edges editor -->
+        <div id="admin-edges-panel" class="admin-subtab-panel" style="display: none;">
+          <table class="admin-table" id="admin-edges-table"></table>
+          <div style="margin-top: 12px; padding: 12px; background: var(--bg-card-2); border-radius: 8px; border: 1px dashed var(--border);">
+            <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 8px;">Add New Edge</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+              <select id="new-edge-from" class="admin-input"></select>
+              <select id="new-edge-to" class="admin-input"></select>
+              <input type="number" id="new-edge-weight" placeholder="Weight (e.g., 0.5 or -0.8)" step="0.05" class="admin-input">
+              <button class="btn btn-primary" onclick="addEdge()">+ Add Edge</button>
+            </div>
+            <div style="font-size: 10.5px; color: var(--text-mute); margin-top: 8px;">
+              <b>Note:</b> Edges where the source is a Lever node directly affect the simulator. Other edges are documentation only (the simulator's pre-built pathways carry the math).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Coefficients editor -->
+      <div class="panel">
+        <h2>Simulator Coefficients</h2>
+        <div class="panel-sub">Tune sensitivity values · changes flow live to all calculations</div>
+        <div id="admin-coef-content" style="margin-top: 14px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Save Modal -->
+<div class="modal-overlay" id="save-modal">
+  <div class="modal">
+    <h3>Save Scenario</h3>
+    <label style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Name</label>
+    <input type="text" id="save-name" placeholder="e.g., Aggressive Growth Q2">
+    <label style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Description (optional)</label>
+    <textarea id="save-desc" placeholder="Brief description of this scenario..."></textarea>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeSaveModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveScenario()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer class="footer">
+  QSR CEO Simulator · v1.0 · Built on FY2025 baseline (8 stores · 21.6M orders · 832 Cr revenue)
+</footer>
+
+<script>
+/* ====================================================
+   KNOWLEDGE GRAPH DATA (editable via Admin tab)
+   ==================================================== */
+const DEFAULT_KG_NODES = [
+  // Strategic Objective
+  {id: 'goal', x: 600, y: 50, w: 160, h: 50, fill: '#22c55e', label: 'Profitable Sustainable\nGrowth', type: 'goal'},
+  // KPIs (blue)
+  {id: 'ebitda', x: 200, y: 165, w: 110, h: 38, fill: '#3b82f6', label: 'EBITDA Margin', type: 'kpi'},
+  {id: 'revenue', x: 460, y: 165, w: 110, h: 38, fill: '#3b82f6', label: 'Revenue Growth', type: 'kpi'},
+  {id: 'csat', x: 720, y: 165, w: 130, h: 38, fill: '#3b82f6', label: 'Customer Satisfaction', type: 'kpi'},
+  {id: 'mktshare', x: 1000, y: 165, w: 110, h: 38, fill: '#3b82f6', label: 'Market Share', type: 'kpi'},
+  // Business Drivers (purple)
+  {id: 'tx', x: 270, y: 295, w: 110, h: 38, fill: '#a855f7', label: 'Transactions', type: 'driver'},
+  {id: 'aov', x: 500, y: 295, w: 120, h: 38, fill: '#a855f7', label: 'Average Order Value', type: 'driver'},
+  {id: 'repeat', x: 740, y: 295, w: 110, h: 38, fill: '#a855f7', label: 'Repeat Rate', type: 'driver'},
+  {id: 'expansion', x: 970, y: 295, w: 120, h: 38, fill: '#a855f7', label: 'Store Expansion', type: 'driver'},
+  // Operational Metrics (orange)
+  {id: 'footfall', x: 100, y: 425, w: 90, h: 34, fill: '#f97316', label: 'Footfall', type: 'op'},
+  {id: 'discount', x: 230, y: 425, w: 90, h: 34, fill: '#f97316', label: 'Discount %', type: 'op'},
+  {id: 'menu', x: 360, y: 425, w: 105, h: 34, fill: '#f97316', label: 'Menu Mix', type: 'op'},
+  {id: 'delivery', x: 500, y: 425, w: 95, h: 34, fill: '#f97316', label: 'Delivery Mix', type: 'op'},
+  {id: 'foodcost', x: 635, y: 425, w: 95, h: 34, fill: '#f97316', label: 'Food Cost %', type: 'op'},
+  {id: 'preptime', x: 770, y: 425, w: 95, h: 34, fill: '#f97316', label: 'Prep Time', type: 'op'},
+  {id: 'service', x: 910, y: 425, w: 100, h: 34, fill: '#f97316', label: 'Service Quality', type: 'op'},
+  {id: 'wastage', x: 1060, y: 425, w: 100, h: 34, fill: '#f97316', label: 'Food Wastage', type: 'op'},
+  // Decision Levers (yellow)
+  {id: 'l_pricing', x: 120, y: 580, w: 95, h: 34, fill: '#facc15', label: 'Pricing', type: 'lever', dark: true},
+  {id: 'l_promo', x: 240, y: 580, w: 95, h: 34, fill: '#facc15', label: 'Promotions', type: 'lever', dark: true},
+  {id: 'l_menu', x: 360, y: 580, w: 110, h: 34, fill: '#facc15', label: 'Menu Engineering', type: 'lever', dark: true},
+  {id: 'l_marketing', x: 500, y: 580, w: 100, h: 34, fill: '#facc15', label: 'Marketing', type: 'lever', dark: true},
+  {id: 'l_delivery', x: 630, y: 580, w: 110, h: 34, fill: '#facc15', label: 'Delivery Discount', type: 'lever', dark: true},
+  {id: 'l_staff', x: 770, y: 580, w: 100, h: 34, fill: '#facc15', label: 'Staffing', type: 'lever', dark: true},
+  {id: 'l_train', x: 900, y: 580, w: 100, h: 34, fill: '#facc15', label: 'Training', type: 'lever', dark: true},
+  {id: 'l_capex', x: 1040, y: 580, w: 100, h: 34, fill: '#facc15', label: 'Capex / Stores', type: 'lever', dark: true},
+];
+
+// Edges. "live: true" means the edge weight directly drives simulator math (lever → outcome).
+// "live: false" edges are documentation in the KG only — math handled by other pathways/coefficients.
+const DEFAULT_KG_EDGES = [
+  // KPIs to goal (documentation only)
+  {from: 'ebitda', to: 'goal', weight: 1.0, kind: 'positive', live: false},
+  {from: 'revenue', to: 'goal', weight: 1.2, kind: 'positive', live: false},
+  {from: 'csat', to: 'goal', weight: 0.8, kind: 'positive', live: false},
+  {from: 'mktshare', to: 'goal', weight: 0.9, kind: 'positive', live: false},
+  // Drivers to KPIs (documentation)
+  {from: 'tx', to: 'revenue', weight: 0.95, kind: 'positive', live: false},
+  {from: 'aov', to: 'revenue', weight: 0.70, kind: 'positive', live: false},
+  {from: 'repeat', to: 'csat', weight: 0.65, kind: 'positive', live: false},
+  {from: 'expansion', to: 'mktshare', weight: 0.45, kind: 'positive', live: false},
+  {from: 'repeat', to: 'ebitda', weight: -0.80, kind: 'negative', live: false},
+  {from: 'aov', to: 'mktshare', weight: 0.50, kind: 'positive', live: false},
+  // Operations to drivers
+  {from: 'footfall', to: 'tx', weight: 0.85, kind: 'positive', live: false},
+  {from: 'discount', to: 'tx', weight: 0.60, kind: 'positive', live: false},
+  {from: 'menu', to: 'aov', weight: 0.50, kind: 'positive', live: false},
+  {from: 'delivery', to: 'aov', weight: 0.40, kind: 'positive', live: false},
+  {from: 'foodcost', to: 'repeat', weight: -0.30, kind: 'negative', live: false},
+  {from: 'preptime', to: 'repeat', weight: -0.60, kind: 'negative', live: false},
+  {from: 'service', to: 'expansion', weight: 0.70, kind: 'positive', live: false},
+  {from: 'preptime', to: 'service', weight: -0.75, kind: 'negative', live: false},
+  {from: 'foodcost', to: 'preptime', weight: -0.90, kind: 'negative', live: false},
+  {from: 'wastage', to: 'foodcost', weight: 0.45, kind: 'positive', live: false},
+  // === LIVE EDGES: these drive the simulator math directly ===
+  {from: 'l_pricing', to: 'tx', weight: -1.4, kind: 'negative', live: true,
+    desc: 'Price elasticity: each +1% price → -1.4% transactions'},
+  {from: 'l_pricing', to: 'aov', weight: 0.95, kind: 'positive', live: true,
+    desc: 'Price pass-through: +1% price → +0.95% AOV'},
+  {from: 'l_promo', to: 'tx', weight: 0.55, kind: 'positive', live: true,
+    desc: 'Discount lift: each +1pp discount → +0.55% transactions'},
+  {from: 'l_promo', to: 'aov', weight: -0.40, kind: 'negative', live: true,
+    desc: 'Discount drag on AOV: +1pp discount → -0.40% AOV'},
+  {from: 'l_delivery', to: 'tx', weight: 0.35, kind: 'positive', live: true,
+    desc: 'Delivery discount lift: +1pp → +0.35% transactions'},
+  {from: 'l_delivery', to: 'aov', weight: -0.25, kind: 'negative', live: true,
+    desc: 'Delivery discount drag on AOV: +1pp → -0.25% AOV'},
+  {from: 'l_marketing', to: 'tx', weight: 0.018, kind: 'positive', live: true,
+    desc: 'Marketing reach: each +1% mktg spend → +0.018% transactions'},
+  {from: 'l_menu', to: 'tx', weight: 0.08, kind: 'positive', live: true,
+    desc: 'Menu novelty: +1 innovation pt → +0.08% transactions'},
+  {from: 'l_menu', to: 'aov', weight: 0.18, kind: 'positive', live: true,
+    desc: 'Premium upsell: +1 innovation pt → +0.18% AOV'},
+  {from: 'l_staff', to: 'tx', weight: 0.0, kind: 'neutral', live: true,
+    desc: 'Staffing has indirect effect via prep/service (no direct tx)'},
+  {from: 'l_train', to: 'tx', weight: 0.05, kind: 'positive', live: true,
+    desc: 'Service-led retention: +1pp training → +0.05% transactions'},
+  {from: 'l_capex', to: 'tx', weight: 4.5, kind: 'positive', live: true,
+    desc: 'Each new store → +4.5% transaction capacity'},
+];
+
+/* ====================================================
+   SIMULATOR COEFFICIENTS (editable via Admin tab)
+   ==================================================== */
+const DEFAULT_COEFFS = {
+  // Demand / transaction effects
+  "prepTime_tx_drag":      { val: -0.4,  label: "Prep time drag on transactions (per min over baseline)", group: "Demand" },
+  // External factor impacts on transactions
+  "ext_inflation_tx":      { val: -4.0,  label: "Inflation impact on transactions (%)", group: "External Factors" },
+  "ext_fuel_tx":           { val: -2.0,  label: "Fuel spike impact on transactions (%)", group: "External Factors" },
+  "ext_weather_tx":        { val: -3.0,  label: "Bad weather impact on transactions (%)", group: "External Factors" },
+  "ext_festival_tx":       { val:  7.0,  label: "Festival lift on transactions (%)", group: "External Factors" },
+  "ext_competitor_tx":     { val: -5.5,  label: "Competitor promo impact on transactions (%)", group: "External Factors" },
+  "ext_regulatory_tx":     { val: -1.5,  label: "Regulatory tax impact on transactions (%)", group: "External Factors" },
+  // Cost coefficients
+  "sourcing_food_cost":    { val: -0.7,  label: "Sourcing optimization on food cost % (per +1pp)", group: "Costs" },
+  "inflation_food_cost":   { val:  3.5,  label: "Inflation push on food cost % (when active)", group: "Costs" },
+  "fuel_food_cost":        { val:  0.8,  label: "Fuel impact on food cost % (when active)", group: "Costs" },
+  "training_productivity": { val:  0.004, label: "Training boost on labor productivity (per +1pp)", group: "Costs" },
+  "newstore_labor":        { val:  0.045, label: "Labor cost multiplier per new store", group: "Costs" },
+  "newstore_other_opex":   { val:  0.04, label: "Other OpEx multiplier per new store", group: "Costs" },
+  // Quality / CSAT
+  "prepTime_csat_drag":    { val: -0.08, label: "CSAT drop per min over baseline prep time", group: "Quality" },
+  "prepTime_csat_lift":    { val:  0.10, label: "CSAT lift per min under baseline prep time", group: "Quality" },
+  "training_csat":         { val:  0.012, label: "CSAT lift per +1pp training", group: "Quality" },
+  "staffing_csat":         { val:  0.008, label: "CSAT lift per +1pp staffing", group: "Quality" },
+  "menuinnov_csat":        { val:  0.005, label: "CSAT lift per +1 menu innovation point", group: "Quality" },
+  "ext_weather_csat":      { val: -0.20, label: "Weather event drop in CSAT", group: "Quality" },
+  "ext_fuel_csat":         { val: -0.10, label: "Fuel spike drop in CSAT (delivery delays)", group: "Quality" },
+  // Customer loyalty
+  "csat_to_repeat":        { val:  4.5,  label: "Repeat-rate lift per +1.0 CSAT change", group: "Loyalty" },
+  "prepTime_repeat_drag":  { val: -0.15, label: "Repeat-rate drag per min over baseline prep time", group: "Loyalty" },
+  "training_repeat":       { val:  0.10, label: "Repeat-rate lift per +1pp training", group: "Loyalty" },
+  "discount_repeat_drag":  { val: -0.10, label: "Repeat-rate drag per +1pp over baseline discount", group: "Loyalty" },
+  "csat_to_nps":           { val: 20.0,  label: "NPS lift per +1.0 CSAT change", group: "Loyalty" },
+  // Market dynamics
+  "tx_to_share":           { val:  0.045, label: "Market share lift per +1% transactions", group: "Market" },
+  "newstore_share":        { val:  0.60, label: "Market share lift per new store (pp)", group: "Market" },
+  "ext_competitor_share":  { val: -1.5,  label: "Share drop when competitor promo active (pp)", group: "Market" },
+  // Workforce
+  "training_attrition":    { val: -0.04, label: "Attrition reduction per +1pp training", group: "Workforce" },
+  "staffing_attrition":    { val: -0.05, label: "Attrition reduction per +1pp staffing", group: "Workforce" },
+  "prepTime_attrition":    { val:  0.03, label: "Attrition rise per min over baseline prep time", group: "Workforce" },
+  // Channel shift
+  "delivery_channel_shift": { val:  0.4,  label: "Delivery channel share shift per +1pp delivery discount", group: "Channel" },
+  "newstore_dinein_shift": { val:  0.15, label: "Dine-in channel share shift per new store", group: "Channel" },
+};
+
+/* Live state — loaded from localStorage if present, else defaults */
+let KG_NODES = [];
+let KG_EDGES = [];
+let COEFFS = {};
+
+function loadModel() {
+  const savedNodes = localStorage.getItem('qsr_kg_nodes');
+  const savedEdges = localStorage.getItem('qsr_kg_edges');
+  const savedCoeffs = localStorage.getItem('qsr_coeffs');
+  KG_NODES = savedNodes ? JSON.parse(savedNodes) : JSON.parse(JSON.stringify(DEFAULT_KG_NODES));
+  KG_EDGES = savedEdges ? JSON.parse(savedEdges) : JSON.parse(JSON.stringify(DEFAULT_KG_EDGES));
+  if (savedCoeffs) {
+    const saved = JSON.parse(savedCoeffs);
+    COEFFS = JSON.parse(JSON.stringify(DEFAULT_COEFFS));
+    Object.keys(saved).forEach(k => { if (COEFFS[k]) COEFFS[k].val = saved[k]; });
+  } else {
+    COEFFS = JSON.parse(JSON.stringify(DEFAULT_COEFFS));
+  }
+}
+function saveModel() {
+  localStorage.setItem('qsr_kg_nodes', JSON.stringify(KG_NODES));
+  localStorage.setItem('qsr_kg_edges', JSON.stringify(KG_EDGES));
+  const coefVals = {};
+  Object.keys(COEFFS).forEach(k => coefVals[k] = COEFFS[k].val);
+  localStorage.setItem('qsr_coeffs', JSON.stringify(coefVals));
+}
+function getLiveEdgeWeight(fromId, toId, fallback = 0) {
+  const e = KG_EDGES.find(x => x.from === fromId && x.to === toId && x.live);
+  return e ? e.weight : fallback;
+}
+function getCoef(key) {
+  return COEFFS[key] ? COEFFS[key].val : (DEFAULT_COEFFS[key] ? DEFAULT_COEFFS[key].val : 0);
+}
+
+
+const BASELINE = {
+  // Revenue & volume
+  revenue_cr: 831.97,
+  orders_M: 21.64,
+  aov: 384.41,  // revenue / orders
+  // Margin structure
+  food_cost_pct: 32.21,
+  labor_cost_cr: 91.29,
+  marketing_cr: 5.95,
+  ebitda_pct: 23.5,   // realistic QSR EBITDA after all opex
+  // Other operating costs (rent, utilities, packaging, etc.)
+  other_opex_pct: 32.6,  // back-solved so EBITDA = 23.5%
+  // Quality & customer
+  csat: 3.73,
+  nps: 35.4,
+  repeat_rate_pct: 42.2,
+  customer_rating: 3.90,
+  loyalty_pct: 32.5,
+  cart_abandonment_pct: 25.2,
+  // Operations
+  footfall_avg: 1964,
+  prep_time_min: 10.95,
+  order_accuracy_pct: 92.37,
+  kitchen_util_pct: 76.43,
+  drive_thru_wait_min: 9.5,
+  // Supply chain
+  fill_rate_pct: 87.35,
+  inventory_turnover: 8.93,
+  wastage_kg: 30.1,
+  // HR
+  attrition_pct: 10.07,
+  training_pct: 82.41,
+  productivity: 33.49,
+  engagement: 3.73,
+  // Marketing
+  roas: 5.20,
+  cac_inr: 184.79,
+  ctr_pct: 3.75,
+  brand_index: 69.96,
+  // Market
+  market_share_pct: 18.97,
+  competitor_discount_pct: 25.04,
+  // Macro
+  inflation_pct: 5.97,
+  fuel_price: 106.46,
+  consumer_confidence: 95.43,
+  // Channel mix (revenue share)
+  channel_mix: { Delivery: 24.78, "Dine-In": 25.19, "Drive-Thru": 24.80, Takeaway: 25.22 },
+  // Monthly revenue (Cr)
+  monthly_revenue: [65.50, 59.60, 66.14, 63.51, 65.46, 63.10, 65.46, 66.45, 63.28, 84.89, 83.44, 85.14],
+  months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+};
+
+/* ====================================================
+   DEFAULT LEVER STATE
+   ==================================================== */
+const DEFAULT_LEVERS = {
+  price: 0,              // % change in menu pricing
+  discount: 10,          // discount %
+  deliveryDiscount: 5,   // delivery platform discount %
+  marketing: 0,          // % change vs baseline spend
+  prepTime: 10.95,        // target prep time minutes
+  staffing: 0,           // % change in employees
+  training: 82,          // training completion %
+  menuInnov: 50,         // 0-100 innovation index
+  sourcing: 0,           // % cost cut from sourcing
+  newStores: 0,          // count of new stores added
+  ext: {
+    inflation: false, fuel: false, weather: false,
+    festival: false, competitor: false, regulatory: false
+  }
+};
+
+let currentLevers = JSON.parse(JSON.stringify(DEFAULT_LEVERS));
+let activeScenarioName = "Baseline";
+
+/* ====================================================
+   PRE-BUILT SCENARIO TEMPLATES
+   ==================================================== */
+const TEMPLATES = [
+  {
+    id: 'baseline',
+    name: 'Baseline FY2025',
+    desc: 'Current operating state with no changes from actuals.',
+    levers: JSON.parse(JSON.stringify(DEFAULT_LEVERS)),
+    builtin: true
+  },
+  {
+    id: 'aggressive-growth',
+    name: 'Aggressive Growth',
+    desc: 'Heavy marketing push, new stores, deeper discounts to grab share.',
+    levers: { price: -3, discount: 18, deliveryDiscount: 12, marketing: 80, prepTime: 10, staffing: 12,
+              training: 90, menuInnov: 75, sourcing: 0, newStores: 8,
+              ext: {...DEFAULT_LEVERS.ext, festival: true} },
+    builtin: true
+  },
+  {
+    id: 'cost-optimization',
+    name: 'Cost Optimization',
+    desc: 'Pricing power + sourcing efficiency. Defend margin in tough macro.',
+    levers: { price: 4, discount: 6, deliveryDiscount: 3, marketing: -20, prepTime: 11.5, staffing: -8,
+              training: 85, menuInnov: 35, sourcing: 8, newStores: 0,
+              ext: {...DEFAULT_LEVERS.ext, inflation: true} },
+    builtin: true
+  },
+  {
+    id: 'premium-experience',
+    name: 'Premium Experience',
+    desc: 'Higher prices, better service, menu innovation. Brand-led.',
+    levers: { price: 8, discount: 4, deliveryDiscount: 2, marketing: 30, prepTime: 9.5, staffing: 15,
+              training: 96, menuInnov: 90, sourcing: -3, newStores: 2,
+              ext: DEFAULT_LEVERS.ext },
+    builtin: true
+  },
+  {
+    id: 'recession-defense',
+    name: 'Recession Defense',
+    desc: 'Tough environment. Trim costs, hold prices, protect repeat customers.',
+    levers: { price: 0, discount: 14, deliveryDiscount: 8, marketing: -10, prepTime: 11, staffing: -12,
+              training: 75, menuInnov: 25, sourcing: 6, newStores: 0,
+              ext: {...DEFAULT_LEVERS.ext, inflation: true, fuel: true, competitor: true} },
+    builtin: true
+  }
+];
+
+let scenarios = []; // loaded from localStorage + templates
+
+/* ====================================================
+   CORE SIMULATION ENGINE
+   Sensitivity coefficients are tuned to map to realistic
+   QSR economics on top of the baseline you provided.
+   ==================================================== */
+function simulate(L) {
+  // Pull live edge weights (lever → outcome) from the editable KG
+  const w_price_tx        = getLiveEdgeWeight('l_pricing',   'tx',  -1.4);
+  const w_price_aov       = getLiveEdgeWeight('l_pricing',   'aov',  0.95);
+  const w_promo_tx        = getLiveEdgeWeight('l_promo',     'tx',   0.55);
+  const w_promo_aov       = getLiveEdgeWeight('l_promo',     'aov', -0.40);
+  const w_delivery_tx     = getLiveEdgeWeight('l_delivery',  'tx',   0.35);
+  const w_delivery_aov    = getLiveEdgeWeight('l_delivery',  'aov', -0.25);
+  const w_marketing_tx    = getLiveEdgeWeight('l_marketing', 'tx',   0.018);
+  const w_menu_tx         = getLiveEdgeWeight('l_menu',      'tx',   0.08);
+  const w_menu_aov        = getLiveEdgeWeight('l_menu',      'aov',  0.18);
+  const w_staff_tx        = getLiveEdgeWeight('l_staff',     'tx',   0.0);
+  const w_train_tx        = getLiveEdgeWeight('l_train',     'tx',   0.05);
+  const w_capex_tx        = getLiveEdgeWeight('l_capex',     'tx',   4.5);
+
+  // ---- DEMAND (transactions / footfall) ----
+  let txEffect = 0;
+  txEffect += w_price_tx     * L.price;                          // price elasticity
+  txEffect += w_promo_tx     * (L.discount - 10);                // discount lift
+  txEffect += w_delivery_tx  * (L.deliveryDiscount - 5);         // delivery discount lift
+  txEffect += w_marketing_tx * L.marketing;                      // marketing reach
+  txEffect += w_menu_tx      * (L.menuInnov - 50);               // menu novelty
+  txEffect += w_train_tx     * (L.training - 82);                // service-led retention
+  txEffect += w_staff_tx     * L.staffing;
+  txEffect += w_capex_tx     * L.newStores;                      // new stores add capacity
+  txEffect += getCoef('prepTime_tx_drag') * Math.max(0, L.prepTime - BASELINE.prep_time_min);
+
+  // External factors
+  if (L.ext.inflation)   txEffect += getCoef('ext_inflation_tx');
+  if (L.ext.fuel)        txEffect += getCoef('ext_fuel_tx');
+  if (L.ext.weather)     txEffect += getCoef('ext_weather_tx');
+  if (L.ext.festival)    txEffect += getCoef('ext_festival_tx');
+  if (L.ext.competitor)  txEffect += getCoef('ext_competitor_tx');
+  if (L.ext.regulatory)  txEffect += getCoef('ext_regulatory_tx');
+
+  const txMult = 1 + txEffect / 100;
+  const orders_M = BASELINE.orders_M * txMult;
+
+  // ---- AOV ----
+  let aovEffect = 0;
+  aovEffect += w_price_aov    * L.price;
+  aovEffect += w_promo_aov    * (L.discount - 10);
+  aovEffect += w_delivery_aov * (L.deliveryDiscount - 5);
+  aovEffect += w_menu_aov     * (L.menuInnov - 50);
+  const aovMult = 1 + aovEffect / 100;
+  const aov = BASELINE.aov * aovMult;
+
+  // ---- REVENUE ----
+  const revenue_cr = (orders_M * 1e6 * aov) / 1e7; // Cr
+
+  // ---- FOOD COST % ----
+  let fc = BASELINE.food_cost_pct;
+  fc += getCoef('sourcing_food_cost') * L.sourcing;
+  if (L.ext.inflation) fc += getCoef('inflation_food_cost');
+  if (L.ext.fuel)      fc += getCoef('fuel_food_cost');
+  fc = Math.max(20, Math.min(50, fc));
+
+  // ---- LABOR ----
+  const productivityMult = 1 + (L.training - 82) * getCoef('training_productivity');
+  let labor_cr = BASELINE.labor_cost_cr * (1 + L.staffing/100) * (1 + L.newStores * getCoef('newstore_labor')) / productivityMult;
+
+  // ---- MARKETING ----
+  const marketing_cr = BASELINE.marketing_cr * (1 + L.marketing / 100);
+
+  // ---- OTHER OPEX ----
+  let other_cr = (BASELINE.other_opex_pct / 100) * BASELINE.revenue_cr;
+  other_cr = other_cr * (0.4 + 0.6 * (revenue_cr / BASELINE.revenue_cr));
+  other_cr *= (1 + L.newStores * getCoef('newstore_other_opex'));
+  if (L.ext.fuel)       other_cr *= 1.025;
+  if (L.ext.regulatory) other_cr *= 1.04;
+
+  const cogs_cr = revenue_cr * (fc / 100);
+  const ebitda_cr = revenue_cr - cogs_cr - labor_cr - marketing_cr - other_cr;
+  const ebitda_pct = (ebitda_cr / revenue_cr) * 100;
+
+  // ---- CSAT ----
+  let csat = BASELINE.csat;
+  const prepDelta = L.prepTime - BASELINE.prep_time_min;
+  csat += getCoef('prepTime_csat_drag') * Math.max(0,  prepDelta);
+  csat += getCoef('prepTime_csat_lift') * Math.max(0, -prepDelta);
+  csat += getCoef('training_csat')  * (L.training - 82);
+  csat += getCoef('staffing_csat')  * L.staffing;
+  csat += getCoef('menuinnov_csat') * (L.menuInnov - 50);
+  if (L.ext.weather) csat += getCoef('ext_weather_csat');
+  if (L.ext.fuel)    csat += getCoef('ext_fuel_csat');
+  csat = Math.max(1, Math.min(5, csat));
+
+  // ---- REPEAT RATE ----
+  let repeat = BASELINE.repeat_rate_pct;
+  repeat += getCoef('csat_to_repeat')        * (csat - BASELINE.csat);
+  repeat += getCoef('prepTime_repeat_drag')  * Math.max(0, prepDelta);
+  repeat += getCoef('training_repeat')       * (L.training - 82);
+  repeat += getCoef('discount_repeat_drag')  * (L.discount - 10);
+  repeat = Math.max(10, Math.min(80, repeat));
+
+  // ---- NPS ----
+  let nps = BASELINE.nps + getCoef('csat_to_nps') * (csat - BASELINE.csat);
+  nps = Math.max(-100, Math.min(100, nps));
+
+  // ---- MARKET SHARE ----
+  let share = BASELINE.market_share_pct;
+  share += getCoef('tx_to_share') * txEffect;
+  share += getCoef('newstore_share') * L.newStores;
+  if (L.ext.competitor) share += getCoef('ext_competitor_share');
+  share = Math.max(5, Math.min(50, share));
+
+  // ---- ATTRITION ----
+  let attrition = BASELINE.attrition_pct;
+  attrition += getCoef('training_attrition') * (L.training - 82);
+  attrition += getCoef('staffing_attrition') * L.staffing;
+  attrition += getCoef('prepTime_attrition') * Math.max(0, prepDelta);
+  attrition = Math.max(2, Math.min(35, attrition));
+
+  let accuracy = BASELINE.order_accuracy_pct + 0.05 * (L.training - 82) + 0.02 * L.staffing;
+  accuracy = Math.max(70, Math.min(99.5, accuracy));
+
+  // ---- CHANNEL MIX SHIFT ----
+  const channelMix = {
+    Delivery: BASELINE.channel_mix.Delivery + getCoef('delivery_channel_shift') * (L.deliveryDiscount - 5),
+    "Dine-In": BASELINE.channel_mix["Dine-In"] + getCoef('newstore_dinein_shift') * L.newStores,
+    "Drive-Thru": BASELINE.channel_mix["Drive-Thru"],
+    Takeaway: BASELINE.channel_mix.Takeaway
+  };
+  const channelSum = Object.values(channelMix).reduce((a,b)=>a+b,0);
+  Object.keys(channelMix).forEach(k => channelMix[k] = channelMix[k] / channelSum * 100);
+
+  // ---- MONTHLY REVENUE PROJECTION ----
+  const monthly_revenue = BASELINE.monthly_revenue.map(m => m * (revenue_cr / BASELINE.revenue_cr));
+  if (L.ext.festival) {
+    monthly_revenue[9] *= 1.08; monthly_revenue[10] *= 1.10; monthly_revenue[11] *= 1.07;
+  }
+
+  // ---- WASTAGE ----
+  let wastage = BASELINE.wastage_kg;
+  wastage += -0.3 * L.sourcing;
+  wastage += 0.4 * Math.max(0, L.menuInnov - 70);
+
+  return {
+    revenue_cr, orders_M, aov, ebitda_cr, ebitda_pct, cogs_cr, labor_cr, marketing_cr, other_cr,
+    food_cost_pct: fc, csat, nps, repeat_rate_pct: repeat, market_share_pct: share,
+    attrition_pct: attrition, accuracy_pct: accuracy, wastage_kg: wastage,
+    txMult, aovMult, channelMix, monthly_revenue,
+    deltas: {
+      tx: txEffect, aov: aovEffect,
+      revenue: ((revenue_cr / BASELINE.revenue_cr) - 1) * 100,
+      ebitda_pp: ebitda_pct - BASELINE.ebitda_pct,
+      foodcost_pp: fc - BASELINE.food_cost_pct,
+      csat: csat - BASELINE.csat,
+      repeat_pp: repeat - BASELINE.repeat_rate_pct,
+      share_pp: share - BASELINE.market_share_pct
+    }
+  };
+}
+
+/* ====================================================
+   UI UPDATE LOGIC
+   ==================================================== */
+function fmt(v, decimals=1) {
+  if (v == null || isNaN(v)) return '—';
+  return v.toLocaleString('en-IN', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+function fmtDelta(v, suffix='%', decimals=1) {
+  const sign = v > 0 ? '+' : '';
+  return sign + v.toFixed(decimals) + suffix;
+}
+function deltaClass(v, threshold=0.05) {
+  if (Math.abs(v) < threshold) return 'neutral';
+  return v > 0 ? 'up' : 'down';
+}
+function deltaClassInv(v, threshold=0.05) {
+  // inverted: down is good (for costs)
+  if (Math.abs(v) < threshold) return 'neutral';
+  return v < 0 ? 'up' : 'down';
+}
+
+function updateKPIs(sim) {
+  document.getElementById('kpi-revenue').textContent = fmt(sim.revenue_cr, 0);
+  document.getElementById('kpi-revenue-d').textContent = fmtDelta(sim.deltas.revenue);
+  document.getElementById('kpi-revenue-d').className = 'kpi-delta ' + deltaClass(sim.deltas.revenue);
+
+  document.getElementById('kpi-ebitda').textContent = fmt(sim.ebitda_pct, 1);
+  document.getElementById('kpi-ebitda-d').textContent = fmtDelta(sim.deltas.ebitda_pp, ' pp');
+  document.getElementById('kpi-ebitda-d').className = 'kpi-delta ' + deltaClass(sim.deltas.ebitda_pp, 0.1);
+
+  document.getElementById('kpi-tx').textContent = fmt(sim.orders_M, 1);
+  document.getElementById('kpi-tx-d').textContent = fmtDelta(sim.deltas.tx);
+  document.getElementById('kpi-tx-d').className = 'kpi-delta ' + deltaClass(sim.deltas.tx);
+
+  document.getElementById('kpi-aov').textContent = fmt(sim.aov, 0);
+  document.getElementById('kpi-aov-d').textContent = fmtDelta(sim.deltas.aov);
+  document.getElementById('kpi-aov-d').className = 'kpi-delta ' + deltaClass(sim.deltas.aov);
+
+  document.getElementById('kpi-csat').textContent = fmt(sim.csat, 2);
+  document.getElementById('kpi-csat-d').textContent = (sim.deltas.csat>=0?'+':'') + sim.deltas.csat.toFixed(2);
+  document.getElementById('kpi-csat-d').className = 'kpi-delta ' + deltaClass(sim.deltas.csat, 0.02);
+
+  document.getElementById('kpi-repeat').textContent = fmt(sim.repeat_rate_pct, 1);
+  document.getElementById('kpi-repeat-d').textContent = fmtDelta(sim.deltas.repeat_pp, ' pp');
+  document.getElementById('kpi-repeat-d').className = 'kpi-delta ' + deltaClass(sim.deltas.repeat_pp, 0.2);
+
+  document.getElementById('kpi-share').textContent = fmt(sim.market_share_pct, 1);
+  document.getElementById('kpi-share-d').textContent = fmtDelta(sim.deltas.share_pp, ' pp');
+  document.getElementById('kpi-share-d').className = 'kpi-delta ' + deltaClass(sim.deltas.share_pp, 0.1);
+
+  document.getElementById('kpi-foodcost').textContent = fmt(sim.food_cost_pct, 1);
+  document.getElementById('kpi-foodcost-d').textContent = fmtDelta(sim.deltas.foodcost_pp, ' pp');
+  document.getElementById('kpi-foodcost-d').className = 'kpi-delta ' + deltaClassInv(sim.deltas.foodcost_pp, 0.1);
+}
+
+function updateCausalChain(sim, L) {
+  // Build a top-impact causal narrative based on which lever moved most
+  const moves = [];
+  if (Math.abs(L.price) > 0.5) moves.push({lab: `Price ${fmtDelta(L.price)}`, val: L.price, kind: 'lever'});
+  if (Math.abs(L.discount - 10) > 1) moves.push({lab: `Discount → ${L.discount}%`, val: L.discount-10, kind: 'lever'});
+  if (Math.abs(L.deliveryDiscount - 5) > 1) moves.push({lab: `Delivery Disc → ${L.deliveryDiscount}%`, val: L.deliveryDiscount-5, kind: 'lever'});
+  if (Math.abs(L.marketing) > 5) moves.push({lab: `Mktg Spend ${fmtDelta(L.marketing)}`, val: L.marketing, kind: 'lever'});
+  if (L.newStores > 0) moves.push({lab: `+${L.newStores} New Stores`, val: L.newStores, kind: 'lever'});
+  if (Math.abs(L.staffing) > 2) moves.push({lab: `Staffing ${fmtDelta(L.staffing)}`, val: L.staffing, kind: 'lever'});
+  if (Math.abs(L.sourcing) > 0.5) moves.push({lab: `Sourcing ${fmtDelta(L.sourcing)}`, val: L.sourcing, kind: 'lever'});
+
+  // External factors
+  Object.entries(L.ext).forEach(([k, v]) => {
+    if (v) moves.push({lab: `External: ${k}`, val: 0, kind: 'ext'});
+  });
+
+  const chain = [];
+  if (moves.length === 0) {
+    chain.push({name: 'Baseline (no changes)', delta: '—', cls: 'neutral'});
+  } else {
+    chain.push({name: moves[0].lab, delta: 'Trigger', cls: 'neutral'});
+  }
+  chain.push({name: 'Transactions', delta: fmtDelta(sim.deltas.tx), cls: deltaClass(sim.deltas.tx)});
+  chain.push({name: 'Average Order Value', delta: fmtDelta(sim.deltas.aov), cls: deltaClass(sim.deltas.aov)});
+  chain.push({name: 'Revenue', delta: fmtDelta(sim.deltas.revenue), cls: deltaClass(sim.deltas.revenue)});
+  chain.push({name: 'Food Cost %', delta: fmtDelta(sim.deltas.foodcost_pp, ' pp'), cls: deltaClassInv(sim.deltas.foodcost_pp, 0.1)});
+  chain.push({name: 'EBITDA Margin', delta: fmtDelta(sim.deltas.ebitda_pp, ' pp'), cls: deltaClass(sim.deltas.ebitda_pp, 0.1)});
+  chain.push({name: 'Market Share', delta: fmtDelta(sim.deltas.share_pp, ' pp'), cls: deltaClass(sim.deltas.share_pp, 0.1)});
+
+  const html = chain.map(s => `
+    <div class="causal-step">
+      <span class="causal-name">${s.name}</span>
+      <span class="causal-delta ${s.cls}">${s.delta}</span>
+    </div>
+  `).join('');
+  document.getElementById('causal-chain').innerHTML = html;
+}
+
+function updateRisks(sim, L) {
+  const risks = [];
+  if (sim.ebitda_pct < 15) risks.push({name: 'EBITDA Below Threshold', level: 'danger', status: 'CRITICAL'});
+  else if (sim.ebitda_pct < 20) risks.push({name: 'EBITDA Compression', level: 'warning', status: 'WATCH'});
+  else risks.push({name: 'Margin Health', level: 'ok', status: 'OK'});
+
+  if (sim.csat < 3.4) risks.push({name: 'Customer Satisfaction Drop', level: 'danger', status: 'CRITICAL'});
+  else if (sim.csat < 3.65) risks.push({name: 'CSAT Weakening', level: 'warning', status: 'WATCH'});
+  else risks.push({name: 'Customer Quality', level: 'ok', status: 'OK'});
+
+  if (sim.attrition_pct > 20) risks.push({name: 'Labor Attrition Spike', level: 'danger', status: 'CRITICAL'});
+  else if (sim.attrition_pct > 15) risks.push({name: 'Labor Attrition', level: 'warning', status: 'WATCH'});
+  else risks.push({name: 'Workforce Stability', level: 'ok', status: 'OK'});
+
+  if (sim.food_cost_pct > 38) risks.push({name: 'Food Cost Inflation', level: 'danger', status: 'CRITICAL'});
+  else if (sim.food_cost_pct > 35) risks.push({name: 'Food Cost Rising', level: 'warning', status: 'WATCH'});
+  else risks.push({name: 'Input Cost', level: 'ok', status: 'OK'});
+
+  if (L.newStores > 5) risks.push({name: 'Store Cannibalization', level: 'warning', status: 'WATCH'});
+  if (L.ext.competitor) risks.push({name: 'Competitive Pressure', level: 'warning', status: 'ACTIVE'});
+  if (L.ext.regulatory) risks.push({name: 'Regulatory Impact', level: 'warning', status: 'ACTIVE'});
+  if (L.discount > 20) risks.push({name: 'Discount Dependence', level: 'warning', status: 'WATCH'});
+
+  document.getElementById('risk-list').innerHTML = risks.map(r => `
+    <div class="risk-item ${r.level}">
+      <span class="risk-name">${r.name}</span>
+      <span class="risk-status">${r.status}</span>
+    </div>
+  `).join('');
+}
+
+/* ====================================================
+   CHARTS
+   ==================================================== */
+let charts = {};
+
+const chartDefaults = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: {
+    legend: { labels: { color: '#8b95a8', font: {family: 'Inter Tight', size: 11}, boxWidth: 10, boxHeight: 10 } },
+    tooltip: {
+      backgroundColor: '#1a2335',
+      borderColor: '#243049', borderWidth: 1,
+      titleColor: '#e8ecf5', bodyColor: '#e8ecf5',
+      titleFont: {family: 'Inter Tight', size: 12, weight: '600'},
+      bodyFont: {family: 'JetBrains Mono', size: 11}
+    }
+  },
+  scales: {
+    x: { ticks: { color: '#8b95a8', font: {family: 'JetBrains Mono', size: 10} },
+         grid: { color: '#1a2335' } },
+    y: { ticks: { color: '#8b95a8', font: {family: 'JetBrains Mono', size: 10} },
+         grid: { color: '#1a2335' } }
+  }
+};
+
+function buildCharts() {
+  // Revenue trajectory
+  charts.revenue = new Chart(document.getElementById('chart-revenue'), {
+    type: 'line',
+    data: {
+      labels: BASELINE.months,
+      datasets: [
+        { label: 'Baseline', data: BASELINE.monthly_revenue, borderColor: '#5a6378',
+          backgroundColor: 'rgba(90,99,120,0.05)', tension: 0.35, borderDash: [4,4], borderWidth: 2, pointRadius: 0 },
+        { label: 'Simulated', data: BASELINE.monthly_revenue, borderColor: '#facc15',
+          backgroundColor: 'rgba(250,204,21,0.08)', tension: 0.35, borderWidth: 2.5, pointRadius: 0, fill: true }
+      ]
+    },
+    options: chartDefaults
+  });
+
+  // Cost structure
+  charts.costs = new Chart(document.getElementById('chart-costs'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Food Cost', 'Labor', 'Other OpEx', 'Marketing', 'EBITDA'],
+      datasets: [{
+        data: [32.2, 11.0, 32.6, 0.7, 23.5],
+        backgroundColor: ['#f97316','#a855f7','#3b82f6','#ec4899','#22c55e'],
+        borderColor: '#111826', borderWidth: 2
+      }]
+    },
+    options: { ...chartDefaults, cutout: '60%', scales: {} }
+  });
+
+  // Channel mix
+  charts.channel = new Chart(document.getElementById('chart-channel'), {
+    type: 'bar',
+    data: {
+      labels: ['Delivery', 'Dine-In', 'Drive-Thru', 'Takeaway'],
+      datasets: [
+        { label: 'Baseline', data: [
+            BASELINE.channel_mix.Delivery, BASELINE.channel_mix["Dine-In"],
+            BASELINE.channel_mix["Drive-Thru"], BASELINE.channel_mix.Takeaway
+          ], backgroundColor: 'rgba(90,99,120,0.5)', borderRadius: 4 },
+        { label: 'Simulated', data: [25,25,25,25],
+          backgroundColor: '#facc15', borderRadius: 4 }
+      ]
+    },
+    options: { ...chartDefaults }
+  });
+
+  // Waterfall (P&L tab)
+  charts.waterfall = new Chart(document.getElementById('chart-waterfall'), {
+    type: 'bar',
+    data: {
+      labels: ['Revenue','Food Cost','Labor','Marketing','Other OpEx','EBITDA'],
+      datasets: [{
+        data: [832, -268, -91, -6, -272, 195],
+        backgroundColor: ['#22c55e','#ef4444','#ef4444','#ef4444','#ef4444','#facc15'],
+        borderRadius: 4
+      }]
+    },
+    options: { ...chartDefaults, plugins: {...chartDefaults.plugins, legend: {display:false}} }
+  });
+
+  // Sensitivity (P&L tab)
+  charts.sensitivity = new Chart(document.getElementById('chart-sensitivity'), {
+    type: 'bar',
+    data: {
+      labels: ['Price','Discount','Sourcing','Marketing','Staffing','New Stores'],
+      datasets: [{
+        label: 'EBITDA Δ (pp per unit change)',
+        data: [1.2, -0.4, 0.5, -0.05, -0.2, -0.3],
+        backgroundColor: ['#22c55e','#ef4444','#22c55e','#ef4444','#ef4444','#ef4444'],
+        borderRadius: 4
+      }]
+    },
+    options: { ...chartDefaults, plugins: {...chartDefaults.plugins, legend: {display:false}}, indexAxis: 'y' }
+  });
+
+  // Compare chart
+  charts.compare = new Chart(document.getElementById('chart-compare'), {
+    type: 'radar',
+    data: { labels: ['Revenue','EBITDA %','CSAT','Repeat %','Market Share','-Food Cost'], datasets: [] },
+    options: {
+      ...chartDefaults,
+      scales: {
+        r: {
+          angleLines: { color: '#243049' },
+          grid: { color: '#1a2335' },
+          pointLabels: { color: '#e8ecf5', font: {family:'Inter Tight', size:11, weight:'600'} },
+          ticks: { display: false, color: '#5a6378' }
+        }
+      }
+    }
+  });
+}
+
+function updateCharts(sim, L) {
+  if (!charts.revenue) return; // Charts not loaded (CDN blocked) - skip gracefully
+
+  charts.revenue.data.datasets[1].data = sim.monthly_revenue;
+  charts.revenue.update('none');
+
+  // Recompute cost mix
+  const ebitdaShare = sim.ebitda_pct;
+  const otherShare = 100 - sim.food_cost_pct - (sim.labor_cr / sim.revenue_cr * 100)
+                       - (sim.marketing_cr / sim.revenue_cr * 100) - ebitdaShare;
+  charts.costs.data.datasets[0].data = [
+    sim.food_cost_pct,
+    sim.labor_cr / sim.revenue_cr * 100,
+    Math.max(0, otherShare),
+    sim.marketing_cr / sim.revenue_cr * 100,
+    Math.max(0, ebitdaShare)
+  ];
+  charts.costs.update('none');
+
+  charts.channel.data.datasets[1].data = [
+    sim.channelMix.Delivery, sim.channelMix["Dine-In"],
+    sim.channelMix["Drive-Thru"], sim.channelMix.Takeaway
+  ];
+  charts.channel.update('none');
+
+  // Waterfall
+  charts.waterfall.data.datasets[0].data = [
+    sim.revenue_cr, -sim.cogs_cr, -sim.labor_cr, -sim.marketing_cr, -sim.other_cr, sim.ebitda_cr
+  ];
+  charts.waterfall.update('none');
+}
+
+/* ====================================================
+   P&L TABLE
+   ==================================================== */
+function updatePnL(sim) {
+  const rows = [
+    {label: 'Revenue', base: BASELINE.revenue_cr, sim: sim.revenue_cr, good: 'up'},
+    {label: 'Food Cost (COGS)', base: BASELINE.revenue_cr * BASELINE.food_cost_pct/100, sim: sim.cogs_cr, good: 'down'},
+    {label: 'Gross Profit', base: BASELINE.revenue_cr * (1 - BASELINE.food_cost_pct/100),
+      sim: sim.revenue_cr - sim.cogs_cr, good: 'up'},
+    {label: 'Labor', base: BASELINE.labor_cost_cr, sim: sim.labor_cr, good: 'down'},
+    {label: 'Marketing', base: BASELINE.marketing_cr, sim: sim.marketing_cr, good: null},
+    {label: 'Other OpEx', base: BASELINE.revenue_cr * BASELINE.other_opex_pct/100, sim: sim.other_cr, good: 'down'},
+    {label: 'EBITDA', base: BASELINE.revenue_cr * BASELINE.ebitda_pct/100, sim: sim.ebitda_cr, good: 'up'},
+  ];
+
+  document.getElementById('pnl-tbody').innerHTML = rows.map((r,i) => {
+    const variance = r.sim - r.base;
+    const variancePct = (variance / r.base) * 100;
+    const isHighlight = r.label === 'Revenue' || r.label === 'EBITDA' || r.label === 'Gross Profit';
+    let varCls = 'neutral';
+    if (r.good === 'up') varCls = variance > 0 ? 'best' : (variance < 0 ? 'worst' : '');
+    if (r.good === 'down') varCls = variance < 0 ? 'best' : (variance > 0 ? 'worst' : '');
+    return `<tr ${isHighlight ? 'style="font-weight:700;"' : ''}>
+      <td>${r.label}</td>
+      <td>${fmt(r.base, 1)}</td>
+      <td>${fmt(r.base/BASELINE.revenue_cr*100, 1)}%</td>
+      <td>${fmt(r.sim, 1)}</td>
+      <td>${fmt(r.sim/sim.revenue_cr*100, 1)}%</td>
+      <td class="${varCls}">${variance>=0?'+':''}${fmt(variance, 1)} (${variancePct>=0?'+':''}${fmt(variancePct, 1)}%)</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ====================================================
+   KNOWLEDGE GRAPH SVG
+   ==================================================== */
+function buildKG() {
+  const svg = document.getElementById('kg-svg');
+  if (!svg) return;
+  const W = 1200, H = 700;
+
+  // Use live (editable) graph data
+  const nodes = KG_NODES;
+  const edges = KG_EDGES;
+
+  const nodeMap = {};
+  nodes.forEach(n => nodeMap[n.id] = n);
+
+  // Helper: derive visual styling for an edge from its semantic fields
+  function styleEdge(e) {
+    // Color: red for negative, green for goal-targeting, yellow for live lever edges, dark grey otherwise
+    let color = '#000';
+    let dash = false;
+    let strokeW = 1.5;
+    if (e.live) {
+      color = '#facc15';  // lever-driven edges = yellow
+      dash = true;
+      strokeW = 1.8;
+    } else if (e.kind === 'negative') {
+      color = '#ef4444';
+      strokeW = Math.min(3, 1 + Math.abs(e.weight) * 2);
+    } else if (nodeMap[e.to] && nodeMap[e.to].type === 'goal') {
+      color = '#22c55e';
+      dash = true;
+      strokeW = 2;
+    } else {
+      strokeW = Math.min(3, 1 + Math.abs(e.weight || 1) * 2);
+      // Dashed if weight < 0.6 (weak relationship)
+      if ((e.weight || 1) < 0.6 && e.kind !== 'negative') dash = true;
+    }
+    return {color, dash, strokeW};
+  }
+
+  // Build edges first (under nodes)
+  let edgeHTML = '<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs>';
+
+  edges.forEach((e, i) => {
+    const from = nodeMap[e.from], to = nodeMap[e.to];
+    if (!from || !to) return;
+    const sty = styleEdge(e);
+    let x1 = from.x, y1 = from.y, x2 = to.x, y2 = to.y;
+    const dy = y2 - y1;
+    if (dy > 0) { y1 += from.h/2; y2 -= to.h/2; }
+    else if (dy < 0) { y1 -= from.h/2; y2 += to.h/2; }
+    edgeHTML += `<line class="kg-edge" data-edge="${e.from}-${e.to}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${sty.color}" stroke-width="${sty.strokeW}" ${sty.dash ? 'stroke-dasharray="6 4"' : ''} marker-end="url(#arrow)"/>`;
+    // Show weight label for non-goal-pointing edges
+    if (to.type !== 'goal' && e.weight !== undefined) {
+      const mx = (x1+x2)/2, my = (y1+y2)/2;
+      const lbl = (e.weight >= 0 ? '' : '') + (Math.abs(e.weight) < 0.01 ? '0' : e.weight.toFixed(2));
+      const lblW = Math.max(28, lbl.length * 6 + 6);
+      edgeHTML += `<rect x="${mx-lblW/2}" y="${my-9}" width="${lblW}" height="14" rx="3" fill="#1a2335" stroke="#243049"/>`;
+      edgeHTML += `<text x="${mx}" y="${my+1}" text-anchor="middle" fill="#e8ecf5" font-size="10" font-family="JetBrains Mono" font-weight="700" dominant-baseline="middle">${lbl}</text>`;
+    }
+  });
+
+  // Build nodes
+  let nodeHTML = '';
+  nodes.forEach(n => {
+    const rx = (n.type === 'goal' || n.type === 'lever' || n.type === 'op') ? n.h/2 : 8;
+    nodeHTML += `<g class="kg-node" data-node="${n.id}">
+      <rect x="${n.x-n.w/2}" y="${n.y-n.h/2}" width="${n.w}" height="${n.h}" rx="${rx}" fill="${n.fill}"/>`;
+    const lines = (n.label || '').split('\n');
+    if (lines.length === 1) {
+      nodeHTML += `<text x="${n.x}" y="${n.y+3}" text-anchor="middle" class="kg-node-text" ${n.dark ? 'fill="#0a0e1a"' : ''} dominant-baseline="middle">${n.label}</text>`;
+    } else {
+      lines.forEach((line, i) => {
+        const offset = (i - (lines.length-1)/2) * 11;
+        nodeHTML += `<text x="${n.x}" y="${n.y+offset+3}" text-anchor="middle" class="kg-node-text" ${n.dark ? 'fill="#0a0e1a"' : ''} dominant-baseline="middle">${line}</text>`;
+      });
+    }
+    nodeHTML += `</g>`;
+  });
+
+  svg.innerHTML = edgeHTML + nodeHTML;
+
+  // Add click-to-highlight handlers
+  svg.querySelectorAll('.kg-node').forEach(g => {
+    g.addEventListener('click', () => {
+      const id = g.dataset.node;
+      // Find all edges connected to this node
+      const connected = new Set();
+      edges.forEach(e => {
+        if (e.from === id || e.to === id) {
+          connected.add(`${e.from}-${e.to}`);
+        }
+      });
+      svg.querySelectorAll('.kg-edge').forEach(line => {
+        line.classList.remove('highlight', 'dim');
+        if (connected.has(line.dataset.edge)) line.classList.add('highlight');
+        else line.classList.add('dim');
+      });
+    });
+  });
+  // Click empty area to reset
+  svg.addEventListener('click', (ev) => {
+    if (ev.target === svg) {
+      svg.querySelectorAll('.kg-edge').forEach(line => line.classList.remove('highlight', 'dim'));
+    }
+  });
+}
+
+/* ====================================================
+   ADMIN TAB
+   ==================================================== */
+const NODE_TYPE_META = {
+  goal:   { label: 'Goal',     fill: '#22c55e', dark: false },
+  kpi:    { label: 'KPI',      fill: '#3b82f6', dark: false },
+  driver: { label: 'Driver',   fill: '#a855f7', dark: false },
+  op:     { label: 'Operation', fill: '#f97316', dark: false },
+  lever:  { label: 'Lever',    fill: '#facc15', dark: true  },
+};
+
+function switchAdminSubtab(name) {
+  document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
+  document.getElementById('admin-nodes-panel').style.display = name === 'nodes' ? 'block' : 'none';
+  document.getElementById('admin-edges-panel').style.display = name === 'edges' ? 'block' : 'none';
+}
+
+function renderAdminNodes() {
+  const tbl = document.getElementById('admin-nodes-table');
+  if (!tbl) return;
+  let html = '<thead><tr><th>ID</th><th>Label</th><th>Type</th><th></th></tr></thead><tbody>';
+  KG_NODES.forEach(n => {
+    const meta = NODE_TYPE_META[n.type] || {label: n.type, fill: '#888'};
+    html += `<tr>
+      <td><code style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-dim);">${n.id}</code></td>
+      <td><input type="text" value="${(n.label||'').replace(/\n/g,' / ')}" data-node-id="${n.id}" data-field="label" onchange="editNodeField(event)"></td>
+      <td><span class="node-pill pill-${n.type}">${meta.label}</span></td>
+      <td><button class="admin-btn-mini" onclick="deleteNode('${n.id}')">✕</button></td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+
+function renderAdminEdges() {
+  const tbl = document.getElementById('admin-edges-table');
+  if (!tbl) return;
+  let html = '<thead><tr><th>From</th><th>To</th><th>Weight</th><th>Kind</th><th>Live</th><th></th></tr></thead><tbody>';
+  KG_EDGES.forEach((e, i) => {
+    const fromNode = KG_NODES.find(n => n.id === e.from);
+    const toNode = KG_NODES.find(n => n.id === e.to);
+    if (!fromNode || !toNode) return;
+    const fromLabel = (fromNode.label || e.from).replace(/\n/g, ' ').slice(0, 22);
+    const toLabel = (toNode.label || e.to).replace(/\n/g, ' ').slice(0, 22);
+    const kindOptions = ['positive','negative','neutral'].map(k =>
+      `<option value="${k}" ${e.kind===k?'selected':''}>${k}</option>`).join('');
+    html += `<tr>
+      <td title="${fromNode.label||e.from}">${fromLabel}</td>
+      <td title="${toNode.label||e.to}">${toLabel}</td>
+      <td><input type="number" step="0.05" value="${e.weight ?? 0}" data-edge-idx="${i}" data-field="weight" onchange="editEdgeField(event)"></td>
+      <td><select data-edge-idx="${i}" data-field="kind" onchange="editEdgeField(event)">${kindOptions}</select></td>
+      <td>${e.live ? '<span class="pill-live">LIVE</span>' : '<span class="pill-doc">DOC</span>'}</td>
+      <td><button class="admin-btn-mini" onclick="deleteEdge(${i})">✕</button></td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+  // Populate "from" and "to" dropdowns for new edge
+  const fromSel = document.getElementById('new-edge-from');
+  const toSel = document.getElementById('new-edge-to');
+  if (fromSel && toSel) {
+    const opts = KG_NODES.map(n => `<option value="${n.id}">${(n.label||n.id).replace(/\n/g,' ')}</option>`).join('');
+    fromSel.innerHTML = '<option value="">From node…</option>' + opts;
+    toSel.innerHTML = '<option value="">To node…</option>' + opts;
+  }
+}
+
+function renderAdminCoeffs() {
+  const container = document.getElementById('admin-coef-content');
+  if (!container) return;
+  // Group by category
+  const groups = {};
+  Object.keys(COEFFS).forEach(k => {
+    const g = COEFFS[k].group || 'Other';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push({key: k, ...COEFFS[k]});
+  });
+  let html = '';
+  Object.keys(groups).forEach(g => {
+    html += `<div class="coef-group"><div class="coef-group-title">${g}</div>`;
+    groups[g].forEach(c => {
+      const isModified = Math.abs(c.val - DEFAULT_COEFFS[c.key].val) > 1e-9;
+      html += `<div class="coef-row">
+        <div class="coef-label">${c.label}<span class="coef-default">default: ${DEFAULT_COEFFS[c.key].val}</span></div>
+        <input type="number" step="${Math.abs(c.val) < 1 ? '0.01' : '0.1'}" value="${c.val}" data-coef="${c.key}" class="${isModified ? 'modified' : ''}" onchange="editCoef(event)">
+        <button class="admin-btn-mini reset" onclick="resetCoef('${c.key}')" title="Reset to default">↻</button>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  container.innerHTML = html;
+}
+
+function editNodeField(ev) {
+  const id = ev.target.dataset.nodeId;
+  const node = KG_NODES.find(n => n.id === id);
+  if (!node) return;
+  node.label = ev.target.value;
+  saveModel();
+  buildKG();
+}
+
+function editEdgeField(ev) {
+  const idx = parseInt(ev.target.dataset.edgeIdx, 10);
+  const field = ev.target.dataset.field;
+  if (isNaN(idx) || !KG_EDGES[idx]) return;
+  if (field === 'weight') KG_EDGES[idx].weight = parseFloat(ev.target.value);
+  else if (field === 'kind') KG_EDGES[idx].kind = ev.target.value;
+  saveModel();
+  buildKG();
+  run();              // weight may be a live edge
+  renderAdminEdges();
+}
+
+function editCoef(ev) {
+  const k = ev.target.dataset.coef;
+  if (COEFFS[k]) {
+    COEFFS[k].val = parseFloat(ev.target.value);
+    saveModel();
+    const isModified = Math.abs(COEFFS[k].val - DEFAULT_COEFFS[k].val) > 1e-9;
+    ev.target.classList.toggle('modified', isModified);
+    run();
+    if (document.getElementById('tab-scenarios').classList.contains('active')) renderScenarios();
+    if (document.getElementById('tab-compare').classList.contains('active')) renderCompareSelector();
+  }
+}
+
+function resetCoef(k) {
+  if (COEFFS[k]) {
+    COEFFS[k].val = DEFAULT_COEFFS[k].val;
+    saveModel();
+    renderAdminCoeffs();
+    run();
+  }
+}
+
+function addNode() {
+  const id = document.getElementById('new-node-id').value.trim();
+  const label = document.getElementById('new-node-label').value.trim();
+  const type = document.getElementById('new-node-type').value;
+  if (!id || !label) { toast('ID and label are required'); return; }
+  if (KG_NODES.find(n => n.id === id)) { toast('Node ID already exists'); return; }
+  if (/[^a-z0-9_]/i.test(id)) { toast('ID can only contain letters, digits, underscore'); return; }
+  const meta = NODE_TYPE_META[type];
+  // Place the new node in a sensible spot based on type
+  const rowY = {goal: 50, kpi: 165, driver: 295, op: 425, lever: 580}[type] || 350;
+  // Find horizontal slot — count existing nodes of same type
+  const sameType = KG_NODES.filter(n => n.type === type);
+  const x = 100 + (sameType.length % 10) * 130;
+  KG_NODES.push({
+    id, x, y: rowY, w: 110, h: 38, fill: meta.fill, label, type,
+    dark: meta.dark || false
+  });
+  saveModel();
+  document.getElementById('new-node-id').value = '';
+  document.getElementById('new-node-label').value = '';
+  renderAdminNodes();
+  renderAdminEdges();
+  buildKG();
+  toast('Node added: ' + label);
+}
+
+function deleteNode(id) {
+  if (!confirm(`Delete node "${id}" and all its edges?`)) return;
+  KG_NODES = KG_NODES.filter(n => n.id !== id);
+  KG_EDGES = KG_EDGES.filter(e => e.from !== id && e.to !== id);
+  saveModel();
+  renderAdminNodes();
+  renderAdminEdges();
+  buildKG();
+  run();
+  toast('Node deleted');
+}
+
+function addEdge() {
+  const from = document.getElementById('new-edge-from').value;
+  const to = document.getElementById('new-edge-to').value;
+  const weight = parseFloat(document.getElementById('new-edge-weight').value);
+  if (!from || !to) { toast('Pick both From and To'); return; }
+  if (from === to) { toast('From and To must differ'); return; }
+  if (isNaN(weight)) { toast('Weight is required'); return; }
+  if (KG_EDGES.find(e => e.from === from && e.to === to)) { toast('Edge already exists'); return; }
+  const fromNode = KG_NODES.find(n => n.id === from);
+  // Edges from levers default to "live" (drive simulator)
+  const live = fromNode && fromNode.type === 'lever';
+  const kind = weight < 0 ? 'negative' : (Math.abs(weight) < 0.01 ? 'neutral' : 'positive');
+  KG_EDGES.push({ from, to, weight, kind, live });
+  saveModel();
+  document.getElementById('new-edge-weight').value = '';
+  renderAdminEdges();
+  buildKG();
+  run();
+  toast(live ? 'Live edge added (drives simulator)' : 'Edge added');
+}
+
+function deleteEdge(idx) {
+  if (idx == null || !KG_EDGES[idx]) return;
+  const e = KG_EDGES[idx];
+  if (!confirm(`Delete edge ${e.from} → ${e.to}?`)) return;
+  KG_EDGES.splice(idx, 1);
+  saveModel();
+  renderAdminEdges();
+  buildKG();
+  run();
+  toast('Edge deleted');
+}
+
+function resetModelToDefaults() {
+  if (!confirm('Reset all KG nodes, edges, and coefficients to defaults? Your scenarios will be kept.')) return;
+  KG_NODES = JSON.parse(JSON.stringify(DEFAULT_KG_NODES));
+  KG_EDGES = JSON.parse(JSON.stringify(DEFAULT_KG_EDGES));
+  COEFFS = JSON.parse(JSON.stringify(DEFAULT_COEFFS));
+  saveModel();
+  renderAdminNodes();
+  renderAdminEdges();
+  renderAdminCoeffs();
+  buildKG();
+  run();
+  toast('Model reset to defaults');
+}
+
+function exportModel() {
+  const coefVals = {};
+  Object.keys(COEFFS).forEach(k => coefVals[k] = COEFFS[k].val);
+  const payload = { kg_nodes: KG_NODES, kg_edges: KG_EDGES, coeffs: coefVals,
+                    exported_at: new Date().toISOString(), version: '1.0' };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'qsr_model.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('Model exported');
+}
+
+function importModel(ev) {
+  const f = ev.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const p = JSON.parse(e.target.result);
+      if (!p.kg_nodes || !p.kg_edges) { toast('Invalid model JSON'); return; }
+      if (!confirm('Replace current KG and coefficients with imported model?')) return;
+      KG_NODES = p.kg_nodes;
+      KG_EDGES = p.kg_edges;
+      if (p.coeffs) {
+        Object.keys(p.coeffs).forEach(k => { if (COEFFS[k]) COEFFS[k].val = p.coeffs[k]; });
+      }
+      saveModel();
+      renderAdminNodes();
+      renderAdminEdges();
+      renderAdminCoeffs();
+      buildKG();
+      run();
+      toast('Model imported');
+    } catch(err) {
+      toast('Import failed: invalid JSON');
+    }
+  };
+  reader.readAsText(f);
+  ev.target.value = '';
+}
+
+/* ====================================================
+   DIAGNOSTICS TAB DATA & RENDER
+   ==================================================== */
+const DIAGNOSTIC_DATA = {"hypotheses":[{"driver":"Prep_Time_Min","outcome":"CSAT","lever":"prepTime","desc":"CSAT drop per minute over baseline","expected_sign":"negative","r":-0.002,"p":0.9128,"r_within":-0.0031,"p_within":0.8655,"slope":-0.0004,"slope_se":0.0033,"n":2920,"verdict":"NOISE"},{"driver":"Training_Completion_Pct","outcome":"Attrition_Rate_Pct","lever":"training","desc":"Attrition reduction per +1pp training","expected_sign":"negative","r":0.028,"p":0.13,"r_within":0.0266,"p_within":0.1504,"slope":0.0128,"slope_se":0.0085,"n":2920,"verdict":"NOISE"},{"driver":"Training_Completion_Pct","outcome":"CSAT","lever":"training","desc":"CSAT lift per +1pp training","expected_sign":"positive","r":0.0189,"p":0.307,"r_within":0.018,"p_within":0.3305,"slope":0.0013,"slope_se":0.0013,"n":2920,"verdict":"NOISE"},{"driver":"Order_Accuracy_Pct","outcome":"CSAT","lever":"training (indirect)","desc":"Accuracy \u2192 satisfaction","expected_sign":"positive","r":-0.005,"p":0.7851,"r_within":-0.0032,"p_within":0.8628,"slope":-0.0009,"slope_se":0.0031,"n":2920,"verdict":"NOISE"},{"driver":"CSAT","outcome":"Repeat_Customer_Rate_Pct","lever":"-","desc":"CSAT \u2192 repeat (key conversion)","expected_sign":"positive","r":0.0054,"p":0.771,"r_within":0.0054,"p_within":0.7723,"slope":0.1192,"slope_se":0.4097,"n":2920,"verdict":"NOISE"},{"driver":"Employee_Engagement_Score","outcome":"CSAT","lever":"training (indirect)","desc":"Engaged employees \u2192 happy customers","expected_sign":"positive","r":0.0045,"p":0.8068,"r_within":0.0039,"p_within":0.8339,"slope":0.0045,"slope_se":0.0184,"n":2920,"verdict":"NOISE"},{"driver":"Footfall","outcome":"orders","lever":"-","desc":"Footfall \u2192 orders (mechanical)","expected_sign":"positive","r":-0.0156,"p":0.3988,"r_within":-0.0183,"p_within":0.3217,"slope":-0.0106,"slope_se":0.0126,"n":2920,"verdict":"NOISE"},{"driver":"discount_pct","outcome":"orders","lever":"discount","desc":"Discount lift on transactions","expected_sign":"positive","r":-0.0112,"p":0.5439,"r_within":-0.0153,"p_within":0.4088,"slope":-8.1742,"slope_se":13.466,"n":2920,"verdict":"NOISE"},{"driver":"discount_pct","outcome":"aov","lever":"discount","desc":"Discount drag on AOV","expected_sign":"negative","r":0.0002,"p":0.9935,"r_within":0.0017,"p_within":0.9282,"slope":0.0133,"slope_se":1.6335,"n":2920,"verdict":"NOISE"},{"driver":"Food_Cost_Pct","outcome":"Prep_Time_Min","lever":"-","desc":"Worse ingredients \u2192 slower prep","expected_sign":"positive","r":0.0379,"p":0.0405,"r_within":0.0379,"p_within":0.0406,"slope":0.0269,"slope_se":0.0131,"n":2920,"verdict":"NOISE"},{"driver":"Equipment_Downtime_Hrs","outcome":"Prep_Time_Min","lever":"-","desc":"Broken equipment slows prep","expected_sign":"positive","r":0.0075,"p":0.6854,"r_within":0.0072,"p_within":0.6988,"slope":0.0105,"slope_se":0.026,"n":2920,"verdict":"NOISE"},{"driver":"Queue_Abandonment_Pct","outcome":"orders","lever":"-","desc":"Long queues \u2192 lost orders","expected_sign":"negative","r":0.0088,"p":0.635,"r_within":0.0076,"p_within":0.6795,"slope":1.3205,"slope_se":2.7811,"n":2920,"verdict":"NOISE"},{"driver":"Drive_Thru_Wait_Min","outcome":"CSAT","lever":"prepTime","desc":"Wait time \u2192 unhappy customers","expected_sign":"negative","r":0.0082,"p":0.6561,"r_within":0.0085,"p_within":0.6467,"slope":0.0016,"slope_se":0.0035,"n":2920,"verdict":"NOISE"},{"driver":"Kitchen_Capacity_Utilization_Pct","outcome":"Prep_Time_Min","lever":"-","desc":"Over-utilization \u2192 delays","expected_sign":"positive","r":0.0098,"p":0.5964,"r_within":0.0101,"p_within":0.5868,"slope":0.0032,"slope_se":0.006,"n":2920,"verdict":"NOISE"},{"driver":"Fill_Rate_Pct","outcome":"CSAT","lever":"sourcing","desc":"Stockouts \u2192 unhappy customers","expected_sign":"positive","r":0.0024,"p":0.898,"r_within":0.0026,"p_within":0.8891,"slope":0.0002,"slope_se":0.0018,"n":2920,"verdict":"NOISE"},{"driver":"Raw_Material_Quality_Score","outcome":"CSAT","lever":"-","desc":"Quality \u2192 satisfaction","expected_sign":"positive","r":-0.0301,"p":0.1038,"r_within":-0.0294,"p_within":0.1123,"slope":-0.0302,"slope_se":0.0186,"n":2920,"verdict":"NOISE"},{"driver":"Cold_Chain_Compliance_Pct","outcome":"Food_Cost_Pct","lever":"-","desc":"Poor cold chain \u2192 waste/cost","expected_sign":"negative","r":0.0062,"p":0.7377,"r_within":0.0051,"p_within":0.7845,"slope":0.0061,"slope_se":0.0183,"n":2920,"verdict":"NOISE"},{"driver":"Food_Wastage_Kg","outcome":"Food_Cost_Pct","lever":"-","desc":"Waste \u2192 food cost","expected_sign":"positive","r":0.0101,"p":0.5862,"r_within":0.0095,"p_within":0.6092,"slope":0.004,"slope_se":0.0073,"n":2920,"verdict":"NOISE"},{"driver":"Absenteeism_Pct","outcome":"Order_Accuracy_Pct","lever":"-","desc":"Absent staff \u2192 errors","expected_sign":"negative","r":-0.0101,"p":0.5836,"r_within":-0.0113,"p_within":0.5414,"slope":-0.0136,"slope_se":0.0248,"n":2920,"verdict":"NOISE"},{"driver":"Productivity_Orders_Per_Employee","outcome":"Labor_Cost_INR","lever":"-","desc":"Higher productivity \u2192 lower unit labor cost","expected_sign":"negative","r":-0.0053,"p":0.7744,"r_within":-0.0038,"p_within":0.8364,"slope":-58.9315,"slope_se":205.6265,"n":2920,"verdict":"NOISE"},{"driver":"NPS","outcome":"Repeat_Customer_Rate_Pct","lever":"-","desc":"NPS \u2192 repeat","expected_sign":"positive","r":-0.0115,"p":0.5351,"r_within":-0.013,"p_within":0.4814,"slope":-0.0058,"slope_se":0.0093,"n":2920,"verdict":"NOISE"},{"driver":"Social_Sentiment_Score","outcome":"NPS","lever":"-","desc":"Social buzz \u2192 NPS","expected_sign":"positive","r":0.022,"p":0.235,"r_within":0.0207,"p_within":0.2643,"slope":1.1919,"slope_se":1.0035,"n":2920,"verdict":"NOISE"},{"driver":"Cart_Abandonment_Pct","outcome":"orders","lever":"-","desc":"Cart drop \u2192 lost online orders","expected_sign":"negative","r":-0.0098,"p":0.5976,"r_within":-0.0093,"p_within":0.6136,"slope":-0.5051,"slope_se":0.9567,"n":2920,"verdict":"NOISE"},{"driver":"Complaints","outcome":"CSAT","lever":"-","desc":"Complaints \u2192 low CSAT","expected_sign":"negative","r":-0.0254,"p":0.1694,"r_within":-0.0262,"p_within":0.1567,"slope":-0.0011,"slope_se":0.0008,"n":2920,"verdict":"NOISE"},{"driver":"Complaint_Resolution_Hrs","outcome":"CSAT","lever":"-","desc":"Slow resolution \u2192 unhappy","expected_sign":"negative","r":0.0148,"p":0.4225,"r_within":0.0156,"p_within":0.3996,"slope":0.0005,"slope_se":0.0006,"n":2920,"verdict":"NOISE"}],"fittable_findings":{"q4_seasonality_lift_pct":30.02,"aov_by_channel":{"Delivery":384.04,"Dine-In":385.5,"Drive-Thru":381.6,"Takeaway":386.51},"aov_by_menu_item":{"Chicken Lollipop":382.9,"Dragon Chicken":382.92,"Hakka Noodles":383.7,"Manchurian":385.16,"Paneer Chilli":386.53,"Schezwan Noodles":386.46,"Spring Rolls":385.16,"Veg Fried Rice":382.54},"revenue_share_by_channel":{"Delivery":24.78,"Dine-In":25.19,"Drive-Thru":24.8,"Takeaway":25.22},"revenue_share_by_menu":{"Chicken Lollipop":12.6,"Dragon Chicken":12.34,"Hakka Noodles":12.57,"Manchurian":12.58,"Paneer Chilli":12.5,"Schezwan Noodles":12.56,"Spring Rolls":12.34,"Veg Fried Rice":12.52},"revenue_share_by_store":{"Ahmedabad-SGHighway":12.47,"Bangalore-Indiranagar":12.39,"Chennai-OMR":12.55,"Delhi-Saket":12.48,"Hyderabad-Hitech":12.47,"Mumbai-Andheri":12.51,"Mumbai-Thane":12.62,"Pune-Hinjewadi":12.5},"revenue_share_by_platform_delivery":{"Magicpin":33.7,"Swiggy":33.39,"Zomato":32.91},"mkt_spend_roas_correlation_r":0.0135,"mkt_spend_roas_correlation_p":0.9237},"data_meta":{"date_range":"2025-01-01 to 2025-12-31","total_sales_rows":116800,"daily_store_panel_rows":2920,"stores":8,"channels":4,"menu_items":8,"platforms":3}};
+
+function renderDiagnostics() {
+  // Hypothesis test table
+  const tbl = document.getElementById('hypothesis-table');
+  if (!tbl) return;
+  let html = `<thead><tr>
+    <th>Hypothesis</th>
+    <th>Driver Variable</th>
+    <th>Outcome Variable</th>
+    <th>Expected</th>
+    <th>r (raw)</th>
+    <th>r (within-store)</th>
+    <th>p-value</th>
+    <th>Slope ± SE</th>
+    <th>Verdict</th>
+  </tr></thead><tbody>`;
+  DIAGNOSTIC_DATA.hypotheses.forEach(h => {
+    const verdictCls = h.verdict === 'FIT-ABLE' ? 'verdict-fit'
+                      : h.verdict === 'WEAK' ? 'verdict-weak' : 'verdict-noise';
+    // Sign match check
+    const actualSign = h.r_within > 0.01 ? 'positive' : (h.r_within < -0.01 ? 'negative' : 'neutral');
+    const signPill = h.expected_sign === 'positive'
+      ? `<span class="sign-match pos">+ pos</span>`
+      : `<span class="sign-match neg">− neg</span>`;
+    const slopeDisplay = `${h.slope.toFixed(3)} ± ${h.slope_se.toFixed(3)}`;
+    html += `<tr>
+      <td>${h.desc}</td>
+      <td><code style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-dim);">${h.driver}</code></td>
+      <td><code style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-dim);">${h.outcome}</code></td>
+      <td>${signPill}</td>
+      <td class="num">${h.r >= 0 ? '+' : ''}${h.r.toFixed(4)}</td>
+      <td class="num"><b>${h.r_within >= 0 ? '+' : ''}${h.r_within.toFixed(4)}</b></td>
+      <td class="num">${h.p_within.toFixed(3)}</td>
+      <td class="num" style="font-size:10.5px;color:var(--text-dim);">${slopeDisplay}</td>
+      <td><span class="${verdictCls}">${h.verdict}</span></td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+
+  // Real findings
+  const ff = DIAGNOSTIC_DATA.fittable_findings;
+  const findings = [
+    {
+      icon: '📈',
+      title: 'Q4 Festival Lift',
+      desc: 'October-December average daily revenue is 30% higher than Q1-Q3 baseline. This pattern is real and statistically significant — it\'s baked into the data generation and reflects realistic QSR seasonality (Diwali, weddings, winter).',
+      value: '+' + ff.q4_seasonality_lift_pct + '% revenue lift'
+    },
+    {
+      icon: '🍽️',
+      title: 'Channel Mix (descriptive)',
+      desc: 'Revenue is split almost evenly across the four channels — uncharacteristic of real QSR where Delivery typically dominates urban markets and Dine-in dominates suburban. Used as the baseline channel mix in the simulator.',
+      value: 'Delivery ' + ff.revenue_share_by_channel['Delivery'] + '% · Dine-In ' + ff.revenue_share_by_channel['Dine-In'] + '% · Drive-Thru ' + ff.revenue_share_by_channel['Drive-Thru'] + '% · Takeaway ' + ff.revenue_share_by_channel['Takeaway'] + '%'
+    },
+    {
+      icon: '🍜',
+      title: 'Menu Item AOVs',
+      desc: 'AOV varies by less than ₹4 across all 8 menu items (real range: ₹382.54 – ₹386.53). In real data, premium items (Chicken Lollipop) would typically command 30-50% higher AOV than entry items (Veg Fried Rice). The uniformity confirms synthetic generation.',
+      value: 'Spread: ₹3.99 (1% of mean)'
+    },
+    {
+      icon: '🛵',
+      title: 'Delivery Platform Split',
+      desc: 'Across Zomato, Swiggy, and Magicpin, revenue share is essentially uniform at 33% each. Real market data shows Zomato and Swiggy each at 40-45% with Magicpin at 10-15%. The even split suggests random platform assignment.',
+      value: 'Zomato ' + ff.revenue_share_by_platform_delivery['Zomato'] + '% · Swiggy ' + ff.revenue_share_by_platform_delivery['Swiggy'] + '% · Magicpin ' + ff.revenue_share_by_platform_delivery['Magicpin'] + '%'
+    },
+    {
+      icon: '🏪',
+      title: 'Store Revenue Distribution',
+      desc: 'All 8 stores contribute ~12.5% of total revenue (spread: 12.39% – 12.62%). Real multi-city chains typically show 2-3× revenue variance between top and bottom stores driven by location quality, trade area density, and tenure.',
+      value: 'Spread: 0.23pp across 8 stores'
+    },
+  ];
+  document.getElementById('real-findings').innerHTML = findings.map(f => `
+    <div class="real-finding">
+      <div class="rf-icon">${f.icon}</div>
+      <div class="rf-content">
+        <div class="rf-title">${f.title}</div>
+        <div class="rf-desc">${f.desc}</div>
+        <div class="rf-value" style="margin-top:6px;">${f.value}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // What you'd need for each coefficient
+  const needs = [
+    {coef: 'Price elasticity', current: '−1.4% tx per +1% price (heuristic)',
+     desc: 'Daily price changes for menu items over 12+ months, with quasi-random variation across stores or time (e.g. A/B tests, geographic price waves, holiday menus). At least 100 distinct price change events.'},
+    {coef: 'Discount lift', current: '+0.55% tx per +1pp discount (heuristic)',
+     desc: 'Promotional calendar with start/end dates, discount levels per campaign, and daily transactions during and after each campaign. Halo and pull-forward effects need 4-6 weeks post-promo data.'},
+    {coef: 'CSAT → Repeat conversion', current: '+4.5pp repeat per +1.0 CSAT (heuristic)',
+     desc: 'Customer-level cohort data: identifiable customers, their CSAT scores after first visit, and whether they returned within 30/60/90 days. Aggregate store CSAT can\'t identify this — needs CRM-linked transaction data.'},
+    {coef: 'Prep time → CSAT', current: '−0.08 CSAT per min over baseline (heuristic)',
+     desc: 'Transaction-level prep times tied to receipt-level customer ratings. Currently the data has daily store averages on both sides — averaging hides the relationship.'},
+    {coef: 'Training → Attrition', current: '−0.04pp attrition per +1pp training (heuristic)',
+     desc: 'Employee-level training records linked to tenure outcomes. Pre/post comparisons before and after training programs. Currently aggregated daily store-level data can\'t resolve this.'},
+    {coef: 'Marketing → Transactions', current: '+0.018% tx per +1% spend (heuristic)',
+     desc: 'Geographic ad blackout experiments OR matched-store DiD analysis. Marketing mix modeling requires 2-3 years of weekly data with substantial campaign variation. Your file has 53 weeks with weak campaign-spend signal.'},
+    {coef: 'New store cannibalization', current: '+4.5% tx capacity per new store (heuristic)',
+     desc: 'Pre/post transactions at nearby existing stores when new stores open. Currently the data has 52 new openings but no flag for "which existing stores were affected" — the cannibalization adjustment is unidentified.'},
+    {coef: 'External factor impacts', current: 'Inflation −4%, Festival +7%, etc. (heuristic)',
+     desc: 'Weekly macro indicators are present but show wrong-signed correlation with revenue (Inflation r=+0.25 vs expected negative). Either real macro variation is needed, or longer time series spanning a real recession/spike.'},
+  ];
+  document.getElementById('data-needs').innerHTML = needs.map(n => `
+    <div class="need-item">
+      <div class="need-coef">${n.coef}<span class="need-current">Currently: ${n.current}</span></div>
+      <div class="need-desc">${n.desc}</div>
+    </div>
+  `).join('');
+}
+
+
+/* ====================================================
+   LEVER HANDLERS
+   ==================================================== */
+function attachLeverHandlers() {
+  document.querySelectorAll('.lever').forEach(div => {
+    const key = div.dataset.lever;
+    const input = div.querySelector('input[type="range"]');
+    const valSpan = div.querySelector('.lever-value');
+    input.addEventListener('input', () => {
+      currentLevers[key] = parseFloat(input.value);
+      updateLeverDisplay(key, valSpan, input.value);
+      activeScenarioName = "Custom";
+      document.getElementById('active-scenario-name').textContent = activeScenarioName;
+      run();
+    });
+  });
+
+  document.querySelectorAll('.toggle-chip').forEach(chip => {
+    const ext = chip.dataset.ext;
+    chip.addEventListener('click', () => {
+      currentLevers.ext[ext] = !currentLevers.ext[ext];
+      chip.classList.toggle('active');
+      activeScenarioName = "Custom";
+      document.getElementById('active-scenario-name').textContent = activeScenarioName;
+      run();
+    });
+  });
+}
+
+function updateLeverDisplay(key, valSpan, value) {
+  const v = parseFloat(value);
+  let display = '';
+  switch(key) {
+    case 'price': display = (v>=0?'+':'') + v + '%'; break;
+    case 'discount': display = v + '%'; break;
+    case 'deliveryDiscount': display = v + '%'; break;
+    case 'marketing': display = (v>=0?'+':'') + v + '%'; break;
+    case 'prepTime': display = v.toFixed(1) + ' min'; break;
+    case 'staffing': display = (v>=0?'+':'') + v + '%'; break;
+    case 'training': display = v + '%'; break;
+    case 'menuInnov': display = v; break;
+    case 'sourcing': display = (v>=0?'+':'') + v + '%'; break;
+    case 'newStores': display = v; break;
+    default: display = v;
+  }
+  valSpan.textContent = display;
+  valSpan.classList.remove('delta-up', 'delta-down');
+  if (['price', 'discount', 'deliveryDiscount', 'marketing', 'staffing', 'sourcing', 'newStores'].includes(key)) {
+    const baseline = key === 'discount' ? 10 : (key === 'deliveryDiscount' ? 5 : 0);
+    if (v > baseline) valSpan.classList.add('delta-up');
+    else if (v < baseline) valSpan.classList.add('delta-down');
+  }
+}
+
+function setLeversFromState(L) {
+  document.querySelectorAll('.lever').forEach(div => {
+    const key = div.dataset.lever;
+    const input = div.querySelector('input[type="range"]');
+    const valSpan = div.querySelector('.lever-value');
+    input.value = L[key];
+    updateLeverDisplay(key, valSpan, L[key]);
+  });
+  document.querySelectorAll('.toggle-chip').forEach(chip => {
+    const ext = chip.dataset.ext;
+    if (L.ext[ext]) chip.classList.add('active');
+    else chip.classList.remove('active');
+  });
+  currentLevers = JSON.parse(JSON.stringify(L));
+}
+
+function resetLevers() {
+  setLeversFromState(DEFAULT_LEVERS);
+  activeScenarioName = "Baseline";
+  document.getElementById('active-scenario-name').textContent = activeScenarioName;
+  run();
+  toast('Reset to baseline');
+}
+
+/* ====================================================
+   SCENARIOS / PERSISTENCE
+   ==================================================== */
+function loadScenarios() {
+  const saved = JSON.parse(localStorage.getItem('qsr_scenarios') || '[]');
+  scenarios = [...TEMPLATES, ...saved];
+  document.getElementById('scenarios-badge').textContent = scenarios.length;
+}
+
+function persistSaved() {
+  const saved = scenarios.filter(s => !s.builtin);
+  localStorage.setItem('qsr_scenarios', JSON.stringify(saved));
+  document.getElementById('scenarios-badge').textContent = scenarios.length;
+}
+
+function renderScenarios() {
+  const grid = document.getElementById('scenario-grid');
+  grid.innerHTML = scenarios.map(s => {
+    const sim = simulate(s.levers);
+    return `<div class="scenario-card ${s.name === activeScenarioName ? 'active' : ''}" data-id="${s.id}">
+      <div class="sc-name">${s.name}${s.builtin ? '' : ' <span style="color:var(--text-mute);font-size:10px;font-family:JetBrains Mono;">saved</span>'}</div>
+      <div class="sc-desc">${s.desc || ''}</div>
+      <div class="sc-meta">
+        <span>Rev: ${fmt(sim.revenue_cr,0)} Cr</span>
+        <span>EBITDA: ${fmt(sim.ebitda_pct,1)}%</span>
+      </div>
+      <div class="sc-actions">
+        <button class="btn" onclick="applyScenario('${s.id}')">Apply</button>
+        ${!s.builtin ? `<button class="btn btn-danger" onclick="deleteScenario('${s.id}')">Delete</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function applyScenario(id) {
+  const s = scenarios.find(x => x.id === id);
+  if (!s) return;
+  setLeversFromState(s.levers);
+  activeScenarioName = s.name;
+  document.getElementById('active-scenario-name').textContent = activeScenarioName;
+  run();
+  renderScenarios();
+  renderCompareSelector();
+  toast(`Applied: ${s.name}`);
+}
+
+function deleteScenario(id) {
+  if (!confirm('Delete this scenario?')) return;
+  scenarios = scenarios.filter(s => s.id !== id);
+  persistSaved();
+  renderScenarios();
+  renderCompareSelector();
+  toast('Scenario deleted');
+}
+
+function openSaveModal() {
+  document.getElementById('save-name').value = '';
+  document.getElementById('save-desc').value = '';
+  document.getElementById('save-modal').classList.add('show');
+  setTimeout(()=>document.getElementById('save-name').focus(), 50);
+}
+function closeSaveModal() {
+  document.getElementById('save-modal').classList.remove('show');
+}
+function saveScenario() {
+  const name = document.getElementById('save-name').value.trim();
+  const desc = document.getElementById('save-desc').value.trim();
+  if (!name) { toast('Name is required'); return; }
+  const id = 'user-' + Date.now();
+  scenarios.push({
+    id, name, desc,
+    levers: JSON.parse(JSON.stringify(currentLevers)),
+    builtin: false
+  });
+  persistSaved();
+  closeSaveModal();
+  activeScenarioName = name;
+  document.getElementById('active-scenario-name').textContent = name;
+  renderScenarios();
+  renderCompareSelector();
+  toast(`Saved: ${name}`);
+}
+
+function exportAllScenarios() {
+  const blob = new Blob([JSON.stringify(scenarios.filter(s=>!s.builtin), null, 2)],
+                       {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'qsr_scenarios.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('Scenarios exported');
+}
+function importScenarios(ev) {
+  const f = ev.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      imported.forEach(s => {
+        s.id = 'user-' + Date.now() + '-' + Math.random().toString(36).slice(2,6);
+        s.builtin = false;
+        scenarios.push(s);
+      });
+      persistSaved();
+      renderScenarios();
+      renderCompareSelector();
+      toast(`Imported ${imported.length} scenarios`);
+    } catch(err) { toast('Import failed: invalid JSON'); }
+  };
+  reader.readAsText(f);
+  ev.target.value = '';
+}
+function clearSavedScenarios() {
+  if (!confirm('Delete all saved scenarios? Built-in templates remain.')) return;
+  scenarios = scenarios.filter(s => s.builtin);
+  localStorage.removeItem('qsr_scenarios');
+  document.getElementById('scenarios-badge').textContent = scenarios.length;
+  renderScenarios();
+  renderCompareSelector();
+  toast('Saved scenarios cleared');
+}
+
+/* ====================================================
+   COMPARE TAB
+   ==================================================== */
+let compareSelected = new Set(['baseline','aggressive-growth','cost-optimization']);
+
+function renderCompareSelector() {
+  const sel = document.getElementById('compare-selector');
+  sel.innerHTML = scenarios.map(s => `
+    <div class="toggle-chip ${compareSelected.has(s.id) ? 'active' : ''}"
+         onclick="toggleCompare('${s.id}')">${s.name}</div>
+  `).join('');
+  renderCompareTable();
+  renderCompareChart();
+}
+function toggleCompare(id) {
+  if (compareSelected.has(id)) compareSelected.delete(id);
+  else { if (compareSelected.size < 4) compareSelected.add(id); else { toast('Max 4 scenarios'); return; } }
+  renderCompareSelector();
+}
+function renderCompareTable() {
+  const tbl = document.getElementById('compare-table');
+  const selected = scenarios.filter(s => compareSelected.has(s.id));
+  if (selected.length === 0) { tbl.innerHTML = '<tr><td>No scenarios selected.</td></tr>'; return; }
+  const sims = selected.map(s => ({name: s.name, sim: simulate(s.levers)}));
+
+  const metrics = [
+    {key: 'revenue_cr', label: 'Revenue (Cr ₹)', best: 'high', decimals: 1},
+    {key: 'ebitda_cr', label: 'EBITDA (Cr ₹)', best: 'high', decimals: 1},
+    {key: 'ebitda_pct', label: 'EBITDA Margin %', best: 'high', decimals: 1},
+    {key: 'orders_M', label: 'Transactions (M)', best: 'high', decimals: 2},
+    {key: 'aov', label: 'AOV (₹)', best: 'high', decimals: 0},
+    {key: 'food_cost_pct', label: 'Food Cost %', best: 'low', decimals: 1},
+    {key: 'csat', label: 'CSAT', best: 'high', decimals: 2},
+    {key: 'repeat_rate_pct', label: 'Repeat Rate %', best: 'high', decimals: 1},
+    {key: 'market_share_pct', label: 'Market Share %', best: 'high', decimals: 1},
+    {key: 'attrition_pct', label: 'Attrition %', best: 'low', decimals: 1},
+  ];
+
+  let html = '<thead><tr><th>Metric</th>';
+  sims.forEach(s => html += `<th>${s.name}</th>`);
+  html += '</tr></thead><tbody>';
+  metrics.forEach(m => {
+    const vals = sims.map(s => s.sim[m.key]);
+    const best = m.best === 'high' ? Math.max(...vals) : Math.min(...vals);
+    const worst = m.best === 'high' ? Math.min(...vals) : Math.max(...vals);
+    html += `<tr><td>${m.label}</td>`;
+    vals.forEach(v => {
+      let cls = '';
+      if (vals.length > 1 && v === best) cls = 'best';
+      else if (vals.length > 1 && v === worst) cls = 'worst';
+      html += `<td class="${cls}">${fmt(v, m.decimals)}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  tbl.innerHTML = html;
+}
+function renderCompareChart() {
+  if (!charts.compare) return;
+  const selected = scenarios.filter(s => compareSelected.has(s.id));
+  const colors = ['#facc15','#3b82f6','#22c55e','#ec4899'];
+  charts.compare.data.datasets = selected.map((s,i) => {
+    const sim = simulate(s.levers);
+    return {
+      label: s.name,
+      data: [
+        sim.revenue_cr / 10,                // scale to 0-100
+        sim.ebitda_pct * 3,                  // scale
+        sim.csat * 20,                       // scale
+        sim.repeat_rate_pct * 1.5,           // scale
+        sim.market_share_pct * 3,            // scale
+        (50 - sim.food_cost_pct) * 3         // inverted, scale
+      ],
+      borderColor: colors[i], backgroundColor: colors[i] + '22',
+      borderWidth: 2, pointBackgroundColor: colors[i]
+    };
+  });
+  charts.compare.update();
+}
+
+/* ====================================================
+   EXPORTS
+   ==================================================== */
+function exportCSV() {
+  const sim = simulate(currentLevers);
+  let csv = "QSR CEO Simulator - Scenario Export\n";
+  csv += `Scenario,${activeScenarioName}\n`;
+  csv += `Generated,${new Date().toISOString()}\n\n`;
+  csv += "Metric,Baseline,Simulated,Variance\n";
+  csv += `Revenue (Cr INR),${BASELINE.revenue_cr},${sim.revenue_cr.toFixed(2)},${(sim.revenue_cr-BASELINE.revenue_cr).toFixed(2)}\n`;
+  csv += `EBITDA Margin %,${BASELINE.ebitda_pct},${sim.ebitda_pct.toFixed(2)},${(sim.ebitda_pct-BASELINE.ebitda_pct).toFixed(2)}\n`;
+  csv += `EBITDA (Cr INR),${(BASELINE.revenue_cr*BASELINE.ebitda_pct/100).toFixed(2)},${sim.ebitda_cr.toFixed(2)},${(sim.ebitda_cr-BASELINE.revenue_cr*BASELINE.ebitda_pct/100).toFixed(2)}\n`;
+  csv += `Transactions (M),${BASELINE.orders_M},${sim.orders_M.toFixed(2)},${(sim.orders_M-BASELINE.orders_M).toFixed(2)}\n`;
+  csv += `AOV (INR),${BASELINE.aov.toFixed(2)},${sim.aov.toFixed(2)},${(sim.aov-BASELINE.aov).toFixed(2)}\n`;
+  csv += `Food Cost %,${BASELINE.food_cost_pct},${sim.food_cost_pct.toFixed(2)},${(sim.food_cost_pct-BASELINE.food_cost_pct).toFixed(2)}\n`;
+  csv += `CSAT,${BASELINE.csat},${sim.csat.toFixed(2)},${(sim.csat-BASELINE.csat).toFixed(2)}\n`;
+  csv += `Repeat Rate %,${BASELINE.repeat_rate_pct},${sim.repeat_rate_pct.toFixed(2)},${(sim.repeat_rate_pct-BASELINE.repeat_rate_pct).toFixed(2)}\n`;
+  csv += `Market Share %,${BASELINE.market_share_pct},${sim.market_share_pct.toFixed(2)},${(sim.market_share_pct-BASELINE.market_share_pct).toFixed(2)}\n`;
+  csv += `Attrition %,${BASELINE.attrition_pct},${sim.attrition_pct.toFixed(2)},${(sim.attrition_pct-BASELINE.attrition_pct).toFixed(2)}\n`;
+  csv += "\nLevers\n";
+  Object.entries(currentLevers).forEach(([k,v]) => {
+    if (k === 'ext') {
+      Object.entries(v).forEach(([ek,ev]) => csv += `ext:${ek},${ev}\n`);
+    } else {
+      csv += `${k},${v}\n`;
+    }
+  });
+
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `qsr_${activeScenarioName.replace(/\s+/g,'_')}.csv`; a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV exported');
+}
+
+async function exportPDF() {
+  if (!window.jspdf) { toast('PDF library not loaded - check your internet connection'); return; }
+  toast('Generating PDF... (may take a moment)');
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p','mm','a4');
+  const sim = simulate(currentLevers);
+  const pageW = 210, pageH = 297, margin = 12;
+  let y = margin;
+
+  // Header
+  pdf.setFillColor(10,14,26); pdf.rect(0,0,pageW,28,'F');
+  pdf.setTextColor(250,204,21); pdf.setFontSize(18); pdf.setFont('helvetica','bold');
+  pdf.text('QSR CEO Decision Simulator', margin, 14);
+  pdf.setFontSize(9); pdf.setTextColor(180,190,205); pdf.setFont('helvetica','normal');
+  pdf.text('Scenario: ' + activeScenarioName + '  |  Generated: ' + new Date().toLocaleString('en-IN'), margin, 21);
+  y = 36;
+
+  // KPI Summary
+  pdf.setTextColor(20,30,50); pdf.setFontSize(13); pdf.setFont('helvetica','bold');
+  pdf.text('Executive Summary', margin, y); y += 6;
+  pdf.setDrawColor(220,220,220); pdf.line(margin, y, pageW-margin, y); y += 5;
+
+  pdf.setFontSize(9); pdf.setFont('helvetica','normal');
+  const kpis = [
+    ['Revenue', `${fmt(sim.revenue_cr,0)} Cr INR`, fmtDelta(sim.deltas.revenue)],
+    ['EBITDA Margin', `${fmt(sim.ebitda_pct,1)} %`, fmtDelta(sim.deltas.ebitda_pp,' pp')],
+    ['EBITDA Absolute', `${fmt(sim.ebitda_cr,0)} Cr INR`, ''],
+    ['Transactions', `${fmt(sim.orders_M,1)} M`, fmtDelta(sim.deltas.tx)],
+    ['Avg Order Value', `${fmt(sim.aov,0)} INR`, fmtDelta(sim.deltas.aov)],
+    ['CSAT', `${fmt(sim.csat,2)} / 5`, (sim.deltas.csat>=0?'+':'')+sim.deltas.csat.toFixed(2)],
+    ['Repeat Rate', `${fmt(sim.repeat_rate_pct,1)} %`, fmtDelta(sim.deltas.repeat_pp,' pp')],
+    ['Market Share', `${fmt(sim.market_share_pct,1)} %`, fmtDelta(sim.deltas.share_pp,' pp')],
+    ['Food Cost %', `${fmt(sim.food_cost_pct,1)} %`, fmtDelta(sim.deltas.foodcost_pp,' pp')],
+    ['Attrition Rate', `${fmt(sim.attrition_pct,1)} %`, ''],
+  ];
+  kpis.forEach(row => {
+    pdf.setFont('helvetica','bold');
+    pdf.text(row[0], margin, y);
+    pdf.setFont('helvetica','normal');
+    pdf.text(row[1], margin+55, y);
+    pdf.setTextColor(parseFloat(row[2])>0 ? 30 : (parseFloat(row[2])<0 ? 200 : 100),
+                     parseFloat(row[2])>0 ? 150 : (parseFloat(row[2])<0 ? 40 : 100), 80);
+    pdf.text(row[2], margin+110, y);
+    pdf.setTextColor(20,30,50);
+    y += 5.5;
+  });
+
+  // P&L Summary
+  y += 6;
+  pdf.setFontSize(13); pdf.setFont('helvetica','bold');
+  pdf.text('P&L Summary (Cr INR)', margin, y); y += 6;
+  pdf.line(margin, y, pageW-margin, y); y += 5;
+  pdf.setFontSize(9);
+  const pnl = [
+    ['Revenue', BASELINE.revenue_cr, sim.revenue_cr],
+    ['Food Cost (COGS)', BASELINE.revenue_cr*BASELINE.food_cost_pct/100, sim.cogs_cr],
+    ['Gross Profit', BASELINE.revenue_cr*(1-BASELINE.food_cost_pct/100), sim.revenue_cr - sim.cogs_cr],
+    ['Labor', BASELINE.labor_cost_cr, sim.labor_cr],
+    ['Marketing', BASELINE.marketing_cr, sim.marketing_cr],
+    ['Other OpEx', BASELINE.revenue_cr*BASELINE.other_opex_pct/100, sim.other_cr],
+    ['EBITDA', BASELINE.revenue_cr*BASELINE.ebitda_pct/100, sim.ebitda_cr],
+  ];
+  pdf.setFont('helvetica','bold');
+  pdf.text('Line Item', margin, y);
+  pdf.text('Baseline', margin+70, y, {align:'right'});
+  pdf.text('Simulated', margin+100, y, {align:'right'});
+  pdf.text('Variance', margin+135, y, {align:'right'});
+  y += 4;
+  pdf.line(margin, y, pageW-margin, y); y += 4;
+  pdf.setFont('helvetica','normal');
+  pnl.forEach(r => {
+    pdf.text(r[0], margin, y);
+    pdf.text(fmt(r[1],1), margin+70, y, {align:'right'});
+    pdf.text(fmt(r[2],1), margin+100, y, {align:'right'});
+    const v = r[2]-r[1];
+    pdf.text((v>=0?'+':'')+fmt(v,1), margin+135, y, {align:'right'});
+    y += 5;
+  });
+
+  // Levers
+  y += 6;
+  pdf.setFontSize(13); pdf.setFont('helvetica','bold');
+  pdf.text('Decision Levers Applied', margin, y); y += 6;
+  pdf.line(margin, y, pageW-margin, y); y += 5;
+  pdf.setFontSize(9); pdf.setFont('helvetica','normal');
+  const leverLabels = {
+    price: 'Pricing Δ (%)', discount: 'Discount %', deliveryDiscount: 'Delivery Discount %',
+    marketing: 'Marketing Spend Δ (%)', prepTime: 'Prep Time Target (min)',
+    staffing: 'Staffing Δ (%)', training: 'Training Completion %',
+    menuInnov: 'Menu Innovation Index', sourcing: 'Sourcing Optimization (%)',
+    newStores: 'New Store Openings'
+  };
+  Object.entries(leverLabels).forEach(([k,lbl]) => {
+    pdf.text(lbl, margin, y);
+    pdf.text(String(currentLevers[k]), margin+90, y);
+    y += 5;
+  });
+  const activeExt = Object.entries(currentLevers.ext).filter(([_,v])=>v).map(([k])=>k);
+  pdf.text('Active External Factors:', margin, y);
+  pdf.text(activeExt.length ? activeExt.join(', ') : 'None', margin+50, y);
+
+  // Footer
+  pdf.setFontSize(8); pdf.setTextColor(120,130,150);
+  pdf.text('Generated by QSR CEO Decision Simulator · Based on FY2025 actuals', margin, pageH-8);
+
+  pdf.save(`QSR_${activeScenarioName.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.pdf`);
+  toast('PDF downloaded');
+}
+
+/* ====================================================
+   TABS
+   ==================================================== */
+function setupTabs() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + target).classList.add('active');
+      if (target === 'scenarios') renderScenarios();
+      if (target === 'compare') renderCompareSelector();
+      if (target === 'diagnostics') renderDiagnostics();
+      if (target === 'admin') { renderAdminNodes(); renderAdminEdges(); renderAdminCoeffs(); }
+      // Resize charts when their tab becomes visible (Chart.js needs this for layout)
+      Object.values(charts).forEach(c => { if (c && c.resize) c.resize(); });
+    });
+  });
+}
+
+/* ====================================================
+   TOAST
+   ==================================================== */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ====================================================
+   RUN PIPELINE
+   ==================================================== */
+function run() {
+  const sim = simulate(currentLevers);
+  updateKPIs(sim);
+  updateCausalChain(sim, currentLevers);
+  updateRisks(sim, currentLevers);
+  updateCharts(sim, currentLevers);
+  updatePnL(sim);
+}
+
+/* ====================================================
+   INIT
+   ==================================================== */
+function init() {
+  loadModel();       // Load editable KG/coefficients from localStorage (or defaults)
+  loadScenarios();
+  attachLeverHandlers();
+  // Charts depend on CDN — fail gracefully if blocked
+  try { buildCharts(); }
+  catch(err) { console.warn('Charts failed to load (CDN blocked?):', err); }
+  buildKG();
+  setupTabs();
+  renderScenarios();
+  renderCompareSelector();
+  run();
+}
+
+// Modal close on outside click
+document.getElementById('save-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'save-modal') closeSaveModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeSaveModal();
+});
+
+init();
+</script>
+</body>
+</html>
