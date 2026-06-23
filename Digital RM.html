@@ -9,39 +9,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5f8fc;
-  --bg-2:#eef3fa;
-  --panel:#ffffff;
-  --panel-2:#f7fafd;
-  --panel-3:#eaf1fa;
-  --line:#e3e9f1;
-  --line-2:#cdd8e7;
-  --ink:#0d1b2e;
-  --ink-2:#475569;
-  --ink-3:#7a8aa0;
-  --blue:#C8102E;
-  --blue-2:#8B0E26;
-  --blue-soft:#FBE9EC;
-  --blue-soft-border:#F2CDD3;
-  --blue-glow:rgba(200,16,46,.10);
-  --cyan:#8B0E26;
-  --green:#16a34a;
-  --green-soft:#dcfce7;
-  --green-border:#86efac;
+  --bg:#08080a;
+  --bg-2:#0e0e12;
+  --panel:#16161c;
+  --panel-2:#1e1e25;
+  --panel-3:#23232b;
+  --line:rgba(240,235,222,.11);
+  --line-2:rgba(240,235,222,.18);
+  --ink:#F4EFE2;
+  --ink-2:#C7C1B2;
+  --ink-3:#8B8576;
+  --blue:#d4a820;
+  --blue-2:#e8c14d;
+  --blue-soft:rgba(212,168,32,.18);
+  --blue-soft-border:rgba(212,168,32,.32);
+  --blue-glow:rgba(212,168,32,.22);
+  --cyan:#a9831a;
+  --green:#34d17a;
+  --green-soft:rgba(52,209,122,.15);
+  --green-border:rgba(52,209,122,.4);
 
-  --amber:#b8860b;
-  --amber-soft:#fef3c7;
-  --amber-border:#fcd34d;
-  --red:#c2453f;
-  --red-soft:#fee2e2;
-  --red-border:#fca5a5;
-  --violet:#6b5cb8;
-  --violet-soft:#ede9fe;
-  --violet-border:#c4b5fd;
+  --amber:#e0b13a;
+  --amber-soft:rgba(224,177,58,.15);
+  --amber-border:rgba(224,177,58,.4);
+  --red:#e5675f;
+  --red-soft:rgba(229,103,95,.15);
+  --red-border:rgba(229,103,95,.4);
+  --violet:#9d8ce0;
+  --violet-soft:rgba(157,140,224,.15);
+  --violet-border:rgba(157,140,224,.4);
   --radius:14px;
   --radius-sm:9px;
-  --shadow:0 1px 2px rgba(13,27,46,.04),0 6px 18px rgba(13,27,46,.06);
-  --shadow-lg:0 22px 56px rgba(13,27,46,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.5);
+  --shadow-lg:0 22px 56px rgba(0,0,0,.6);
   --sans:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
   --serif:'Fraunces',Georgia,serif;
@@ -51,8 +51,8 @@ html,body{height:100%}
 body{
   font-family:var(--sans);
   background:
-    radial-gradient(1200px 600px at 78% -8%,rgba(200,16,46,.07),transparent 60%),
-    radial-gradient(900px 500px at -5% 100%,rgba(8,145,169,.04),transparent 55%),
+    radial-gradient(1200px 600px at 78% -8%,rgba(212,168,32,.08),transparent 60%),
+    radial-gradient(900px 500px at -5% 100%,rgba(212,168,32,.04),transparent 55%),
     var(--bg);
   color:var(--ink);
   font-size:14px;
@@ -79,7 +79,7 @@ body{
 .brand .logo{
   width:34px;height:34px;border-radius:9px;flex-shrink:0;
   background:linear-gradient(140deg,var(--blue),var(--cyan));
-  display:grid;place-items:center;font-weight:700;color:#ffffff;
+  display:grid;place-items:center;font-weight:700;color:#15110a;
   font-family:var(--serif);font-size:19px;box-shadow:0 6px 18px var(--blue-glow);
 }
 .brand .bn{font-family:var(--serif);font-size:18px;font-weight:600;letter-spacing:.2px}
@@ -94,10 +94,10 @@ body{
 .nav-item.active{background:var(--blue-soft);color:var(--blue);border-color:var(--line-2)}
 .nav-item.active::before{content:"";position:absolute;left:-14px;top:8px;bottom:8px;width:3px;background:var(--blue-2);border-radius:0 3px 3px 0}
 .nav-item .ic{width:17px;height:17px;flex-shrink:0;opacity:.85}
-.nav-item .badge{margin-left:auto;background:var(--blue);color:#ffffff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center}
-.nav-item .badge.red{background:var(--red);color:#fff}
+.nav-item .badge{margin-left:auto;background:var(--blue);color:#15110a;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center}
+.nav-item .badge.red{background:var(--red);color:#15110a}
 .side-foot{padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}
-.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#8B0E26,#E0445A);display:grid;place-items:center;font-weight:600;font-size:12px;color:#fff;flex-shrink:0}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#a9831a,#e8c14d);display:grid;place-items:center;font-weight:600;font-size:12px;color:#15110a;flex-shrink:0}
 .side-foot .nm{font-size:12.5px;font-weight:600}
 .side-foot .rl{font-size:10.5px;color:var(--ink-3)}
 
@@ -105,7 +105,7 @@ body{
 .main{overflow-y:auto;height:100vh;position:relative}
 .topbar{
   position:sticky;top:0;z-index:30;
-  background:rgba(255,255,255,.82);backdrop-filter:blur(14px);
+  background:rgba(14,14,18,.82);backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line);
   padding:14px 30px;display:flex;align-items:center;gap:18px;
 }
@@ -139,16 +139,16 @@ body{
 
 .tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:30px;border:1px solid var(--line-2);color:var(--ink-2);background:var(--panel-2)}
 .tag.blue{background:var(--blue-soft);color:var(--blue);border-color:var(--blue-soft-border)}
-.tag.green{background:var(--green-soft);color:#15803d;border-color:var(--green-border)}
-.tag.amber{background:var(--amber-soft);color:#92400e;border-color:var(--amber-border)}
-.tag.red{background:var(--red-soft);color:#991b1b;border-color:var(--red-border)}
-.tag.violet{background:var(--violet-soft);color:#5b21b6;border-color:var(--violet-border)}
+.tag.green{background:var(--green-soft);color:var(--green);border-color:var(--green-border)}
+.tag.amber{background:var(--amber-soft);color:var(--amber);border-color:var(--amber-border)}
+.tag.red{background:var(--red-soft);color:var(--red);border-color:var(--red-border)}
+.tag.violet{background:var(--violet-soft);color:var(--violet);border-color:var(--violet-border)}
 .tag .pulse{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.8s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:9px;font-family:var(--sans);font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid var(--line-2);background:var(--panel-2);color:var(--ink);transition:.15s}
 .btn:hover{background:var(--panel-3);border-color:var(--line-2)}
-.btn.primary{background:linear-gradient(135deg,var(--blue),#8B0E26);border-color:transparent;color:#fff;box-shadow:0 6px 18px var(--blue-glow)}
+.btn.primary{background:linear-gradient(135deg,var(--blue),#a9831a);border-color:transparent;color:#15110a;box-shadow:0 6px 18px var(--blue-glow)}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{background:transparent}
 .btn.sm{padding:6px 11px;font-size:11.5px}
@@ -162,7 +162,7 @@ body{
 
 /* AI card accent */
 .ai-card{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--blue-soft),var(--panel));border:1px solid var(--blue-soft-border)}
-.ai-card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 140px at 100% 0,rgba(200,16,46,.10),transparent 70%);pointer-events:none}
+.ai-card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 140px at 100% 0,rgba(212,168,32,.10),transparent 70%);pointer-events:none}
 .ai-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:3px 9px;border-radius:20px;border:1px solid var(--blue-soft-border)}
 .ai-badge .spark{width:11px;height:11px}
 
@@ -247,7 +247,7 @@ tbody tr:hover{background:var(--panel-2)}
 .agent-ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:var(--blue-soft);color:var(--blue-2);border:1px solid var(--blue-soft-border)}
 .agent-conn{position:relative;width:2px;height:26px;background:var(--line-2);margin-left:35px;overflow:visible}
 .agent-conn.flowing{background:linear-gradient(var(--blue),var(--cyan))}
-.packet{position:absolute;left:50%;top:0;transform:translate(-50%,-4px);width:0;height:0;opacity:0;background:var(--blue-2);border-radius:30px;box-shadow:0 0 14px var(--blue-2);white-space:nowrap;font-size:9.5px;font-weight:600;color:#ffffff;display:grid;place-items:center;font-family:var(--sans)}
+.packet{position:absolute;left:50%;top:0;transform:translate(-50%,-4px);width:0;height:0;opacity:0;background:var(--blue-2);border-radius:30px;box-shadow:0 0 14px var(--blue-2);white-space:nowrap;font-size:9.5px;font-weight:600;color:#15110a;display:grid;place-items:center;font-family:var(--sans)}
 .packet.run{animation:packetMove 1s ease forwards}
 @keyframes packetMove{
   0%{opacity:0;top:-2px;width:11px;height:11px}
@@ -268,7 +268,7 @@ tbody tr:hover{background:var(--panel-2)}
 .agent-conn .a{display:block}
 
 /* modal */
-.modal-bg{position:fixed;inset:0;background:rgba(13,27,46,.45);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:30px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:30px}
 .modal-bg.show{display:flex;animation:fade .25s}
 .modal{background:var(--panel);border:1px solid var(--line-2);border-radius:16px;max-width:680px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
 
@@ -280,7 +280,7 @@ tbody tr:hover{background:var(--panel-2)}
 .toast .tx{font-size:12px;color:var(--ink-2);margin-top:2px}
 
 /* copilot */
-.copilot-fab{position:fixed;bottom:26px;right:26px;z-index:90;width:56px;height:56px;border-radius:50%;background:linear-gradient(140deg,var(--blue),var(--cyan));display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 34px var(--blue-glow),0 4px 12px rgba(13,27,46,.18);transition:.2s}
+.copilot-fab{position:fixed;bottom:26px;right:26px;z-index:90;width:56px;height:56px;border-radius:50%;background:linear-gradient(140deg,var(--blue),var(--cyan));display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 34px var(--blue-glow),0 4px 12px rgba(0,0,0,.5);transition:.2s}
 .copilot-fab:hover{transform:scale(1.06)}
 .copilot-panel{position:fixed;bottom:26px;right:26px;z-index:95;width:380px;height:560px;background:var(--panel);border:1px solid var(--line-2);border-radius:18px;box-shadow:var(--shadow-lg);display:none;flex-direction:column;overflow:hidden}
 .copilot-panel.show{display:flex;animation:fade .25s}
@@ -320,13 +320,13 @@ tbody tr:hover{background:var(--panel-2)}
   position:fixed;inset:0;z-index:500;display:none;align-items:flex-start;justify-content:center;
   overflow-y:auto;padding:48px 24px;
   background:
-    radial-gradient(1000px 500px at 80% -10%,rgba(74,134,212,.16),transparent 60%),
-    radial-gradient(800px 500px at 0% 110%,rgba(70,196,214,.08),transparent 55%),
+    radial-gradient(1000px 500px at 80% -10%,rgba(212,168,32,.14),transparent 60%),
+    radial-gradient(800px 500px at 0% 110%,rgba(212,168,32,.06),transparent 55%),
     var(--bg);
 }
 .splash-inner{max-width:880px;width:100%;animation:fade .5s ease}
 .splash-brand{display:flex;align-items:center;gap:13px;margin-bottom:34px}
-.splash-brand .logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(140deg,var(--blue),var(--cyan));display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:24px;color:#ffffff;box-shadow:0 8px 22px var(--blue-glow)}
+.splash-brand .logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(140deg,var(--blue),var(--cyan));display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:24px;color:#15110a;box-shadow:0 8px 22px var(--blue-glow)}
 .splash-brand .bn{font-family:var(--serif);font-size:22px;font-weight:600}
 .splash-brand .bt{font-size:11px;color:var(--ink-3);letter-spacing:.8px;text-transform:uppercase}
 .splash-h{font-family:var(--serif);font-size:32px;font-weight:600;letter-spacing:.2px;margin-bottom:8px}
@@ -351,7 +351,7 @@ tbody tr:hover{background:var(--panel-2)}
 .pf-flagcol{min-width:140px;text-align:right}
 .pf-flag{display:inline-block;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:20px}
 .pf-flag.high{background:var(--red-soft);color:var(--red);border:1px solid var(--red-border)}
-.pf-flag.med{background:var(--amber-soft);color:#92400e;border:1px solid var(--amber-border)}
+.pf-flag.med{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber-border)}
 .pf-flag.low{background:var(--green-soft);color:var(--green);border:1px solid var(--green-border)}
 .pf-go{color:var(--blue-2);opacity:.3;transform:translateX(-4px);transition:.16s;flex-shrink:0}
 .pf-go svg{width:18px;height:18px}
@@ -377,7 +377,7 @@ tbody tr:hover{background:var(--panel-2)}
 /* ---------- Generation screen ---------- */
 .gen-inner{max-width:560px;width:100%;margin-top:40px;animation:fade .4s}
 .pulse-logo{animation:logoPulse 1.4s ease-in-out infinite}
-@keyframes logoPulse{0%,100%{box-shadow:0 8px 22px var(--blue-glow)}50%{box-shadow:0 8px 34px rgba(74,134,212,.5)}}
+@keyframes logoPulse{0%,100%{box-shadow:0 8px 22px var(--blue-glow)}50%{box-shadow:0 8px 34px rgba(212,168,32,.5)}}
 .gen-h{text-align:center;color:var(--ink-3);font-size:13px;text-transform:uppercase;letter-spacing:1.2px;margin:30px 0 6px}
 .gen-company{text-align:center;font-family:var(--serif);font-size:30px;font-weight:600;margin-bottom:30px}
 .gen-steps{display:flex;flex-direction:column;gap:9px}
@@ -490,7 +490,7 @@ tbody tr:hover{background:var(--panel-2)}
 
 <!-- Copilot -->
 <div class="copilot-fab" onclick="toggleCopilot()" id="cpFab">
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M12 2l1.9 5.5L19 8l-4 3.5 1.2 5.5L12 14l-4.2 3 1.2-5.5L5 8l5.1-.5z"/></svg>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#15110a" stroke-width="2"><path d="M12 2l1.9 5.5L19 8l-4 3.5 1.2 5.5L12 14l-4.2 3 1.2-5.5L5 8l5.1-.5z"/></svg>
 </div>
 <div class="copilot-panel" id="cpPanel">
   <div class="cp-head">
@@ -584,7 +584,7 @@ const COMPANIES = [
 
   /* ============================ BHARAT FORGE ============================ */
   {
-    id:"CIF-77103", name:"Bharat Forge Ltd", short:"Bharat Forge", logo:"BF", color:"#8B0E26",
+    id:"CIF-77103", name:"Bharat Forge Ltd", short:"Bharat Forge", logo:"BF", color:"#e8c14d",
     sector:"Auto Components · Forging & Defence", group:"Kalyani Group", rating:"AA-", relYrs:11,
     fin:{ revenue:"₹16,812 Cr", revenueFY:"FY26 (+11% YoY)", ebitda:"₹2,921 Cr (17.4%)", pat:"₹1,079 Cr (+15%)",
           netWorth:"—", netCash:"Net debt ₹2,150 Cr", deRatio:"0.6x", rocE:"—" },
@@ -892,7 +892,7 @@ const COMPANIES = [
 
   /* ============================ JSW STEEL ============================ */
   {
-    id:"CIF-71290", name:"JSW Steel Ltd", short:"JSW Steel", logo:"JS", color:"#8B0E26",
+    id:"CIF-71290", name:"JSW Steel Ltd", short:"JSW Steel", logo:"JS", color:"#e8c14d",
     sector:"Metals · Steel", group:"JSW Group", rating:"AA", relYrs:10,
     fin:{ revenue:"₹1,80,000 Cr+", revenueFY:"FY26", ebitda:"₹8,634 Cr (Q4)", pat:"—",
           netWorth:"—", netCash:"Net debt ₹53,870 Cr", deRatio:"—", rocE:"—" },
@@ -1457,7 +1457,7 @@ function viewCorporate(){
   <div class="page">
     <div class="card ai-card" style="margin-bottom:18px">
       <div class="card-pad" style="display:flex;gap:18px;align-items:center">
-        <div style="width:58px;height:58px;border-radius:14px;background:${c.logoColor};display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:24px;color:#ffffff;flex-shrink:0">${c.logo}</div>
+        <div style="width:58px;height:58px;border-radius:14px;background:${c.logoColor};display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:24px;color:#15110a;flex-shrink:0">${c.logo}</div>
         <div style="flex:1">
           <div style="display:flex;align-items:center;gap:10px"><div style="font-family:var(--serif);font-size:24px;font-weight:600">${c.name}</div><span class="tag green">${ic('check')} ${c.npa}</span></div>
           <div style="color:var(--ink-2);font-size:13px;margin-top:2px">${c.sector} · ${c.group} · CIF ${c.id} · Relationship since ${2026-c.relationshipYrs} (${c.relationshipYrs} yrs)</div>
@@ -1557,7 +1557,7 @@ function corpTabBody(tab){
       <div class="card" style="flex:1.4"><div class="card-h"><h3>Internal RM Notes</h3><div class="spacer"></div><span class="sub">Last edited by A. Rao</span></div>
         <div class="card-pad"><div class="note-card" style="border-left:3px solid var(--blue)">${c.notes}</div></div></div>
       <div class="card" style="flex:1"><div class="card-h"><h3>Key Contacts</h3></div><div class="card-pad col" style="gap:10px">
-        ${c.contacts.map(ct=>`<div style="display:flex;gap:11px;align-items:center"><div class="avatar" style="background:linear-gradient(135deg,#8B0E26,#E0445A)">${ct.n.split(' ').map(x=>x[0]).join('')}</div><div><div style="font-weight:600;font-size:13px">${ct.n}</div><div style="font-size:11.5px;color:var(--ink-3)">${ct.r}${ct.e==='primary'?' · Primary':''}</div></div></div>`).join('')}
+        ${c.contacts.map(ct=>`<div style="display:flex;gap:11px;align-items:center"><div class="avatar" style="background:linear-gradient(135deg,#a9831a,#e8c14d)">${ct.n.split(' ').map(x=>x[0]).join('')}</div><div><div style="font-weight:600;font-size:13px">${ct.n}</div><div style="font-size:11.5px;color:var(--ink-3)">${ct.r}${ct.e==='primary'?' · Primary':''}</div></div></div>`).join('')}
       </div></div>
     </div>`;
 }
@@ -2017,7 +2017,7 @@ function viewDemo(){
           <div class="card-pad" style="display:flex;gap:15px;align-items:flex-start">
             <div style="position:relative;flex-shrink:0">
               <div style="width:46px;height:46px;border-radius:12px;background:var(--blue-soft);border:1px solid var(--blue-soft-border);display:grid;place-items:center;color:var(--blue-2);font-size:20px">${ic(s.icon)}</div>
-              <div style="position:absolute;top:-7px;left:-7px;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#ffffff;display:grid;place-items:center;font-size:11px;font-weight:700">${i+1}</div>
+              <div style="position:absolute;top:-7px;left:-7px;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#15110a;display:grid;place-items:center;font-size:11px;font-weight:700">${i+1}</div>
             </div>
             <div style="flex:1">
               <div style="font-size:15px;font-weight:600">${s.t}</div>

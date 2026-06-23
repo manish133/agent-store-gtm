@@ -8,11 +8,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  html, body { margin:0; padding:0; background:#fff; font-family: 'Inter', -apple-system, sans-serif; }
-  #loading { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; background:#fff; color:#6b6b6b; font-size:11px; letter-spacing:2px; text-transform:uppercase; z-index: 9999; }
-  #loading .dot { width:6px; height:6px; border-radius:50%; background:#a3171d; animation: pulse 1s infinite ease-in-out; }
+  html, body { margin:0; padding:0; background:#08080a; font-family: 'Inter', -apple-system, sans-serif; }
+  #loading { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; background:#08080a; color:#8B8576; font-size:11px; letter-spacing:2px; text-transform:uppercase; z-index: 9999; }
+  #loading .dot { width:6px; height:6px; border-radius:50%; background:#d4a820; animation: pulse 1s infinite ease-in-out; }
   @keyframes pulse { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:1;transform:scale(1.4)} }
-  .err { color:#a3171d; font-family:monospace; font-size:12px; max-width:760px; padding:24px; line-height:1.6; text-transform:none; letter-spacing:0; white-space: pre-wrap; }
+  .err { color:#e8c14d; font-family:monospace; font-size:12px; max-width:760px; padding:24px; line-height:1.6; text-transform:none; letter-spacing:0; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -6006,15 +6006,15 @@ const QSR_DATA = {
 // DESIGN TOKENS — consulting style, white bg, subtle red accent
 // ============================================================
 const C = {
-  ink: "#111111",
-  ink2: "#3a3a3a",
-  muted: "#6b6b6b",
-  line: "#e7e5e2",
-  bg: "#ffffff",
-  panel: "#fbfaf8",
-  red: "#a3171d",
-  redSoft: "#f5e6e7",
-  redLine: "#d97a7e",
+  ink: "#F4EFE2",
+  ink2: "#C7C1B2",
+  muted: "#8B8576",
+  line: "rgba(240,235,222,.11)",
+  bg: "#08080a",
+  panel: "#0e0e12",
+  red: "#d4a820",
+  redSoft: "rgba(212,168,32,.18)",
+  redLine: "#e8c14d",
   amber: "#b78628",
   green: "#3f6b4a",
   blue: "#2c5577"
@@ -6203,7 +6203,7 @@ const Pill = ({
 }) => {
   const map = {
     default: {
-      bg: "#f3f1ee",
+      bg: "#16161c",
       fg: C.ink2
     },
     red: {
@@ -6211,15 +6211,15 @@ const Pill = ({
       fg: C.red
     },
     green: {
-      bg: "#e8efe9",
+      bg: "#16161c",
       fg: C.green
     },
     amber: {
-      bg: "#f5ecd9",
+      bg: "#16161c",
       fg: C.amber
     },
     blue: {
-      bg: "#e3ebf2",
+      bg: "#16161c",
       fg: C.blue
     }
   }[tone];
@@ -6263,7 +6263,7 @@ const ScoreBar = ({
 }, (value * 100).toFixed(0))), /*#__PURE__*/React.createElement("div", {
   style: {
     height: 4,
-    background: "#f0eeea",
+    background: "rgba(240,235,222,.06)",
     position: "relative"
   }
 }, /*#__PURE__*/React.createElement("div", {
@@ -6839,7 +6839,7 @@ function StoreGenomeExplorer({
     style: {
       flex: 1,
       height: 3,
-      background: "#f0eeea",
+      background: "rgba(240,235,222,.06)",
       position: "relative"
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -6915,7 +6915,7 @@ function StoreGenomeExplorer({
     style: {
       flex: 1,
       height: 3,
-      background: "#f0eeea",
+      background: "rgba(240,235,222,.06)",
       position: "relative"
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -7286,8 +7286,8 @@ function MenuPlacementEngine({
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        background: `rgba(163,23,29,${alpha * 0.85})`,
-        color: alpha > 0.5 ? "#fff" : C.ink,
+        background: `rgba(212,168,32,${alpha * 0.85})`,
+        color: alpha > 0.5 ? "#15110a" : C.ink,
         padding: "6px 0",
         fontSize: 10,
         fontVariantNumeric: "tabular-nums"
@@ -8245,7 +8245,7 @@ function SKURecommendations({
         display: "inline-block",
         width: 50,
         height: 5,
-        background: "#f0eeea",
+        background: "rgba(240,235,222,.06)",
         position: "relative"
       }
     }, /*#__PURE__*/React.createElement("div", {
@@ -8681,7 +8681,7 @@ function App() {
         select:focus, button:focus { outline: 1px solid ${C.red}; outline-offset: 1px; }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-thumb { background: ${C.line}; }
-        ::-webkit-scrollbar-thumb:hover { background: #cfcdc9; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(240,235,222,.18); }
       `), /*#__PURE__*/React.createElement("aside", {
     style: {
       width: 260,

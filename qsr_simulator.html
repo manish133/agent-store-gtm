@@ -12,23 +12,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
-  --bg: #F6F7F9;
-  --bg-card: #FFFFFF;
-  --bg-card-2: #FBE9EC;       /* red-soft, used for elevated/active surfaces */
-  --border: #E6E6EB;
-  --border-soft: #F0F0F4;
-  --text: #1F1F23;            /* ink */
-  --text-dim: #6b6b73;        /* muted */
-  --text-mute: #9a9aa3;
-  --accent: #C8102E;          /* Agent Store red */
-  --accent-2: #8B0E26;        /* red-dark */
-  --green: #1F9D55;
-  --red: #C8102E;
-  --blue: #3b82f6;
-  --purple: #a855f7;
-  --orange: #f97316;
-  --pink: #ec4899;
-  --teal: #14b8a6;
+  --bg: #08080a;
+  --bg-card: #16161c;         /* card surface */
+  --bg-card-2: #1e1e25;       /* elevated/active surfaces (was red-soft) */
+  --border: rgba(240,235,222,.11);
+  --border-soft: rgba(240,235,222,.06);
+  --text: #F4EFE2;            /* primary text */
+  --text-dim: #C7C1B2;        /* secondary */
+  --text-mute: #8B8576;       /* muted */
+  --accent: #d4a820;          /* GOLD brand accent */
+  --accent-2: #a9831a;        /* deep gold */
+  --accent-bright: #e8c14d;   /* bright gold (hover/emphasis) */
+  --on-accent: #15110a;       /* near-black text/icons on gold fill */
+  --panel: #0e0e12;           /* raised panel surface */
+  --green: #34d399;
+  --red: #f87171;
+  --blue: #60a5fa;
+  --purple: #c084fc;
+  --orange: #fb923c;
+  --pink: #f472b6;
+  --teal: #2dd4bf;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,15 +48,15 @@ html, body {
 
 body {
   background:
-    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(200,16,46,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 1000px 800px at 90% 100%, rgba(200,16,46,0.025) 0%, transparent 60%),
+    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(212,168,32,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 800px at 90% 100%, rgba(212,168,32,0.05) 0%, transparent 60%),
     var(--bg);
 }
 
 /* ============ HEADER ============ */
 .header {
   border-bottom: 1px solid var(--border);
-  background: rgba(255,255,255,0.92);
+  background: rgba(14,14,18,0.92);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -75,9 +78,9 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 700;
-  color: #fff;
+  color: var(--on-accent);
   font-size: 20px;
-  box-shadow: 0 4px 20px rgba(200,16,46,0.25);
+  box-shadow: 0 4px 20px rgba(212,168,32,0.25);
 }
 .brand-text h1 {
   font-family: 'Source Serif 4', Georgia, serif;
@@ -128,10 +131,10 @@ body {
 .btn:hover { border-color: var(--accent); background: var(--bg-card-2); }
 .btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   border-color: var(--accent);
 }
-.btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+.btn-primary:hover { background: var(--accent-bright); border-color: var(--accent-bright); color: var(--on-accent); }
 .btn-danger { color: var(--red); }
 .btn-danger:hover { border-color: var(--red); }
 
@@ -235,13 +238,13 @@ body {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   font-weight: 700;
-  color: var(--accent);
-  background: rgba(200,16,46,0.08);
+  color: var(--accent-bright);
+  background: rgba(212,168,32,0.18);
   padding: 2px 7px;
   border-radius: 4px;
 }
-.lever-value.delta-up { color: var(--green); background: rgba(34,197,94,0.1); }
-.lever-value.delta-down { color: var(--red); background: rgba(239,68,68,0.1); }
+.lever-value.delta-up { color: var(--green); background: rgba(52,211,153,0.12); }
+.lever-value.delta-down { color: var(--red); background: rgba(248,113,113,0.12); }
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -298,7 +301,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .toggle-chip.active {
   border-color: var(--orange);
-  background: rgba(249,115,22,0.12);
+  background: rgba(251,146,60,0.15);
   color: var(--orange);
 }
 
@@ -450,7 +453,7 @@ input[type="range"]::-moz-range-thumb {
   border-left: 3px solid var(--text-mute);
 }
 .risk-item.warning { border-left-color: var(--orange); }
-.risk-item.danger { border-left-color: var(--red); background: rgba(239,68,68,0.05); }
+.risk-item.danger { border-left-color: var(--red); background: rgba(248,113,113,0.08); }
 .risk-name { flex: 1; font-weight: 500; }
 .risk-status {
   font-family: 'JetBrains Mono', monospace;
@@ -479,7 +482,7 @@ input[type="range"]::-moz-range-thumb {
   transition: all 0.15s;
 }
 .scenario-card:hover { border-color: var(--accent); }
-.scenario-card.active { border-color: var(--accent); background: rgba(200,16,46,0.05); }
+.scenario-card.active { border-color: var(--accent); background: rgba(212,168,32,0.08); }
 .scenario-card .sc-name {
   font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 600;
@@ -701,7 +704,7 @@ input[type="range"]::-moz-range-thumb {
   border-bottom: 1px solid var(--border-soft);
   vertical-align: middle;
 }
-.admin-table tr:hover td { background: rgba(200,16,46,0.03); }
+.admin-table tr:hover td { background: rgba(212,168,32,0.06); }
 .admin-table .node-pill {
   display: inline-block;
   padding: 2px 8px;
@@ -711,13 +714,13 @@ input[type="range"]::-moz-range-thumb {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.admin-table .pill-goal { background: rgba(34,197,94,0.15); color: #22c55e; }
-.admin-table .pill-kpi { background: rgba(59,130,246,0.15); color: #3b82f6; }
-.admin-table .pill-driver { background: rgba(168,85,247,0.15); color: #a855f7; }
-.admin-table .pill-op { background: rgba(249,115,22,0.15); color: #f97316; }
-.admin-table .pill-lever { background: rgba(200,16,46,0.15); color: #facc15; }
-.admin-table .pill-live { background: rgba(34,197,94,0.15); color: #22c55e; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
-.admin-table .pill-doc { background: rgba(107,107,115,0.12); color: #6b6b73; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
+.admin-table .pill-goal { background: rgba(52,211,153,0.18); color: #34d399; }
+.admin-table .pill-kpi { background: rgba(96,165,250,0.18); color: #60a5fa; }
+.admin-table .pill-driver { background: rgba(192,132,252,0.18); color: #c084fc; }
+.admin-table .pill-op { background: rgba(251,146,60,0.18); color: #fb923c; }
+.admin-table .pill-lever { background: rgba(212,168,32,0.18); color: #e8c14d; }
+.admin-table .pill-live { background: rgba(52,211,153,0.18); color: #34d399; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
+.admin-table .pill-doc { background: rgba(199,193,178,0.12); color: var(--text-dim); font-size: 9px; padding: 1px 6px; border-radius: 3px; }
 .admin-input, .admin-table input, .admin-table select {
   width: 100%;
   background: var(--bg-card);
@@ -790,7 +793,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .coef-row input.modified {
   border-color: var(--accent);
-  background: rgba(200,16,46,0.08);
+  background: rgba(212,168,32,0.18);
 }
 
 /* ============ DIAGNOSTICS TAB ============ */
@@ -821,7 +824,7 @@ input[type="range"]::-moz-range-thumb {
   font-family: 'JetBrains Mono', monospace;
   text-align: right;
 }
-.diag-table tr:hover td { background: rgba(200,16,46,0.02); }
+.diag-table tr:hover td { background: rgba(212,168,32,0.05); }
 .diag-table .sign-match {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
@@ -829,9 +832,9 @@ input[type="range"]::-moz-range-thumb {
   padding: 1px 6px;
   border-radius: 3px;
 }
-.diag-table .sign-match.pos { background: rgba(34,197,94,0.15); color: var(--green); }
-.diag-table .sign-match.neg { background: rgba(239,68,68,0.15); color: var(--red); }
-.diag-table .sign-match.neut { background: rgba(139,149,168,0.12); color: var(--text-dim); }
+.diag-table .sign-match.pos { background: rgba(52,211,153,0.18); color: var(--green); }
+.diag-table .sign-match.neg { background: rgba(248,113,113,0.18); color: var(--red); }
+.diag-table .sign-match.neut { background: rgba(199,193,178,0.12); color: var(--text-dim); }
 .verdict-fit, .verdict-weak, .verdict-noise {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
@@ -841,9 +844,9 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 3px;
   letter-spacing: 0.05em;
 }
-.verdict-fit { background: rgba(34,197,94,0.15); color: var(--green); }
-.verdict-weak { background: rgba(245,158,11,0.15); color: var(--accent-2); }
-.verdict-noise { background: rgba(139,149,168,0.15); color: var(--text-dim); }
+.verdict-fit { background: rgba(52,211,153,0.18); color: var(--green); }
+.verdict-weak { background: rgba(251,146,60,0.18); color: var(--orange); }
+.verdict-noise { background: rgba(199,193,178,0.15); color: var(--text-dim); }
 .real-finding {
   display: flex;
   align-items: flex-start;
@@ -1131,8 +1134,8 @@ input[type="range"]::-moz-range-thumb {
         <span><span style="display:inline-block;width:10px;height:10px;background:#a855f7;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Business Driver</span>
         <span><span style="display:inline-block;width:10px;height:10px;background:#f97316;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Operational Metric</span>
         <span><span style="display:inline-block;width:10px;height:10px;background:#facc15;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Decision Lever</span>
-        <span><span style="display:inline-block;width:18px;height:2px;background:#000;vertical-align:middle;margin-right:6px;"></span>Drives / Increases</span>
-        <span><span style="display:inline-block;width:18px;height:2px;background:#ef4444;vertical-align:middle;margin-right:6px;"></span>Reduces / Negative</span>
+        <span><span style="display:inline-block;width:18px;height:2px;background:#8B8576;vertical-align:middle;margin-right:6px;"></span>Drives / Increases</span>
+        <span><span style="display:inline-block;width:18px;height:2px;background:#f87171;vertical-align:middle;margin-right:6px;"></span>Reduces / Negative</span>
       </div>
     </div>
   </div>
@@ -1309,7 +1312,7 @@ input[type="range"]::-moz-range-thumb {
         </div>
       </div>
       <div class="panel-sub">Edit the Knowledge Graph structure and simulator coefficients. Changes flow through every tab.</div>
-      <div style="background: rgba(200,16,46,0.06); border-left: 3px solid var(--accent); padding: 10px 14px; margin-top: 12px; border-radius: 4px; font-size: 12px; color: var(--text-dim);">
+      <div style="background: rgba(212,168,32,0.08); border-left: 3px solid var(--accent); padding: 10px 14px; margin-top: 12px; border-radius: 4px; font-size: 12px; color: var(--text-dim);">
         <b style="color: var(--accent);">How this works:</b> Edge weights for lever→outcome paths drive the simulator directly. Coefficients handle non-linear effects (thresholds, capacity, externalities). All changes persist to localStorage.
       </div>
     </div>
@@ -1984,20 +1987,20 @@ let charts = {};
 const chartDefaults = {
   responsive: true, maintainAspectRatio: false,
   plugins: {
-    legend: { labels: { color: '#6b6b73', font: {family: 'Inter', size: 11}, boxWidth: 10, boxHeight: 10 } },
+    legend: { labels: { color: '#C7C1B2', font: {family: 'Inter', size: 11}, boxWidth: 10, boxHeight: 10 } },
     tooltip: {
-      backgroundColor: '#1F1F23',
-      borderColor: '#E6E6EB', borderWidth: 1,
-      titleColor: '#ffffff', bodyColor: '#ffffff',
+      backgroundColor: '#16161c',
+      borderColor: 'rgba(240,235,222,.11)', borderWidth: 1,
+      titleColor: '#F4EFE2', bodyColor: '#F4EFE2',
       titleFont: {family: 'Inter', size: 12, weight: '600'},
       bodyFont: {family: 'JetBrains Mono', size: 11}
     }
   },
   scales: {
-    x: { ticks: { color: '#6b6b73', font: {family: 'JetBrains Mono', size: 10} },
-         grid: { color: '#F0F0F4' } },
-    y: { ticks: { color: '#6b6b73', font: {family: 'JetBrains Mono', size: 10} },
-         grid: { color: '#F0F0F4' } }
+    x: { ticks: { color: '#C7C1B2', font: {family: 'JetBrains Mono', size: 10} },
+         grid: { color: 'rgba(240,235,222,.06)' } },
+    y: { ticks: { color: '#C7C1B2', font: {family: 'JetBrains Mono', size: 10} },
+         grid: { color: 'rgba(240,235,222,.06)' } }
   }
 };
 
@@ -2008,10 +2011,10 @@ function buildCharts() {
     data: {
       labels: BASELINE.months,
       datasets: [
-        { label: 'Baseline', data: BASELINE.monthly_revenue, borderColor: '#9a9aa3',
-          backgroundColor: 'rgba(155,155,163,0.05)', tension: 0.35, borderDash: [4,4], borderWidth: 2, pointRadius: 0 },
-        { label: 'Simulated', data: BASELINE.monthly_revenue, borderColor: '#C8102E',
-          backgroundColor: 'rgba(200,16,46,0.08)', tension: 0.35, borderWidth: 2.5, pointRadius: 0, fill: true }
+        { label: 'Baseline', data: BASELINE.monthly_revenue, borderColor: '#8B8576',
+          backgroundColor: 'rgba(139,133,118,0.08)', tension: 0.35, borderDash: [4,4], borderWidth: 2, pointRadius: 0 },
+        { label: 'Simulated', data: BASELINE.monthly_revenue, borderColor: '#d4a820',
+          backgroundColor: 'rgba(212,168,32,0.12)', tension: 0.35, borderWidth: 2.5, pointRadius: 0, fill: true }
       ]
     },
     options: chartDefaults
@@ -2024,8 +2027,8 @@ function buildCharts() {
       labels: ['Food Cost', 'Labor', 'Other OpEx', 'Marketing', 'EBITDA'],
       datasets: [{
         data: [32.2, 11.0, 32.6, 0.7, 23.5],
-        backgroundColor: ['#f97316','#a855f7','#3b82f6','#ec4899','#1F9D55'],
-        borderColor: '#FFFFFF', borderWidth: 2
+        backgroundColor: ['#fb923c','#c084fc','#60a5fa','#f472b6','#34d399'],
+        borderColor: '#16161c', borderWidth: 2
       }]
     },
     options: { ...chartDefaults, cutout: '60%', scales: {} }
@@ -2055,7 +2058,7 @@ function buildCharts() {
       labels: ['Revenue','Food Cost','Labor','Marketing','Other OpEx','EBITDA'],
       datasets: [{
         data: [832, -268, -91, -6, -272, 195],
-        backgroundColor: ['#22c55e','#ef4444','#ef4444','#ef4444','#ef4444','#facc15'],
+        backgroundColor: ['#34d399','#f87171','#f87171','#f87171','#f87171','#e8c14d'],
         borderRadius: 4
       }]
     },
@@ -2070,7 +2073,7 @@ function buildCharts() {
       datasets: [{
         label: 'EBITDA Δ (pp per unit change)',
         data: [1.2, -0.4, 0.5, -0.05, -0.2, -0.3],
-        backgroundColor: ['#22c55e','#ef4444','#22c55e','#ef4444','#ef4444','#ef4444'],
+        backgroundColor: ['#34d399','#f87171','#34d399','#f87171','#f87171','#f87171'],
         borderRadius: 4
       }]
     },
@@ -2085,10 +2088,10 @@ function buildCharts() {
       ...chartDefaults,
       scales: {
         r: {
-          angleLines: { color: '#E6E6EB' },
-          grid: { color: '#F0F0F4' },
-          pointLabels: { color: '#1F1F23', font: {family:'Inter', size:11, weight:'600'} },
-          ticks: { display: false, color: '#9a9aa3' }
+          angleLines: { color: 'rgba(240,235,222,.11)' },
+          grid: { color: 'rgba(240,235,222,.06)' },
+          pointLabels: { color: '#F4EFE2', font: {family:'Inter', size:11, weight:'600'} },
+          ticks: { display: false, color: '#8B8576' }
         }
       }
     }
@@ -2177,8 +2180,8 @@ function buildKG() {
 
   // Helper: derive visual styling for an edge from its semantic fields
   function styleEdge(e) {
-    // Color: red for negative, green for goal-targeting, yellow for live lever edges, dark grey otherwise
-    let color = '#000';
+    // Color: red for negative, green for goal-targeting, yellow for live lever edges, light grey otherwise
+    let color = '#8B8576';
     let dash = false;
     let strokeW = 1.5;
     if (e.live) {
@@ -2186,7 +2189,7 @@ function buildKG() {
       dash = true;
       strokeW = 1.8;
     } else if (e.kind === 'negative') {
-      color = '#ef4444';
+      color = '#f87171';
       strokeW = Math.min(3, 1 + Math.abs(e.weight) * 2);
     } else if (nodeMap[e.to] && nodeMap[e.to].type === 'goal') {
       color = '#22c55e';
@@ -2217,8 +2220,8 @@ function buildKG() {
       const mx = (x1+x2)/2, my = (y1+y2)/2;
       const lbl = (e.weight >= 0 ? '' : '') + (Math.abs(e.weight) < 0.01 ? '0' : e.weight.toFixed(2));
       const lblW = Math.max(28, lbl.length * 6 + 6);
-      edgeHTML += `<rect x="${mx-lblW/2}" y="${my-9}" width="${lblW}" height="14" rx="3" fill="#FFFFFF" stroke="#E6E6EB"/>`;
-      edgeHTML += `<text x="${mx}" y="${my+1}" text-anchor="middle" fill="#1F1F23" font-size="10" font-family="JetBrains Mono" font-weight="700" dominant-baseline="middle">${lbl}</text>`;
+      edgeHTML += `<rect x="${mx-lblW/2}" y="${my-9}" width="${lblW}" height="14" rx="3" fill="#16161c" stroke="rgba(240,235,222,.11)"/>`;
+      edgeHTML += `<text x="${mx}" y="${my+1}" text-anchor="middle" fill="#F4EFE2" font-size="10" font-family="JetBrains Mono" font-weight="700" dominant-baseline="middle">${lbl}</text>`;
     }
   });
 
@@ -2909,7 +2912,7 @@ function renderCompareTable() {
 function renderCompareChart() {
   if (!charts.compare) return;
   const selected = scenarios.filter(s => compareSelected.has(s.id));
-  const colors = ['#facc15','#3b82f6','#22c55e','#ec4899'];
+  const colors = ['#d4a820','#60a5fa','#34d399','#f472b6'];
   charts.compare.data.datasets = selected.map((s,i) => {
     const sim = simulate(s.levers);
     return {

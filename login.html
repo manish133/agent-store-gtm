@@ -10,20 +10,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --red:#C8102E;
-    --red-dark:#8B0E26;
-    --red-soft:#FBE9EC;
-    --red-tint:#FFF5F6;
-    --ink:#1F1F23;
-    --ink-2:#3a3a40;
-    --muted:#6b6b73;
-    --line:#E6E6EB;
-    --line-2:#F0F0F4;
-    --bg:#F6F7F9;
-    --card:#FFFFFF;
-    --green:#1F9D55;
-    --shadow:0 1px 2px rgba(20,20,30,.04), 0 8px 24px rgba(20,20,30,.06);
-    --shadow-lg:0 4px 8px rgba(20,20,30,.06), 0 20px 50px rgba(20,20,30,.10);
+    /* ---- Black + Gold brand system (matches the storefront) ---- */
+    --gold:#d4a820;
+    --gold-bright:#e8c14d;
+    --gold-deep:#a9831a;
+    --on-gold:#15110a;
+    --red:#d4a820;
+    --red-dark:#e8c14d;
+    --red-soft:rgba(212,168,32,.18);
+    --red-tint:rgba(212,168,32,.08);
+    --ink:#F4EFE2;
+    --ink-2:#C7C1B2;
+    --muted:#8B8576;
+    --line:rgba(240,235,222,.12);
+    --line-2:rgba(240,235,222,.06);
+    --bg:#0b0b0e;
+    --card:#16161c;
+    --green:#3FBF77;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.45);
+    --shadow-lg:0 4px 8px rgba(0,0,0,.5), 0 20px 50px rgba(0,0,0,.6);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;min-height:100%}
@@ -43,69 +48,72 @@
   /* ============ LEFT BRAND PANEL ============ */
   .brand-pane{
     position:relative;
-    background:linear-gradient(135deg,var(--red-dark) 0%,var(--red) 100%);
-    color:#fff;
+    background:
+      radial-gradient(720px 480px at 78% 8%, rgba(212,168,32,.22) 0%, rgba(212,168,32,0) 60%),
+      linear-gradient(160deg,#16130c 0%,#0c0c0e 55%,#08080a 100%);
+    color:var(--ink);
     padding:56px 56px 48px;
     display:flex;
     flex-direction:column;
     overflow:hidden;
+    border-right:1px solid var(--line);
   }
   .brand-pane::after{
     content:"";position:absolute;right:-120px;bottom:-120px;width:380px;height:380px;
-    border-radius:50%;background:rgba(255,255,255,.07);
+    border-radius:50%;background:radial-gradient(circle,rgba(212,168,32,.12) 0%,rgba(212,168,32,0) 70%);
   }
   .brand-pane::before{
     content:"";position:absolute;right:60px;top:-80px;width:220px;height:220px;
-    border-radius:50%;background:rgba(255,255,255,.05);
+    border-radius:50%;background:radial-gradient(circle,rgba(212,168,32,.10) 0%,rgba(212,168,32,0) 70%);
   }
-  .brand-logo{display:flex;align-items:center;gap:11px;font-family:'Source Serif 4';font-weight:700;font-size:20px;position:relative;z-index:1}
-  .brand-logo-mark{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.25)}
-  .brand-logo-mark svg{width:18px;height:18px;color:#fff}
+  .brand-logo{display:flex;align-items:center;gap:11px;font-family:'Source Serif 4';font-weight:700;font-size:20px;position:relative;z-index:1;color:var(--gold)}
+  .brand-logo-mark{width:34px;height:34px;border-radius:9px;background:var(--gold);display:flex;align-items:center;justify-content:center;border:1px solid var(--gold-bright)}
+  .brand-logo-mark svg{width:18px;height:18px;color:var(--on-gold)}
   .brand-body{margin-top:auto;position:relative;z-index:1}
-  .brand-body h1{font-family:'Source Serif 4';font-weight:700;font-size:38px;line-height:1.14;letter-spacing:-.5px;margin:0 0 18px}
-  .brand-body p{font-size:16px;line-height:1.6;color:rgba(255,255,255,.85);margin:0 0 28px;max-width:440px}
+  .brand-body h1{font-family:'Source Serif 4';font-weight:700;font-size:38px;line-height:1.14;letter-spacing:-.5px;margin:0 0 18px;color:var(--ink)}
+  .brand-body p{font-size:16px;line-height:1.6;color:var(--ink-2);margin:0 0 28px;max-width:440px}
   .brand-points{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
-  .brand-points li{display:flex;align-items:center;gap:11px;font-size:14.5px;color:rgba(255,255,255,.92)}
-  .brand-points svg{width:18px;height:18px;flex-shrink:0;color:#fff;background:rgba(255,255,255,.16);border-radius:6px;padding:3px}
-  .brand-foot{margin-top:36px;font-size:12.5px;color:rgba(255,255,255,.6);position:relative;z-index:1}
+  .brand-points li{display:flex;align-items:center;gap:11px;font-size:14.5px;color:var(--ink)}
+  .brand-points svg{width:18px;height:18px;flex-shrink:0;color:var(--on-gold);background:var(--gold);border-radius:6px;padding:3px}
+  .brand-foot{margin-top:36px;font-size:12.5px;color:var(--muted);position:relative;z-index:1}
 
   /* ============ RIGHT FORM PANEL ============ */
   .form-pane{display:flex;align-items:center;justify-content:center;padding:48px 32px}
   .login-card{width:100%;max-width:400px}
-  .login-eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--red);margin-bottom:10px}
+  .login-eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:10px}
   .login-card h2{font-family:'Source Serif 4';font-weight:700;font-size:30px;color:var(--ink);margin:0 0 8px;letter-spacing:-.3px}
   .login-card .sub{color:var(--muted);font-size:14.5px;margin:0 0 30px;line-height:1.55}
   .field{margin-bottom:18px}
   .field label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:7px}
   .field input{
     width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:9px;
-    font-family:inherit;font-size:14.5px;color:var(--ink);background:#fff;transition:.15s;
+    font-family:inherit;font-size:14.5px;color:var(--ink);background:#101015;transition:.15s;
   }
-  .field input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px var(--red-soft)}
-  .field input::placeholder{color:#b6b6bf}
+  .field input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--red-soft)}
+  .field input::placeholder{color:#6c675c}
   .field-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
   .field-row label{margin-bottom:0}
-  .field-row a{font-size:12.5px;font-weight:600;color:var(--red)}
-  .field-row a:hover{color:var(--red-dark)}
+  .field-row a{font-size:12.5px;font-weight:600;color:var(--gold)}
+  .field-row a:hover{color:var(--gold-bright)}
   .remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin:4px 0 24px;cursor:pointer;user-select:none}
-  .remember input{width:15px;height:15px;accent-color:var(--red);cursor:pointer}
+  .remember input{width:15px;height:15px;accent-color:var(--gold);cursor:pointer}
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
     padding:13px 18px;border-radius:9px;font-weight:600;font-size:15px;font-family:inherit;
     cursor:pointer;transition:.15s;border:1px solid transparent;
   }
-  .btn-primary{background:var(--red);color:#fff}
-  .btn-primary:hover{background:var(--red-dark);box-shadow:0 6px 16px rgba(200,16,46,.25)}
+  .btn-primary{background:var(--gold);color:var(--on-gold)}
+  .btn-primary:hover{background:var(--gold-bright);box-shadow:0 6px 18px rgba(212,168,32,.35)}
   .btn svg{width:16px;height:16px}
   .divider{display:flex;align-items:center;gap:14px;margin:22px 0;color:var(--muted);font-size:12px;font-weight:500}
   .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
-  .btn-sso{background:#fff;color:var(--ink);border-color:var(--line)}
-  .btn-sso:hover{border-color:var(--ink-2);background:var(--line-2)}
-  .err{display:none;background:var(--red-tint);border:1px solid var(--red-soft);color:var(--red-dark);font-size:13px;font-weight:500;padding:10px 12px;border-radius:8px;margin-bottom:18px}
+  .btn-sso{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn-sso:hover{border-color:var(--gold);background:var(--red-tint)}
+  .err{display:none;background:var(--red-tint);border:1px solid var(--red-soft);color:var(--gold-bright);font-size:13px;font-weight:500;padding:10px 12px;border-radius:8px;margin-bottom:18px}
   .err.show{display:block}
   .signup{text-align:center;font-size:13.5px;color:var(--muted);margin-top:26px}
-  .signup a{color:var(--red);font-weight:600}
-  .signup a:hover{color:var(--red-dark)}
+  .signup a{color:var(--gold);font-weight:600}
+  .signup a:hover{color:var(--gold-bright)}
   .demo-note{text-align:center;font-size:11.5px;color:var(--muted);margin-top:18px;line-height:1.5}
 
   @media(max-width:880px){

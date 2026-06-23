@@ -12,23 +12,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
-  --bg: #0a0e1a;
-  --bg-card: #111826;
-  --bg-card-2: #1a2335;
-  --border: #243049;
-  --border-soft: #1a2335;
-  --text: #e8ecf5;
-  --text-dim: #8b95a8;
-  --text-mute: #5a6378;
-  --accent: #C8102E;     /* brand red */
-  --accent-2: #8B0E26;
-  --green: #22c55e;
-  --red: #ef4444;
-  --blue: #3b82f6;
-  --purple: #a855f7;
-  --orange: #f97316;
-  --pink: #ec4899;
-  --teal: #14b8a6;
+  --bg: #08080a;
+  --bg-card: #16161c;
+  --bg-card-2: #1e1e25;
+  --bg-panel: #0e0e12;
+  --border: rgba(240,235,222,.11);
+  --border-soft: rgba(240,235,222,.06);
+  --text: #F4EFE2;
+  --text-dim: #C7C1B2;
+  --text-mute: #8B8576;
+  --accent: #d4a820;     /* brand gold */
+  --accent-2: #a9831a;   /* deep gold */
+  --accent-bright: #e8c14d; /* bright gold */
+  --on-accent: #15110a;  /* near-black text on gold fills */
+  --green: #34d27b;
+  --red: #f06868;
+  --blue: #5b9bf5;
+  --purple: #c084fc;
+  --orange: #fb9a4b;
+  --pink: #f472b6;
+  --teal: #2dd4bf;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,15 +48,15 @@ html, body {
 
 body {
   background:
-    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(200,16,46,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 1000px 800px at 90% 100%, rgba(59,130,246,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 800px 600px at 10% 0%, rgba(212,168,32,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 800px at 90% 100%, rgba(212,168,32,0.04) 0%, transparent 60%),
     var(--bg);
 }
 
 /* ============ HEADER ============ */
 .header {
   border-bottom: 1px solid var(--border);
-  background: rgba(10,14,26,0.85);
+  background: rgba(14,14,18,0.85);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -75,9 +78,9 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-family: 'Fraunces', serif;
   font-weight: 900;
-  color: #0a0e1a;
+  color: var(--on-accent);
   font-size: 20px;
-  box-shadow: 0 4px 20px rgba(200,16,46,0.25);
+  box-shadow: 0 4px 20px rgba(212,168,32,0.25);
 }
 .brand-text h1 {
   font-family: 'Fraunces', serif;
@@ -128,10 +131,10 @@ body {
 .btn:hover { border-color: var(--accent); background: var(--bg-card-2); }
 .btn-primary {
   background: var(--accent);
-  color: #0a0e1a;
+  color: var(--on-accent);
   border-color: var(--accent);
 }
-.btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+.btn-primary:hover { background: var(--accent-bright); border-color: var(--accent-bright); }
 .btn-danger { color: var(--red); }
 .btn-danger:hover { border-color: var(--red); }
 
@@ -236,12 +239,12 @@ body {
   font-size: 12px;
   font-weight: 700;
   color: var(--accent);
-  background: rgba(200,16,46,0.08);
+  background: rgba(212,168,32,0.08);
   padding: 2px 7px;
   border-radius: 4px;
 }
-.lever-value.delta-up { color: var(--green); background: rgba(34,197,94,0.1); }
-.lever-value.delta-down { color: var(--red); background: rgba(239,68,68,0.1); }
+.lever-value.delta-up { color: var(--green); background: rgba(52,210,123,0.12); }
+.lever-value.delta-down { color: var(--red); background: rgba(240,104,104,0.12); }
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -298,7 +301,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .toggle-chip.active {
   border-color: var(--orange);
-  background: rgba(249,115,22,0.12);
+  background: rgba(251,154,75,0.14);
   color: var(--orange);
 }
 
@@ -450,7 +453,7 @@ input[type="range"]::-moz-range-thumb {
   border-left: 3px solid var(--text-mute);
 }
 .risk-item.warning { border-left-color: var(--orange); }
-.risk-item.danger { border-left-color: var(--red); background: rgba(239,68,68,0.05); }
+.risk-item.danger { border-left-color: var(--red); background: rgba(240,104,104,0.08); }
 .risk-name { flex: 1; font-weight: 500; }
 .risk-status {
   font-family: 'JetBrains Mono', monospace;
@@ -479,7 +482,7 @@ input[type="range"]::-moz-range-thumb {
   transition: all 0.15s;
 }
 .scenario-card:hover { border-color: var(--accent); }
-.scenario-card.active { border-color: var(--accent); background: rgba(200,16,46,0.05); }
+.scenario-card.active { border-color: var(--accent); background: rgba(212,168,32,0.08); }
 .scenario-card .sc-name {
   font-family: 'Fraunces', serif;
   font-weight: 600;
@@ -701,7 +704,7 @@ input[type="range"]::-moz-range-thumb {
   border-bottom: 1px solid var(--border-soft);
   vertical-align: middle;
 }
-.admin-table tr:hover td { background: rgba(200,16,46,0.03); }
+.admin-table tr:hover td { background: rgba(212,168,32,0.06); }
 .admin-table .node-pill {
   display: inline-block;
   padding: 2px 8px;
@@ -711,13 +714,13 @@ input[type="range"]::-moz-range-thumb {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.admin-table .pill-goal { background: rgba(34,197,94,0.15); color: #22c55e; }
-.admin-table .pill-kpi { background: rgba(59,130,246,0.15); color: #3b82f6; }
-.admin-table .pill-driver { background: rgba(168,85,247,0.15); color: #a855f7; }
-.admin-table .pill-op { background: rgba(249,115,22,0.15); color: #f97316; }
-.admin-table .pill-lever { background: rgba(200,16,46,0.15); color: #C8102E; }
-.admin-table .pill-live { background: rgba(34,197,94,0.15); color: #22c55e; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
-.admin-table .pill-doc { background: rgba(139,149,168,0.12); color: #8b95a8; font-size: 9px; padding: 1px 6px; border-radius: 3px; }
+.admin-table .pill-goal { background: rgba(52,210,123,0.16); color: var(--green); }
+.admin-table .pill-kpi { background: rgba(91,155,245,0.16); color: var(--blue); }
+.admin-table .pill-driver { background: rgba(192,132,252,0.16); color: var(--purple); }
+.admin-table .pill-op { background: rgba(251,154,75,0.16); color: var(--orange); }
+.admin-table .pill-lever { background: rgba(212,168,32,0.16); color: var(--accent); }
+.admin-table .pill-live { background: rgba(52,210,123,0.16); color: var(--green); font-size: 9px; padding: 1px 6px; border-radius: 3px; }
+.admin-table .pill-doc { background: rgba(199,193,178,0.12); color: var(--text-dim); font-size: 9px; padding: 1px 6px; border-radius: 3px; }
 .admin-input, .admin-table input, .admin-table select {
   width: 100%;
   background: var(--bg-card);
@@ -790,7 +793,7 @@ input[type="range"]::-moz-range-thumb {
 }
 .coef-row input.modified {
   border-color: var(--accent);
-  background: rgba(200,16,46,0.08);
+  background: rgba(212,168,32,0.08);
 }
 
 /* ============ DIAGNOSTICS TAB ============ */
@@ -821,7 +824,7 @@ input[type="range"]::-moz-range-thumb {
   font-family: 'JetBrains Mono', monospace;
   text-align: right;
 }
-.diag-table tr:hover td { background: rgba(200,16,46,0.02); }
+.diag-table tr:hover td { background: rgba(212,168,32,0.05); }
 .diag-table .sign-match {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
@@ -829,9 +832,9 @@ input[type="range"]::-moz-range-thumb {
   padding: 1px 6px;
   border-radius: 3px;
 }
-.diag-table .sign-match.pos { background: rgba(34,197,94,0.15); color: var(--green); }
-.diag-table .sign-match.neg { background: rgba(239,68,68,0.15); color: var(--red); }
-.diag-table .sign-match.neut { background: rgba(139,149,168,0.12); color: var(--text-dim); }
+.diag-table .sign-match.pos { background: rgba(52,210,123,0.16); color: var(--green); }
+.diag-table .sign-match.neg { background: rgba(240,104,104,0.16); color: var(--red); }
+.diag-table .sign-match.neut { background: rgba(199,193,178,0.12); color: var(--text-dim); }
 .verdict-fit, .verdict-weak, .verdict-noise {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
@@ -841,9 +844,9 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 3px;
   letter-spacing: 0.05em;
 }
-.verdict-fit { background: rgba(34,197,94,0.15); color: var(--green); }
-.verdict-weak { background: rgba(139,14,38,0.15); color: var(--accent-2); }
-.verdict-noise { background: rgba(139,149,168,0.15); color: var(--text-dim); }
+.verdict-fit { background: rgba(52,210,123,0.16); color: var(--green); }
+.verdict-weak { background: rgba(251,154,75,0.16); color: var(--orange); }
+.verdict-noise { background: rgba(199,193,178,0.15); color: var(--text-dim); }
 .real-finding {
   display: flex;
   align-items: flex-start;
@@ -1105,11 +1108,11 @@ input[type="range"]::-moz-range-thumb {
       <h2>Data Lineage</h2>
       <div class="panel-sub">From source to KPI</div>
       <div class="lineage-flow">
-        <div class="lineage-node"><div class="lineage-icon" style="background:#3b82f6">💳</div>POS System</div>
-        <div class="lineage-node"><div class="lineage-icon" style="background:#8b5cf6">🛒</div>116K Transactions</div>
-        <div class="lineage-node"><div class="lineage-icon" style="background:#14b8a6">📊</div>Daily Sales Aggregate</div>
-        <div class="lineage-node"><div class="lineage-icon" style="background:#22c55e">📈</div>Revenue KPI</div>
-        <div class="lineage-node"><div class="lineage-icon" style="background:#C8102E;color:#0a0e1a">⚡</div>CEO Dashboard</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#5b9bf5">💳</div>POS System</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#c084fc">🛒</div>116K Transactions</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#2dd4bf">📊</div>Daily Sales Aggregate</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#34d27b">📈</div>Revenue KPI</div>
+        <div class="lineage-node"><div class="lineage-icon" style="background:#d4a820;color:#15110a">⚡</div>CEO Dashboard</div>
       </div>
     </div>
   </aside>
@@ -1124,13 +1127,13 @@ input[type="range"]::-moz-range-thumb {
       <div class="panel-sub">Click a node to highlight its causal influence path · Edge thickness = sensitivity strength</div>
       <svg id="kg-svg" viewBox="0 0 1200 700"></svg>
       <div style="margin-top: 18px; display: flex; gap: 24px; flex-wrap: wrap; font-size: 11px; color: var(--text-dim);">
-        <span><span style="display:inline-block;width:10px;height:10px;background:#22c55e;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Strategic Objective</span>
-        <span><span style="display:inline-block;width:10px;height:10px;background:#3b82f6;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>KPI / Outcome</span>
-        <span><span style="display:inline-block;width:10px;height:10px;background:#a855f7;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Business Driver</span>
-        <span><span style="display:inline-block;width:10px;height:10px;background:#f97316;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Operational Metric</span>
-        <span><span style="display:inline-block;width:10px;height:10px;background:#C8102E;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Decision Lever</span>
-        <span><span style="display:inline-block;width:18px;height:2px;background:#000;vertical-align:middle;margin-right:6px;"></span>Drives / Increases</span>
-        <span><span style="display:inline-block;width:18px;height:2px;background:#ef4444;vertical-align:middle;margin-right:6px;"></span>Reduces / Negative</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#34d27b;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Strategic Objective</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#5b9bf5;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>KPI / Outcome</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#c084fc;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Business Driver</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#fb9a4b;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Operational Metric</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#d4a820;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Decision Lever</span>
+        <span><span style="display:inline-block;width:18px;height:2px;background:#C7C1B2;vertical-align:middle;margin-right:6px;"></span>Drives / Increases</span>
+        <span><span style="display:inline-block;width:18px;height:2px;background:#f06868;vertical-align:middle;margin-right:6px;"></span>Reduces / Negative</span>
       </div>
     </div>
   </div>
@@ -1223,7 +1226,7 @@ input[type="range"]::-moz-range-thumb {
       <h2>Model Diagnostics</h2>
       <div class="panel-sub">Statistical analysis of the FY2025 dataset · what we could fit, what we couldn't, and why</div>
 
-      <div style="background: rgba(239,68,68,0.06); border-left: 3px solid var(--red); padding: 12px 14px; margin-top: 14px; border-radius: 4px; font-size: 12.5px; color: var(--text);">
+      <div style="background: rgba(240,104,104,0.08); border-left: 3px solid var(--red); padding: 12px 14px; margin-top: 14px; border-radius: 4px; font-size: 12.5px; color: var(--text);">
         <b style="color: var(--red);">Headline finding:</b> The provided FY2025 file appears to be <b>synthetic / uniformly-distributed dummy data</b>. The variables are statistically <b>independent</b> of each other — none of the causal relationships we'd expect in a real QSR (e.g. prep-time → CSAT, training → attrition) are detectable in this data. <b>25 of 25 hypothesized relationships came back as statistical noise</b> (within-store correlation between −0.03 and +0.03, p &gt; 0.05). Only one real pattern is baked in: the <b>Q4 +30% festival lift</b>.
         <div style="margin-top: 8px; color: var(--text-dim);">As a result, the simulator continues to use industry-heuristic coefficients (clearly labeled in the Admin tab), not regressions fit to this file. When real production data is available, the Admin tab's coefficients can be re-tuned directly.</div>
       </div>
@@ -1307,7 +1310,7 @@ input[type="range"]::-moz-range-thumb {
         </div>
       </div>
       <div class="panel-sub">Edit the Knowledge Graph structure and simulator coefficients. Changes flow through every tab.</div>
-      <div style="background: rgba(200,16,46,0.06); border-left: 3px solid var(--accent); padding: 10px 14px; margin-top: 12px; border-radius: 4px; font-size: 12px; color: var(--text-dim);">
+      <div style="background: rgba(212,168,32,0.08); border-left: 3px solid var(--accent); padding: 10px 14px; margin-top: 12px; border-radius: 4px; font-size: 12px; color: var(--text-dim);">
         <b style="color: var(--accent);">How this works:</b> Edge weights for lever→outcome paths drive the simulator directly. Coefficients handle non-linear effects (thresholds, capacity, externalities). All changes persist to localStorage.
       </div>
     </div>
@@ -1398,35 +1401,35 @@ input[type="range"]::-moz-range-thumb {
    ==================================================== */
 const DEFAULT_KG_NODES = [
   // Strategic Objective
-  {id: 'goal', x: 600, y: 50, w: 160, h: 50, fill: '#22c55e', label: 'Profitable Sustainable\nGrowth', type: 'goal'},
+  {id: 'goal', x: 600, y: 50, w: 160, h: 50, fill: '#34d27b', label: 'Profitable Sustainable\nGrowth', type: 'goal'},
   // KPIs (blue)
-  {id: 'ebitda', x: 200, y: 165, w: 110, h: 38, fill: '#3b82f6', label: 'EBITDA Margin', type: 'kpi'},
-  {id: 'revenue', x: 460, y: 165, w: 110, h: 38, fill: '#3b82f6', label: 'Revenue Growth', type: 'kpi'},
-  {id: 'csat', x: 720, y: 165, w: 130, h: 38, fill: '#3b82f6', label: 'Customer Satisfaction', type: 'kpi'},
-  {id: 'mktshare', x: 1000, y: 165, w: 110, h: 38, fill: '#3b82f6', label: 'Market Share', type: 'kpi'},
+  {id: 'ebitda', x: 200, y: 165, w: 110, h: 38, fill: '#5b9bf5', label: 'EBITDA Margin', type: 'kpi'},
+  {id: 'revenue', x: 460, y: 165, w: 110, h: 38, fill: '#5b9bf5', label: 'Revenue Growth', type: 'kpi'},
+  {id: 'csat', x: 720, y: 165, w: 130, h: 38, fill: '#5b9bf5', label: 'Customer Satisfaction', type: 'kpi'},
+  {id: 'mktshare', x: 1000, y: 165, w: 110, h: 38, fill: '#5b9bf5', label: 'Market Share', type: 'kpi'},
   // Business Drivers (purple)
-  {id: 'tx', x: 270, y: 295, w: 110, h: 38, fill: '#a855f7', label: 'Transactions', type: 'driver'},
-  {id: 'aov', x: 500, y: 295, w: 120, h: 38, fill: '#a855f7', label: 'Average Order Value', type: 'driver'},
-  {id: 'repeat', x: 740, y: 295, w: 110, h: 38, fill: '#a855f7', label: 'Repeat Rate', type: 'driver'},
-  {id: 'expansion', x: 970, y: 295, w: 120, h: 38, fill: '#a855f7', label: 'Store Expansion', type: 'driver'},
+  {id: 'tx', x: 270, y: 295, w: 110, h: 38, fill: '#c084fc', label: 'Transactions', type: 'driver'},
+  {id: 'aov', x: 500, y: 295, w: 120, h: 38, fill: '#c084fc', label: 'Average Order Value', type: 'driver'},
+  {id: 'repeat', x: 740, y: 295, w: 110, h: 38, fill: '#c084fc', label: 'Repeat Rate', type: 'driver'},
+  {id: 'expansion', x: 970, y: 295, w: 120, h: 38, fill: '#c084fc', label: 'Store Expansion', type: 'driver'},
   // Operational Metrics (orange)
-  {id: 'footfall', x: 100, y: 425, w: 90, h: 34, fill: '#f97316', label: 'Footfall', type: 'op'},
-  {id: 'discount', x: 230, y: 425, w: 90, h: 34, fill: '#f97316', label: 'Discount %', type: 'op'},
-  {id: 'menu', x: 360, y: 425, w: 105, h: 34, fill: '#f97316', label: 'Menu Mix', type: 'op'},
-  {id: 'delivery', x: 500, y: 425, w: 95, h: 34, fill: '#f97316', label: 'Delivery Mix', type: 'op'},
-  {id: 'foodcost', x: 635, y: 425, w: 95, h: 34, fill: '#f97316', label: 'Food Cost %', type: 'op'},
-  {id: 'preptime', x: 770, y: 425, w: 95, h: 34, fill: '#f97316', label: 'Prep Time', type: 'op'},
-  {id: 'service', x: 910, y: 425, w: 100, h: 34, fill: '#f97316', label: 'Service Quality', type: 'op'},
-  {id: 'wastage', x: 1060, y: 425, w: 100, h: 34, fill: '#f97316', label: 'Food Wastage', type: 'op'},
+  {id: 'footfall', x: 100, y: 425, w: 90, h: 34, fill: '#fb9a4b', label: 'Footfall', type: 'op'},
+  {id: 'discount', x: 230, y: 425, w: 90, h: 34, fill: '#fb9a4b', label: 'Discount %', type: 'op'},
+  {id: 'menu', x: 360, y: 425, w: 105, h: 34, fill: '#fb9a4b', label: 'Menu Mix', type: 'op'},
+  {id: 'delivery', x: 500, y: 425, w: 95, h: 34, fill: '#fb9a4b', label: 'Delivery Mix', type: 'op'},
+  {id: 'foodcost', x: 635, y: 425, w: 95, h: 34, fill: '#fb9a4b', label: 'Food Cost %', type: 'op'},
+  {id: 'preptime', x: 770, y: 425, w: 95, h: 34, fill: '#fb9a4b', label: 'Prep Time', type: 'op'},
+  {id: 'service', x: 910, y: 425, w: 100, h: 34, fill: '#fb9a4b', label: 'Service Quality', type: 'op'},
+  {id: 'wastage', x: 1060, y: 425, w: 100, h: 34, fill: '#fb9a4b', label: 'Food Wastage', type: 'op'},
   // Decision Levers (yellow)
-  {id: 'l_pricing', x: 120, y: 580, w: 95, h: 34, fill: '#C8102E', label: 'Pricing', type: 'lever', dark: true},
-  {id: 'l_promo', x: 240, y: 580, w: 95, h: 34, fill: '#C8102E', label: 'Promotions', type: 'lever', dark: true},
-  {id: 'l_menu', x: 360, y: 580, w: 110, h: 34, fill: '#C8102E', label: 'Menu Engineering', type: 'lever', dark: true},
-  {id: 'l_marketing', x: 500, y: 580, w: 100, h: 34, fill: '#C8102E', label: 'Marketing', type: 'lever', dark: true},
-  {id: 'l_delivery', x: 630, y: 580, w: 110, h: 34, fill: '#C8102E', label: 'Delivery Discount', type: 'lever', dark: true},
-  {id: 'l_staff', x: 770, y: 580, w: 100, h: 34, fill: '#C8102E', label: 'Staffing', type: 'lever', dark: true},
-  {id: 'l_train', x: 900, y: 580, w: 100, h: 34, fill: '#C8102E', label: 'Training', type: 'lever', dark: true},
-  {id: 'l_capex', x: 1040, y: 580, w: 100, h: 34, fill: '#C8102E', label: 'Capex / Stores', type: 'lever', dark: true},
+  {id: 'l_pricing', x: 120, y: 580, w: 95, h: 34, fill: '#d4a820', label: 'Pricing', type: 'lever', dark: true},
+  {id: 'l_promo', x: 240, y: 580, w: 95, h: 34, fill: '#d4a820', label: 'Promotions', type: 'lever', dark: true},
+  {id: 'l_menu', x: 360, y: 580, w: 110, h: 34, fill: '#d4a820', label: 'Menu Engineering', type: 'lever', dark: true},
+  {id: 'l_marketing', x: 500, y: 580, w: 100, h: 34, fill: '#d4a820', label: 'Marketing', type: 'lever', dark: true},
+  {id: 'l_delivery', x: 630, y: 580, w: 110, h: 34, fill: '#d4a820', label: 'Delivery Discount', type: 'lever', dark: true},
+  {id: 'l_staff', x: 770, y: 580, w: 100, h: 34, fill: '#d4a820', label: 'Staffing', type: 'lever', dark: true},
+  {id: 'l_train', x: 900, y: 580, w: 100, h: 34, fill: '#d4a820', label: 'Training', type: 'lever', dark: true},
+  {id: 'l_capex', x: 1040, y: 580, w: 100, h: 34, fill: '#d4a820', label: 'Capex / Stores', type: 'lever', dark: true},
 ];
 
 // Edges. "live: true" means the edge weight directly drives simulator math (lever → outcome).
@@ -1982,20 +1985,20 @@ let charts = {};
 const chartDefaults = {
   responsive: true, maintainAspectRatio: false,
   plugins: {
-    legend: { labels: { color: '#8b95a8', font: {family: 'Inter Tight', size: 11}, boxWidth: 10, boxHeight: 10 } },
+    legend: { labels: { color: '#C7C1B2', font: {family: 'Inter Tight', size: 11}, boxWidth: 10, boxHeight: 10 } },
     tooltip: {
-      backgroundColor: '#1a2335',
-      borderColor: '#243049', borderWidth: 1,
-      titleColor: '#e8ecf5', bodyColor: '#e8ecf5',
+      backgroundColor: '#16161c',
+      borderColor: 'rgba(240,235,222,.11)', borderWidth: 1,
+      titleColor: '#F4EFE2', bodyColor: '#F4EFE2',
       titleFont: {family: 'Inter Tight', size: 12, weight: '600'},
       bodyFont: {family: 'JetBrains Mono', size: 11}
     }
   },
   scales: {
-    x: { ticks: { color: '#8b95a8', font: {family: 'JetBrains Mono', size: 10} },
-         grid: { color: '#1a2335' } },
-    y: { ticks: { color: '#8b95a8', font: {family: 'JetBrains Mono', size: 10} },
-         grid: { color: '#1a2335' } }
+    x: { ticks: { color: '#C7C1B2', font: {family: 'JetBrains Mono', size: 10} },
+         grid: { color: 'rgba(240,235,222,.06)' } },
+    y: { ticks: { color: '#C7C1B2', font: {family: 'JetBrains Mono', size: 10} },
+         grid: { color: 'rgba(240,235,222,.06)' } }
   }
 };
 
@@ -2006,10 +2009,10 @@ function buildCharts() {
     data: {
       labels: BASELINE.months,
       datasets: [
-        { label: 'Baseline', data: BASELINE.monthly_revenue, borderColor: '#5a6378',
-          backgroundColor: 'rgba(90,99,120,0.05)', tension: 0.35, borderDash: [4,4], borderWidth: 2, pointRadius: 0 },
-        { label: 'Simulated', data: BASELINE.monthly_revenue, borderColor: '#C8102E',
-          backgroundColor: 'rgba(200,16,46,0.08)', tension: 0.35, borderWidth: 2.5, pointRadius: 0, fill: true }
+        { label: 'Baseline', data: BASELINE.monthly_revenue, borderColor: '#8B8576',
+          backgroundColor: 'rgba(139,133,118,0.06)', tension: 0.35, borderDash: [4,4], borderWidth: 2, pointRadius: 0 },
+        { label: 'Simulated', data: BASELINE.monthly_revenue, borderColor: '#d4a820',
+          backgroundColor: 'rgba(212,168,32,0.10)', tension: 0.35, borderWidth: 2.5, pointRadius: 0, fill: true }
       ]
     },
     options: chartDefaults
@@ -2022,8 +2025,8 @@ function buildCharts() {
       labels: ['Food Cost', 'Labor', 'Other OpEx', 'Marketing', 'EBITDA'],
       datasets: [{
         data: [32.2, 11.0, 32.6, 0.7, 23.5],
-        backgroundColor: ['#f97316','#a855f7','#3b82f6','#ec4899','#22c55e'],
-        borderColor: '#111826', borderWidth: 2
+        backgroundColor: ['#fb9a4b','#c084fc','#5b9bf5','#f472b6','#34d27b'],
+        borderColor: '#16161c', borderWidth: 2
       }]
     },
     options: { ...chartDefaults, cutout: '60%', scales: {} }
@@ -2038,9 +2041,9 @@ function buildCharts() {
         { label: 'Baseline', data: [
             BASELINE.channel_mix.Delivery, BASELINE.channel_mix["Dine-In"],
             BASELINE.channel_mix["Drive-Thru"], BASELINE.channel_mix.Takeaway
-          ], backgroundColor: 'rgba(90,99,120,0.5)', borderRadius: 4 },
+          ], backgroundColor: 'rgba(139,133,118,0.45)', borderRadius: 4 },
         { label: 'Simulated', data: [25,25,25,25],
-          backgroundColor: '#C8102E', borderRadius: 4 }
+          backgroundColor: '#d4a820', borderRadius: 4 }
       ]
     },
     options: { ...chartDefaults }
@@ -2053,7 +2056,7 @@ function buildCharts() {
       labels: ['Revenue','Food Cost','Labor','Marketing','Other OpEx','EBITDA'],
       datasets: [{
         data: [832, -268, -91, -6, -272, 195],
-        backgroundColor: ['#22c55e','#ef4444','#ef4444','#ef4444','#ef4444','#C8102E'],
+        backgroundColor: ['#34d27b','#f06868','#f06868','#f06868','#f06868','#d4a820'],
         borderRadius: 4
       }]
     },
@@ -2068,7 +2071,7 @@ function buildCharts() {
       datasets: [{
         label: 'EBITDA Δ (pp per unit change)',
         data: [1.2, -0.4, 0.5, -0.05, -0.2, -0.3],
-        backgroundColor: ['#22c55e','#ef4444','#22c55e','#ef4444','#ef4444','#ef4444'],
+        backgroundColor: ['#34d27b','#f06868','#34d27b','#f06868','#f06868','#f06868'],
         borderRadius: 4
       }]
     },
@@ -2083,10 +2086,10 @@ function buildCharts() {
       ...chartDefaults,
       scales: {
         r: {
-          angleLines: { color: '#243049' },
-          grid: { color: '#1a2335' },
-          pointLabels: { color: '#e8ecf5', font: {family:'Inter Tight', size:11, weight:'600'} },
-          ticks: { display: false, color: '#5a6378' }
+          angleLines: { color: 'rgba(240,235,222,.11)' },
+          grid: { color: 'rgba(240,235,222,.06)' },
+          pointLabels: { color: '#F4EFE2', font: {family:'Inter Tight', size:11, weight:'600'} },
+          ticks: { display: false, color: '#8B8576' }
         }
       }
     }
@@ -2176,18 +2179,18 @@ function buildKG() {
   // Helper: derive visual styling for an edge from its semantic fields
   function styleEdge(e) {
     // Color: red for negative, green for goal-targeting, yellow for live lever edges, dark grey otherwise
-    let color = '#000';
+    let color = '#5a5648';
     let dash = false;
     let strokeW = 1.5;
     if (e.live) {
-      color = '#C8102E';  // lever-driven edges = yellow
+      color = '#d4a820';  // lever-driven edges = gold
       dash = true;
       strokeW = 1.8;
     } else if (e.kind === 'negative') {
-      color = '#ef4444';
+      color = '#f06868';
       strokeW = Math.min(3, 1 + Math.abs(e.weight) * 2);
     } else if (nodeMap[e.to] && nodeMap[e.to].type === 'goal') {
-      color = '#22c55e';
+      color = '#34d27b';
       dash = true;
       strokeW = 2;
     } else {
@@ -2215,8 +2218,8 @@ function buildKG() {
       const mx = (x1+x2)/2, my = (y1+y2)/2;
       const lbl = (e.weight >= 0 ? '' : '') + (Math.abs(e.weight) < 0.01 ? '0' : e.weight.toFixed(2));
       const lblW = Math.max(28, lbl.length * 6 + 6);
-      edgeHTML += `<rect x="${mx-lblW/2}" y="${my-9}" width="${lblW}" height="14" rx="3" fill="#1a2335" stroke="#243049"/>`;
-      edgeHTML += `<text x="${mx}" y="${my+1}" text-anchor="middle" fill="#e8ecf5" font-size="10" font-family="JetBrains Mono" font-weight="700" dominant-baseline="middle">${lbl}</text>`;
+      edgeHTML += `<rect x="${mx-lblW/2}" y="${my-9}" width="${lblW}" height="14" rx="3" fill="#1e1e25" stroke="rgba(240,235,222,.11)"/>`;
+      edgeHTML += `<text x="${mx}" y="${my+1}" text-anchor="middle" fill="#F4EFE2" font-size="10" font-family="JetBrains Mono" font-weight="700" dominant-baseline="middle">${lbl}</text>`;
     }
   });
 
@@ -2228,11 +2231,11 @@ function buildKG() {
       <rect x="${n.x-n.w/2}" y="${n.y-n.h/2}" width="${n.w}" height="${n.h}" rx="${rx}" fill="${n.fill}"/>`;
     const lines = (n.label || '').split('\n');
     if (lines.length === 1) {
-      nodeHTML += `<text x="${n.x}" y="${n.y+3}" text-anchor="middle" class="kg-node-text" ${n.dark ? 'fill="#0a0e1a"' : ''} dominant-baseline="middle">${n.label}</text>`;
+      nodeHTML += `<text x="${n.x}" y="${n.y+3}" text-anchor="middle" class="kg-node-text" ${n.dark ? 'fill="#15110a"' : ''} dominant-baseline="middle">${n.label}</text>`;
     } else {
       lines.forEach((line, i) => {
         const offset = (i - (lines.length-1)/2) * 11;
-        nodeHTML += `<text x="${n.x}" y="${n.y+offset+3}" text-anchor="middle" class="kg-node-text" ${n.dark ? 'fill="#0a0e1a"' : ''} dominant-baseline="middle">${line}</text>`;
+        nodeHTML += `<text x="${n.x}" y="${n.y+offset+3}" text-anchor="middle" class="kg-node-text" ${n.dark ? 'fill="#15110a"' : ''} dominant-baseline="middle">${line}</text>`;
       });
     }
     nodeHTML += `</g>`;
@@ -2270,11 +2273,11 @@ function buildKG() {
    ADMIN TAB
    ==================================================== */
 const NODE_TYPE_META = {
-  goal:   { label: 'Goal',     fill: '#22c55e', dark: false },
-  kpi:    { label: 'KPI',      fill: '#3b82f6', dark: false },
-  driver: { label: 'Driver',   fill: '#a855f7', dark: false },
-  op:     { label: 'Operation', fill: '#f97316', dark: false },
-  lever:  { label: 'Lever',    fill: '#C8102E', dark: true  },
+  goal:   { label: 'Goal',     fill: '#34d27b', dark: false },
+  kpi:    { label: 'KPI',      fill: '#5b9bf5', dark: false },
+  driver: { label: 'Driver',   fill: '#c084fc', dark: false },
+  op:     { label: 'Operation', fill: '#fb9a4b', dark: false },
+  lever:  { label: 'Lever',    fill: '#d4a820', dark: true  },
 };
 
 function switchAdminSubtab(name) {
@@ -2907,7 +2910,7 @@ function renderCompareTable() {
 function renderCompareChart() {
   if (!charts.compare) return;
   const selected = scenarios.filter(s => compareSelected.has(s.id));
-  const colors = ['#C8102E','#3b82f6','#22c55e','#ec4899'];
+  const colors = ['#d4a820','#5b9bf5','#34d27b','#f472b6'];
   charts.compare.data.datasets = selected.map((s,i) => {
     const sim = simulate(s.levers);
     return {
