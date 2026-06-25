@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mission Happiness · Apparel Feedback Intelligence</title>
+<title>Customer Experience Intelligence Hub · Apparel Feedback Intelligence</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -192,7 +192,7 @@ td b{color:var(--tx);font-weight:600}
   <aside class="rail">
     <div class="brand">
       <div class="dot"></div>
-      <div><b>Mission Happiness</b><span>Feedback Intelligence</span></div>
+      <div><b>Customer Experience Intelligence Hub</b><span>Feedback Intelligence</span></div>
     </div>
     <div>
       <div class="rail-lab">Agent Pipeline</div>
@@ -849,7 +849,7 @@ function fallbackCall(c){
   const fix={'Replacement':'arranged a fresh replacement piece for you','Refund':'processed your refund in full',
     'Style Alternatives':'pulled a few alternatives in your size and colour','Call Back':'looked into it personally'}[c.res]||'sorted the issue out';
   return {outcome:'Resolved',lines:[
-    {who:'Agent',text:`Hi ${c.cust}, this is Mission Happiness care calling from ${store(c.store).name}. Do you have a quick moment?`},
+    {who:'Agent',text:`Hi ${c.cust}, this is Customer Experience Intelligence Hub care calling from ${store(c.store).name}. Do you have a quick moment?`},
     {who:'Customer',text:`Oh — sure, go ahead.`},
     {who:'Agent',text:`You recently told us: “${c.text.slice(0,90)}${c.text.length>90?'…':''}”. I’m sorry that happened. I wanted to let you know we’ve ${fix}.`},
     {who:'Customer',text:`That’s good to hear, thanks for following up.`},

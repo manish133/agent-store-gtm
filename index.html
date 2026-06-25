@@ -171,7 +171,8 @@
   .agent-icon{width:44px;height:44px;border-radius:10px;background:var(--gold);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
   .agent-icon svg{width:22px;height:22px;color:var(--on-gold)}
   .agent-headline{font-family:'Source Serif 4';font-weight:700;font-size:22px;color:var(--ink);margin:0 0 6px;line-height:1.2}
-  .agent-name{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 18px;text-transform:none}
+  .agent-name{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 8px;text-transform:none}
+  .agent-desc{font-size:14px;color:var(--ink-2);margin:0 0 18px;line-height:1.55}
   .agent-bullets{list-style:none;padding:0;margin:0 0 22px}
   .agent-bullets li{font-size:13.5px;color:var(--ink-2);padding:5px 0;display:flex;gap:9px;line-height:1.5}
   .agent-bullets li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--red);margin-top:8px;flex-shrink:0}
@@ -438,7 +439,8 @@
   // To add an agent: append an object with the same fields below.
   const AGENTS = [
     {
-      name: "Earnings Call Companion",
+      name: "Earnings Call Intelligence Hub",
+      description: "Prepares, simulates, and evaluates earnings call readiness.",
       audience: "For equity research teams",
       headline: "Cut earnings prep from 6 hours to 20 minutes per company.",
       bullets: [
@@ -458,7 +460,8 @@
             </svg>`
     },
     {
-      name: "QSR Genome Platform",
+      name: "SKU Growth Hypothesis Platform",
+      description: "Unified store, customer, and location intelligence for growth decisions.",
       audience: "For QSR strategy teams",
       headline: "Build a defensible market-share deck in days, not weeks.",
       bullets: [
@@ -480,7 +483,8 @@
             </svg>`
     },
     {
-      name: "QSR CEO Decision Simulator",
+      name: "QSR Executive Decision Simulator",
+      description: "Simulates executive-level QSR decisions using data-driven scenarios.",
       audience: "For QSR C-suite &amp; FP&A",
       headline: "Stress-test a $10M decision before you make it.",
       bullets: [
@@ -503,7 +507,8 @@
             </svg>`
     },
     {
-      name: "Pricing Optimization",
+      name: "Pricing Intelligence Engine",
+      description: "Recommends optimal pricing to maximize revenue and margin.",
       audience: "For QSR pricing &amp; revenue teams",
       headline: "Find the price that maximizes margin without killing traffic.",
       bullets: [
@@ -523,7 +528,8 @@
             </svg>`
     },
     {
-      name: "Digital RM",
+      name: "Digital Relationship Manager",
+      description: "AI-powered assistant for RM preparation, engagement, and follow-ups.",
       audience: "For banking relationship managers",
       headline: "Give every RM a daily cockpit for their entire book.",
       bullets: [
@@ -545,7 +551,8 @@
             </svg>`
     },
     {
-      name: "meridian-rm-platform",
+      name: "Client Intelligence Workspace",
+      description: "End-to-end relationship management and client intelligence workspace.",
       audience: "For commercial &amp; wealth RM teams",
       headline: "The RM assistant platform that preps every client meeting for you.",
       bullets: [
@@ -568,7 +575,8 @@
             </svg>`
     },
     {
-      name: "Decision Simulator",
+      name: "Enterprise Decision Simulator",
+      description: "Tests strategic decisions through data-driven scenario modeling.",
       audience: "For QSR C-suite &amp; FP&A",
       headline: "Model the P&amp;L impact of any operating decision in seconds.",
       bullets: [
@@ -590,7 +598,8 @@
             </svg>`
     },
     {
-      name: "Mission Happiness",
+      name: "Customer Experience Intelligence Hub",
+      description: "Captures, analyzes, and improves customer experience and satisfaction.",
       audience: "For apparel retail CX &amp; store ops",
       headline: "Turn every customer conversation into a Happiness Index you can act on.",
       bullets: [
@@ -612,7 +621,8 @@
             </svg>`
     },
     {
-      name: "Dealer Health Index",
+      name: "Dealer Health Performance Manager",
+      description: "Monitors dealer performance, risk, and growth potential.",
       audience: "For OEM channel &amp; dealer-network teams",
       headline: "Score the health of your entire dealer network — and act before one slips.",
       bullets: [
@@ -648,14 +658,9 @@
   function agentCardHtml(a) {
     return `
       <article class="agent-card">
-        <span class="agent-audience">${escapeHtml(a.audience)}</span>
         <div class="agent-icon">${a.icon}</div>
-        <h3 class="agent-headline">${a.headline}</h3>
-        <div class="agent-name">${escapeHtml(a.name)}</div>
-        <ul class="agent-bullets">
-          ${a.bullets.map(b => `<li>${b}</li>`).join('')}
-        </ul>
-        <blockquote class="agent-quote">"${escapeHtml(a.quote)}"<cite>— ${escapeHtml(a.attribution)}</cite></blockquote>
+        <h3 class="agent-headline">${escapeHtml(a.name)}</h3>
+        ${a.description ? `<p class="agent-desc">${escapeHtml(a.description)}</p>` : ''}
         <div class="agent-tags">
           ${[...a.functions.slice(0,1), ...a.industries.slice(0,1), ...a.tech.slice(0,1)].map(t => `<span class="agent-tag">${escapeHtml(t)}</span>`).join('')}
         </div>
