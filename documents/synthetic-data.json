@@ -1,0 +1,1562 @@
+{
+  "generatedFor": "Agentic AI Real Estate Sales Platform (demo)",
+  "customer": {
+    "id": "LEAD-2026-00871",
+    "name": "Rahul Sharma",
+    "phone": "+91 98765 43210",
+    "email": "rahul.sharma@email.com",
+    "leadSource": "Instagram Ad",
+    "campaign": "Sai Silicon Heights — Whitefield Launch",
+    "budget": {
+      "min": 12000000,
+      "max": 15000000,
+      "label": "₹1.2 Cr – ₹1.5 Cr"
+    },
+    "preferredLocation": [
+      "Whitefield",
+      "Sarjapur Road"
+    ],
+    "configuration": "3 BHK",
+    "purpose": "Self-use",
+    "buyingTimeline": "2–3 months",
+    "loanRequired": true,
+    "familySize": 4,
+    "priorities": [
+      "Good school nearby",
+      "Metro connectivity",
+      "Clubhouse",
+      "Gated community"
+    ],
+    "initialStage": "New Lead",
+    "avatarInitials": "RS"
+  },
+  "leads": [
+    {
+      "id": "LEAD-2026-00871",
+      "name": "Rahul Sharma",
+      "firstName": "Rahul",
+      "phone": "+91 98765 43210",
+      "email": "rahul.sharma@email.com",
+      "avatarInitials": "RS",
+      "leadSource": "Instagram Ad",
+      "channel": "Meta Lead Ad (Instagram) + WhatsApp",
+      "campaign": "Sai Silicon Heights — Whitefield Launch",
+      "intakeRaw": "Hi, interested in your Whitefield project I saw on Instagram. Looking at a 3 BHK, budget around 1.2–1.5 Cr, planning in 2-3 months.",
+      "budget": {
+        "min": 12000000,
+        "max": 15000000,
+        "label": "₹1.2 Cr – ₹1.5 Cr"
+      },
+      "preferredLocation": [
+        "Whitefield",
+        "Sarjapur Road"
+      ],
+      "configuration": "3 BHK",
+      "purpose": "Self-use",
+      "buyingTimeline": "2–3 months",
+      "loanRequired": true,
+      "familySize": 4,
+      "priorities": [
+        "Good school nearby",
+        "Connectivity",
+        "Clubhouse",
+        "Gated community"
+      ],
+      "initialStage": "New Lead",
+      "tag": "HOT",
+      "outcomes": {
+        "classification": "HOT",
+        "leadScore": 88,
+        "bant": {
+          "budget": "Pass",
+          "authority": "Pass",
+          "need": "Strong",
+          "timeline": "High urgency"
+        },
+        "sla": "Respond within 15 minutes",
+        "matchedProjectId": "PRJ-SSH",
+        "matchedProjectName": "Sai Silicon Heights",
+        "matchScore": 96,
+        "recommendedUnit": "3 BHK · 1425–1505 sq ft",
+        "secondLabel": "GreenVista Heights (89%)",
+        "budgetOptionLabel": "Skyline Orchid (79%)",
+        "targetUnit": {
+          "sqft": 1505,
+          "floor": 7,
+          "isVilla": false
+        },
+        "objection": {
+          "text": "“Price is slightly high compared to other projects.”",
+          "type": "Price / Value",
+          "response": "I understand 🙂 At ₹9,799/sq ft for a near-ready Whitefield address, Sai Silicon Heights is competitive — and a June 2026 handover saves years of rent-plus-EMI overlap. Only a handful of the 137 3 BHKs remain. Launch benefit: floor-rise waiver + free club membership (₹3.9L value). Shall I block a unit?",
+          "offer": "Floor-rise waiver + free club membership (₹3.9L value)",
+          "offerValue": "₹3.9L",
+          "resolved": true
+        },
+        "visit": {
+          "booked": true,
+          "slot": "Sunday, 29 Jun 2026 · 11:00 AM",
+          "executive": "Priya Nair",
+          "bookingId": "SV-2026-0421"
+        },
+        "followups": [
+          {
+            "day": "Day 1",
+            "date": "30 Jun",
+            "text": "Thank you for visiting Sai Silicon Heights! 🙏 Sharing your personalised cost sheet & site photos. Let me know your thoughts."
+          },
+          {
+            "day": "Day 3",
+            "date": "02 Jul",
+            "text": "Quick update 🏗️ Finishing works are in full swing for the June 2026 handover. Here’s a walkthrough + a happy-homeowner testimonial."
+          },
+          {
+            "day": "Day 7",
+            "date": "06 Jul",
+            "text": "⏰ Reminder: the launch offer (floor-rise waiver + free club membership) closes this week. Want me to run your EMI numbers?"
+          },
+          {
+            "day": "Day 15",
+            "date": "14 Jul",
+            "text": "Hi Rahul, a premium east-facing 3 BHK in Block A just freed up 🌅. Shall I block it, or set up a call with our sales head?"
+          }
+        ],
+        "briefing": [
+          "HOT lead · family of 4 · self-use · budget ₹1.2–1.5 Cr",
+          "Top priorities: school + connectivity + clubhouse + gated",
+          "Lead project: Sai Silicon Heights (96% match). Backup: GreenVista.",
+          "Open objection: price. Anchor on ₹9,799/sq ft + near-ready June 2026 handover.",
+          "Active offer: floor-rise waiver + free club membership (₹3.9L value).",
+          "Close: offer to block the unit today with a refundable token."
+        ],
+        "finalStage": "Site Visit Scheduled",
+        "analytics": {
+          "conversionProbability": "76%",
+          "nextBestAction": "Personal call from a senior exec 1 day before the site visit to reinforce the launch offer and pre-empt the price objection.",
+          "stageVelocity": "Fast (1 session)",
+          "pipelineValueLabel": "₹1.76 Cr"
+        }
+      }
+    },
+    {
+      "id": "LEAD-2026-00872",
+      "name": "Meera Iyer",
+      "firstName": "Meera",
+      "phone": "+91 99001 23456",
+      "email": "meera.iyer@email.com",
+      "avatarInitials": "MI",
+      "leadSource": "Facebook Ad",
+      "channel": "Meta Lead Ad (Facebook) + WhatsApp",
+      "campaign": "Sai Silicon Heights — Whitefield Launch",
+      "intakeRaw": "Interested in a 2 BHK in Whitefield for investment / rental. Budget about 1.1–1.3 Cr.",
+      "budget": {
+        "min": 11000000,
+        "max": 13000000,
+        "label": "₹1.1 Cr – ₹1.3 Cr"
+      },
+      "preferredLocation": [
+        "Whitefield"
+      ],
+      "configuration": "2 BHK",
+      "purpose": "Investment",
+      "buyingTimeline": "4–6 months",
+      "loanRequired": false,
+      "familySize": 2,
+      "priorities": [
+        "Rental yield",
+        "Resale value",
+        "Tenant demand",
+        "Low maintenance"
+      ],
+      "initialStage": "New Lead",
+      "tag": "WARM",
+      "outcomes": {
+        "classification": "WARM",
+        "leadScore": 71,
+        "bant": {
+          "budget": "Pass",
+          "authority": "Pass",
+          "need": "Moderate",
+          "timeline": "Medium"
+        },
+        "sla": "Respond within 1 hour",
+        "matchedProjectId": "PRJ-SSH",
+        "matchedProjectName": "Sai Silicon Heights",
+        "matchScore": 88,
+        "recommendedUnit": "2 BHK · 1205–1295 sq ft",
+        "secondLabel": "LakeEdge Residences (84%)",
+        "budgetOptionLabel": "Skyline Orchid (80%)",
+        "targetUnit": {
+          "sqft": 1205,
+          "floor": 3,
+          "isVilla": false
+        },
+        "objection": {
+          "text": "“What kind of rental yield and ROI can I expect?”",
+          "type": "ROI / Yield",
+          "response": "Great question 📈 In Nagondanahalli/Whitefield, 2 BHKs near ITPL rent at ₹28–34k/mo — roughly a 3–3.5% gross yield with strong tech-park tenant demand. A June 2026 handover means rent starts almost immediately, and Whitefield has seen healthy capital appreciation. Want me to share a 5-year ROI projection?",
+          "offer": "Assured rental-assistance program for the first year",
+          "offerValue": "1 yr",
+          "resolved": true
+        },
+        "visit": {
+          "booked": false,
+          "slot": "Requested a callback — Wed 6:00 PM",
+          "executive": "Priya Nair",
+          "bookingId": null
+        },
+        "followups": [
+          {
+            "day": "Day 1",
+            "date": "25 Jun",
+            "text": "Hi Meera 👋 As promised, here’s the 5-year ROI + rental-yield projection for a 2 BHK at Sai Silicon Heights."
+          },
+          {
+            "day": "Day 4",
+            "date": "28 Jun",
+            "text": "📊 Comparable 2 BHKs near ITPL are renting at ₹30k+. Sharing 3 recent rental deals in the micro-market."
+          },
+          {
+            "day": "Day 8",
+            "date": "02 Jul",
+            "text": "⏰ The first-year rental-assistance offer is available on this phase. Shall I set up a quick call with our investment desk?"
+          },
+          {
+            "day": "Day 16",
+            "date": "10 Jul",
+            "text": "Hi Meera, a high-floor east 2 BHK (best rental demand) is open. Want me to hold it for you?"
+          }
+        ],
+        "briefing": [
+          "WARM lead · investor · 2 BHK · budget ₹1.1–1.3 Cr · no loan",
+          "Priorities: rental yield, resale, tenant demand, low maintenance",
+          "Lead project: Sai Silicon Heights 2 BHK (88%). Backup: LakeEdge.",
+          "Open question: ROI / rental yield. Anchor on ITPL tenant demand + ~3–3.5% yield.",
+          "Active offer: 1st-year rental-assistance program.",
+          "Close: book investment-desk call; share 5-year ROI sheet."
+        ],
+        "finalStage": "Project Shared",
+        "analytics": {
+          "conversionProbability": "54%",
+          "nextBestAction": "Send the 5-year ROI + rental-yield projection, then offer a weekend virtual walkthrough and an investment-desk call.",
+          "stageVelocity": "Steady",
+          "pipelineValueLabel": "₹1.40 Cr"
+        }
+      }
+    },
+    {
+      "id": "LEAD-2026-00873",
+      "name": "Arjun Reddy",
+      "firstName": "Arjun",
+      "phone": "+91 98800 77665",
+      "email": "arjun.reddy@email.com",
+      "avatarInitials": "AR",
+      "leadSource": "Instagram Ad",
+      "channel": "Meta Lead Ad (Instagram) + WhatsApp",
+      "campaign": "Sai Silicon Heights — Whitefield Launch",
+      "intakeRaw": "Just saw your ad, exploring options. Maybe a 2/3 BHK, not sure of budget yet, no hurry.",
+      "budget": {
+        "min": 9000000,
+        "max": 11000000,
+        "label": "₹90 L – ₹1.1 Cr"
+      },
+      "preferredLocation": [
+        "Whitefield",
+        "Varthur"
+      ],
+      "configuration": "2 BHK",
+      "purpose": "Self-use",
+      "buyingTimeline": "6–12 months",
+      "loanRequired": true,
+      "familySize": 3,
+      "priorities": [
+        "Affordability",
+        "Ready possession",
+        "Connectivity"
+      ],
+      "initialStage": "New Lead",
+      "tag": "COLD",
+      "outcomes": {
+        "classification": "COLD",
+        "leadScore": 41,
+        "bant": {
+          "budget": "Below band",
+          "authority": "Pass",
+          "need": "Exploring",
+          "timeline": "Low"
+        },
+        "sla": "Add to nurture track",
+        "matchedProjectId": "PRJ-SSH",
+        "matchedProjectName": "Sai Silicon Heights",
+        "matchScore": 74,
+        "recommendedUnit": "2 BHK · 1205 sq ft (entry)",
+        "secondLabel": "Skyline Orchid (82%)",
+        "budgetOptionLabel": "Skyline Orchid (82%)",
+        "targetUnit": {
+          "sqft": 1295,
+          "floor": 9,
+          "isVilla": false
+        },
+        "objection": {
+          "text": "“I’m just exploring, and it’s a bit above my budget.”",
+          "type": "Budget / Timing",
+          "response": "Totally fine — no rush 🙂 If budget is the main thing, our entry 2 BHK (1205 sq ft) starts lower, and I can also share Skyline Orchid which is below ₹1.2 Cr. Shall I keep you posted on price-drop / pre-launch offers and send a quick EMI snapshot so you know where you stand?",
+          "offer": "Pre-launch price-lock waitlist",
+          "offerValue": "waitlist",
+          "resolved": false
+        },
+        "visit": {
+          "booked": false,
+          "slot": "Not yet — added to nurture cadence",
+          "executive": "—",
+          "bookingId": null
+        },
+        "followups": [
+          {
+            "day": "Day 2",
+            "date": "26 Jun",
+            "text": "Hi Arjun 👋 No pressure at all — here’s a quick EMI snapshot for the entry 2 BHK so you know the ballpark."
+          },
+          {
+            "day": "Day 10",
+            "date": "04 Jul",
+            "text": "🏠 A couple of budget-friendly options near Whitefield (incl. Skyline Orchid) — sharing in case they fit better."
+          },
+          {
+            "day": "Day 30",
+            "date": "24 Jul",
+            "text": "📣 We just opened a pre-launch price-lock waitlist. Want me to add you so you’re first in line on any offer?"
+          },
+          {
+            "day": "Day 60",
+            "date": "23 Aug",
+            "text": "Hi Arjun, checking in — any change in your timeline or budget? Happy to re-share ready-to-move options."
+          }
+        ],
+        "briefing": [
+          "COLD lead · exploring · 2 BHK · budget ₹90L–1.1 Cr · 6–12 months",
+          "Priorities: affordability, ready possession, connectivity",
+          "Budget below Sai Silicon Heights band — show entry 2 BHK + Skyline Orchid.",
+          "Open objection: budget / just browsing. Keep it low-pressure.",
+          "Action: nurture cadence + price-lock waitlist; do NOT hard-sell.",
+          "Re-engage on price drops or ready-to-move inventory."
+        ],
+        "finalStage": "Qualified",
+        "analytics": {
+          "conversionProbability": "22%",
+          "nextBestAction": "Drop into a low-touch nurture cadence; re-engage on a price-drop or ready-to-move alert. Avoid hard-selling now.",
+          "stageVelocity": "Slow / exploring",
+          "pipelineValueLabel": "₹1.53 Cr"
+        }
+      }
+    },
+    {
+      "id": "LEAD-2026-00874",
+      "name": "David Thomas",
+      "firstName": "David",
+      "phone": "+971 50 123 4567",
+      "email": "david.thomas@email.com",
+      "avatarInitials": "DT",
+      "leadSource": "Facebook Ad",
+      "channel": "Meta Lead Ad (Facebook) + WhatsApp",
+      "campaign": "Sai Silicon Heights — Whitefield Launch",
+      "intakeRaw": "NRI based in Dubai. Looking for a 4 BHK in Whitefield for family, budget 2–2.5 Cr. Prefer a virtual tour first.",
+      "budget": {
+        "min": 20000000,
+        "max": 25000000,
+        "label": "₹2.0 Cr – ₹2.5 Cr"
+      },
+      "preferredLocation": [
+        "Whitefield"
+      ],
+      "configuration": "4 BHK",
+      "purpose": "Self-use (family)",
+      "buyingTimeline": "2–4 months",
+      "loanRequired": false,
+      "familySize": 5,
+      "priorities": [
+        "Premium spec",
+        "Virtual buying support",
+        "Legal / registration help",
+        "NRI banking"
+      ],
+      "initialStage": "New Lead",
+      "tag": "NRI",
+      "outcomes": {
+        "classification": "HOT",
+        "leadScore": 83,
+        "bant": {
+          "budget": "Strong",
+          "authority": "Pass",
+          "need": "Strong",
+          "timeline": "High"
+        },
+        "sla": "Respond within 15 minutes (IST/GST aware)",
+        "matchedProjectId": "PRJ-SSH",
+        "matchedProjectName": "Sai Silicon Heights",
+        "matchScore": 91,
+        "recommendedUnit": "4 BHK · 1960–2065 sq ft",
+        "secondLabel": "GreenVista Heights (85%)",
+        "budgetOptionLabel": "—",
+        "targetUnit": {
+          "sqft": 1960,
+          "floor": 11,
+          "isVilla": false
+        },
+        "objection": {
+          "text": "“I’m abroad — how do I handle the visit, paperwork and payments?”",
+          "type": "NRI / Remote buying",
+          "response": "We’ve got you covered 🌍 I’ll set up a live video walkthrough at your convenience (GST/IST adjusted), share RERA + legal docs digitally, and our NRI desk handles PoA, NRE/NRO payments and registration end-to-end. SBI/HDFC are approved for NRI home loans too. Shall I book a guided virtual tour this weekend?",
+          "offer": "Dedicated NRI relationship manager + fully digital documentation",
+          "offerValue": "NRI desk",
+          "resolved": true
+        },
+        "visit": {
+          "booked": true,
+          "slot": "Saturday, 28 Jun 2026 · 7:30 PM (virtual)",
+          "executive": "Priya Nair",
+          "bookingId": "SV-2026-0438"
+        },
+        "followups": [
+          {
+            "day": "Day 1",
+            "date": "29 Jun",
+            "text": "Hi David 🙏 Thanks for the virtual tour! Sharing the 4 BHK cost sheet, RERA & legal docs, and our NRI buying guide."
+          },
+          {
+            "day": "Day 3",
+            "date": "01 Jul",
+            "text": "🌍 Your NRI relationship manager (Priya) is assigned. Here’s how PoA + NRE/NRO payments + registration work, step by step."
+          },
+          {
+            "day": "Day 7",
+            "date": "05 Jul",
+            "text": "⏰ The premium-floor 4 BHK you liked is in demand. Want me to block it with a refundable token via secure online payment?"
+          },
+          {
+            "day": "Day 14",
+            "date": "12 Jul",
+            "text": "Hi David, shall I set up a call with our legal desk to walk your family through the agreement before you decide?"
+          }
+        ],
+        "briefing": [
+          "HOT NRI lead (Dubai) · 4 BHK · budget ₹2–2.5 Cr · no loan",
+          "Priorities: premium spec, virtual buying, legal help, NRI banking",
+          "Lead project: Sai Silicon Heights 4 BHK (91%).",
+          "Open objection: remote buying logistics. Anchor on NRI desk + digital docs.",
+          "Active offer: dedicated NRI RM + end-to-end digital process.",
+          "Close: block premium-floor unit with refundable online token after virtual tour."
+        ],
+        "finalStage": "Site Visit Scheduled",
+        "analytics": {
+          "conversionProbability": "68%",
+          "nextBestAction": "Run the virtual tour, then share the digital booking form + NRI payment plan and assign the NRI relationship manager.",
+          "stageVelocity": "Fast",
+          "pipelineValueLabel": "₹2.30 Cr"
+        }
+      }
+    }
+  ],
+  "crmStages": [
+    "New Lead",
+    "Qualified",
+    "Project Shared",
+    "Site Visit Scheduled",
+    "Negotiation",
+    "Booked"
+  ],
+  "primaryProjectId": "PRJ-SSH",
+  "projects": [
+    {
+      "id": "PRJ-SSH",
+      "name": "Sai Silicon Heights",
+      "builder": "United Developers",
+      "location": "Nagondanahalli, Whitefield, Bangalore",
+      "mapsUrl": "https://maps.app.goo.gl/NpWwK6eJWWpfFoQF8",
+      "configurations": [
+        "2 BHK",
+        "3 BHK",
+        "4 BHK",
+        "Duplex",
+        "Villa Mint"
+      ],
+      "size3BHK": "1425–1775 sq ft",
+      "startingPrice": 14832150,
+      "startingPriceLabel": "₹1.48 Cr",
+      "possession": "June 2026",
+      "rera": "PRM/KA/RERA/1251/446/PR/180424/006788",
+      "approvals": [
+        "RERA",
+        "BBMP",
+        "A-Khatha (CC & OC)"
+      ],
+      "landArea": "2.38 acres",
+      "totalFlats": 206,
+      "blocks": "2 (A & B)",
+      "floors": "B + G + 14",
+      "amenities": [
+        "3-Level Clubhouse",
+        "Swimming Pool",
+        "Kids’ Pool",
+        "Gym",
+        "Mini Theatre",
+        "Badminton Court",
+        "Indoor Games",
+        "Library & Lounge",
+        "Creche",
+        "Cafe",
+        "Guest Rooms",
+        "Open Party Hall",
+        "Basketball Court",
+        "Running & Cycling Track",
+        "Yoga Area",
+        "Elderly Park"
+      ],
+      "nearby": [
+        {
+          "label": "ITPL",
+          "distance": "6 km"
+        },
+        {
+          "label": "Whitefield Rly Stn",
+          "distance": "4 km"
+        },
+        {
+          "label": "Phoenix Marketcity",
+          "distance": "7 km"
+        },
+        {
+          "label": "Manipal Hospital",
+          "distance": "5 km"
+        },
+        {
+          "label": "Whitefield Global School",
+          "distance": "3 km"
+        }
+      ],
+      "brochureUrl": "/documents/sai-silicon-heights-brochure.pdf",
+      "floorPlanUrl": "/documents/sai-silicon-heights-costsheet.pdf",
+      "matchScore": 96,
+      "matchTag": "Best Match",
+      "highlights": [
+        "Near-ready — handover June 2026 (minimal construction risk)",
+        "Fully approved: RERA + BBMP + A-Khatha with CC & OC",
+        "Whitefield/Nagondanahalli — ITPL & tech parks within ~6 km",
+        "3-level world-class clubhouse + 20+ curated amenities"
+      ],
+      "unitTypes": [
+        {
+          "type": "2 BHK",
+          "sizeRange": "1205–1295 sq ft",
+          "count": 24,
+          "startingLabel": "₹1.26 Cr",
+          "isVilla": false,
+          "sizes": [
+            1205,
+            1225,
+            1250,
+            1260,
+            1280,
+            1295
+          ]
+        },
+        {
+          "type": "3 BHK",
+          "sizeRange": "1425–1775 sq ft",
+          "count": 137,
+          "startingLabel": "₹1.48 Cr",
+          "isVilla": false,
+          "sizes": [
+            1425,
+            1505,
+            1550,
+            1645,
+            1680,
+            1740,
+            1775
+          ]
+        },
+        {
+          "type": "4 BHK",
+          "sizeRange": "1960–2230 sq ft",
+          "count": 24,
+          "startingLabel": "₹2.03 Cr",
+          "isVilla": false,
+          "sizes": [
+            1960,
+            2065,
+            2200,
+            2220,
+            2230
+          ]
+        },
+        {
+          "type": "Duplex",
+          "sizeRange": "2415–2800 sq ft",
+          "count": 16,
+          "startingLabel": "₹2.49 Cr",
+          "isVilla": false,
+          "sizes": [
+            2415,
+            2800
+          ]
+        },
+        {
+          "type": "Villa Mint",
+          "sizeRange": "2985 sq ft",
+          "count": 5,
+          "startingLabel": "₹3.67 Cr",
+          "isVilla": true,
+          "sizes": [
+            2985
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRJ-GVH",
+      "name": "GreenVista Heights",
+      "builder": "UrbanNest Developers",
+      "location": "Whitefield, Bangalore",
+      "configurations": [
+        "2 BHK",
+        "3 BHK",
+        "4 BHK"
+      ],
+      "size3BHK": "1580 sq ft",
+      "startingPrice": 13200000,
+      "startingPriceLabel": "₹1.32 Cr",
+      "possession": "Dec 2027",
+      "rera": "PRM/KA/RERA/1251/446/PR/230901/006789",
+      "amenities": [
+        "Clubhouse",
+        "Swimming Pool",
+        "Gym",
+        "Kids Play Area",
+        "Co-working Lounge",
+        "Jogging Track",
+        "Amphitheatre",
+        "Security"
+      ],
+      "nearby": [
+        {
+          "label": "Metro",
+          "distance": "1.5 km"
+        },
+        {
+          "label": "School",
+          "distance": "2 km"
+        },
+        {
+          "label": "Hospital",
+          "distance": "3 km"
+        },
+        {
+          "label": "IT Park",
+          "distance": "4 km"
+        }
+      ],
+      "brochureUrl": "/documents/greenvista-brochure.pdf",
+      "floorPlanUrl": "/documents/greenvista-floorplan.pdf",
+      "matchScore": 89,
+      "matchTag": "Strong Match",
+      "highlights": [
+        "Within budget with premium amenities",
+        "Closest metro access (1.5 km) — matches connectivity priority",
+        "Reputed school 2 km away",
+        "Fully gated community with 24x7 security"
+      ]
+    },
+    {
+      "id": "PRJ-LER",
+      "name": "LakeEdge Residences",
+      "builder": "BlueStone Realty",
+      "location": "Sarjapur Road, Bangalore",
+      "configurations": [
+        "2 BHK",
+        "3 BHK"
+      ],
+      "size3BHK": "1645 sq ft",
+      "startingPrice": 14200000,
+      "startingPriceLabel": "₹1.42 Cr",
+      "possession": "Mar 2028",
+      "rera": "PRM/KA/RERA/1251/308/PR/240110/007231",
+      "amenities": [
+        "Lake View Deck",
+        "Clubhouse",
+        "Gym",
+        "Mini Theatre",
+        "Indoor Games",
+        "Kids Zone",
+        "Senior Citizen Park"
+      ],
+      "nearby": [
+        {
+          "label": "School",
+          "distance": "1 km"
+        },
+        {
+          "label": "Hospital",
+          "distance": "2.5 km"
+        },
+        {
+          "label": "ORR",
+          "distance": "5 km"
+        },
+        {
+          "label": "Tech Park",
+          "distance": "6 km"
+        }
+      ],
+      "brochureUrl": "/documents/lakeedge-brochure.pdf",
+      "floorPlanUrl": "/documents/lakeedge-floorplan.pdf",
+      "matchScore": 87,
+      "matchTag": "Second Option",
+      "highlights": [
+        "Largest 3 BHK layout (1645 sq ft)",
+        "School just 1 km away — top priority match",
+        "Premium lake-facing units",
+        "In preferred Sarjapur Road corridor"
+      ]
+    },
+    {
+      "id": "PRJ-SKO",
+      "name": "Skyline Orchid",
+      "builder": "PrimeHabitat Group",
+      "location": "Varthur, Bangalore",
+      "configurations": [
+        "2 BHK",
+        "3 BHK"
+      ],
+      "size3BHK": "1510 sq ft",
+      "startingPrice": 11800000,
+      "startingPriceLabel": "₹1.18 Cr",
+      "possession": "Jun 2027",
+      "rera": "PRM/KA/RERA/1251/309/PR/231220/006998",
+      "amenities": [
+        "Clubhouse",
+        "Pool",
+        "Yoga Deck",
+        "EV Charging",
+        "Multi-purpose Hall",
+        "Indoor Games"
+      ],
+      "nearby": [
+        {
+          "label": "Whitefield",
+          "distance": "4 km"
+        },
+        {
+          "label": "School",
+          "distance": "2.8 km"
+        },
+        {
+          "label": "Hospital",
+          "distance": "4 km"
+        },
+        {
+          "label": "Metro",
+          "distance": "3.5 km"
+        }
+      ],
+      "brochureUrl": "/documents/skyline-brochure.pdf",
+      "floorPlanUrl": "/documents/skyline-floorplan.pdf",
+      "matchScore": 79,
+      "matchTag": "Budget-friendly",
+      "highlights": [
+        "Most affordable — below budget at ₹1.18 Cr",
+        "Earliest possession (Jun 2027)",
+        "EV charging & modern amenities",
+        "Close to Whitefield (4 km)"
+      ]
+    }
+  ],
+  "pricing": {
+    "projectId": "PRJ-SSH",
+    "projectName": "Sai Silicon Heights",
+    "unit": "3 BHK · 1505 sq ft · Block A · 7th Floor",
+    "ratePerSqft": 9799,
+    "costSheet": [
+      {
+        "label": "Base Price (1505 sq ft @ ₹9,799)",
+        "amount": 14747495
+      },
+      {
+        "label": "Amenities Charges (@ ₹399 / sq ft)",
+        "amount": 600495
+      },
+      {
+        "label": "Car Parking (1 covered)",
+        "amount": 300000
+      },
+      {
+        "label": "Floor Rise (7th floor @ ₹25 / sq ft)",
+        "amount": 112875
+      }
+    ],
+    "gstRate": 0.05,
+    "registrationRate": 0.066,
+    "bookingAmount": 500000,
+    "paymentPlan": [
+      {
+        "milestone": "On Booking",
+        "percent": 10
+      },
+      {
+        "milestone": "Within 30 days (Agreement)",
+        "percent": 30
+      },
+      {
+        "milestone": "On Structure Completion",
+        "percent": 25
+      },
+      {
+        "milestone": "On Plastering & Flooring",
+        "percent": 20
+      },
+      {
+        "milestone": "On Possession (June 2026)",
+        "percent": 15
+      }
+    ],
+    "loan": {
+      "amountFinanced": 13600000,
+      "downPayment": 4000000,
+      "interestRate": 8.6,
+      "tenureYears": 20,
+      "emi": 118886
+    }
+  },
+  "agents": [
+    {
+      "id": "lead-intake",
+      "name": "Lead Intake Agent",
+      "icon": "📥",
+      "objective": "Capture the inbound enquiry from the Facebook/Instagram lead ad and create a structured lead record.",
+      "input": {
+        "channel": "Meta Lead Ad (Instagram) + WhatsApp",
+        "campaign": "Sai Silicon Heights — Whitefield Launch",
+        "raw": "Hi, interested in your Whitefield project I saw on Instagram. Looking at a 3 BHK, budget around 1.2–1.5 Cr, planning in 2-3 months.",
+        "name": "Rahul Sharma",
+        "phone": "+91 98765 43210",
+        "email": "rahul.sharma@email.com"
+      },
+      "processingLogic": [
+        "Receive Meta Lead Ads webhook payload + WhatsApp opt-in",
+        "De-duplicate against existing CRM records (no match found)",
+        "Normalise phone/email and detect language (English)",
+        "Create lead record LEAD-2026-00871 with source attribution"
+      ],
+      "output": {
+        "leadId": "LEAD-2026-00871",
+        "status": "Captured",
+        "source": "Instagram Ad",
+        "whatsappOptIn": true,
+        "duplicate": false
+      },
+      "tools": [
+        {
+          "name": "meta.leadAds.fetch",
+          "params": {
+            "formId": "SSH-Whitefield"
+          },
+          "result": {
+            "name": "Rahul Sharma",
+            "phone": "+91 98765 43210",
+            "source": "Instagram Ad"
+          }
+        },
+        {
+          "name": "crm.createLead",
+          "params": {
+            "source": "Instagram Ad",
+            "optIn": true
+          },
+          "result": {
+            "leadId": "LEAD-2026-00871",
+            "duplicate": false
+          }
+        }
+      ],
+      "confidence": 0.98,
+      "nextAction": "Send instant intro message + route to Qualification Agent",
+      "needsHumanReview": false
+    },
+    {
+      "id": "lead-qualification",
+      "name": "Lead Qualification Agent",
+      "icon": "✅",
+      "objective": "Qualify the lead using BANT (Budget, Authority, Need, Timeline) and classify intent.",
+      "input": {
+        "leadId": "LEAD-2026-00871",
+        "budget": "₹1.2 Cr – ₹1.5 Cr",
+        "timeline": "2–3 months",
+        "loanRequired": true,
+        "configuration": "3 BHK",
+        "purpose": "Self-use"
+      },
+      "processingLogic": [
+        "Run conversational BANT questions over WhatsApp",
+        "Budget: Pass · Need: Strong · Timeline: High urgency",
+        "Purpose Self-use · family of 4 → intent signal",
+        "Compute lead score = 88/100",
+        "Classify as HOT"
+      ],
+      "output": {
+        "classification": "HOT",
+        "leadScore": 88,
+        "bant": {
+          "budget": "Pass",
+          "authority": "Pass",
+          "need": "Strong",
+          "timeline": "High urgency"
+        },
+        "recommendedSla": "Respond within 15 minutes"
+      },
+      "tools": [
+        {
+          "name": "crm.getLead",
+          "params": {
+            "leadId": "LEAD-2026-00871"
+          },
+          "result": {
+            "budget": "₹1.2 Cr – ₹1.5 Cr",
+            "timeline": "2–3 months",
+            "loan": true
+          }
+        },
+        {
+          "name": "scoring.bant",
+          "params": {
+            "budget": "Pass",
+            "authority": "Pass",
+            "need": "Strong",
+            "timeline": "High urgency"
+          },
+          "result": {
+            "leadScore": 88,
+            "classification": "HOT"
+          }
+        }
+      ],
+      "confidence": 0.91,
+      "nextAction": "Trigger Project Matching Agent",
+      "needsHumanReview": false
+    },
+    {
+      "id": "project-matching",
+      "name": "Project Matching Agent",
+      "icon": "🎯",
+      "objective": "Match the qualified lead’s preferences against live inventory and rank the best-fit project & unit.",
+      "input": {
+        "preferredLocation": [
+          "Whitefield",
+          "Sarjapur Road"
+        ],
+        "budget": "₹1.2 Cr – ₹1.5 Cr",
+        "configuration": "3 BHK",
+        "priorities": [
+          "Good school nearby",
+          "Connectivity",
+          "Clubhouse",
+          "Gated community"
+        ]
+      },
+      "processingLogic": [
+        "Filter inventory: 3 BHK + budget + Whitefield corridor",
+        "Score each project on location, price-fit, amenity & priority overlap",
+        "Sai Silicon Heights → 96 (best fit)",
+        "Recommend 3 BHK · 1425–1505 sq ft",
+        "Alternatives: GreenVista Heights (89%) / Skyline Orchid (79%)"
+      ],
+      "output": {
+        "best": "Sai Silicon Heights (96%)",
+        "recommendedUnit": "3 BHK · 1425–1505 sq ft",
+        "second": "GreenVista Heights (89%)",
+        "budgetOption": "Skyline Orchid (79%)"
+      },
+      "tools": [
+        {
+          "name": "inventory.search",
+          "params": {
+            "config": "3 BHK",
+            "area": "Whitefield",
+            "budgetMax": 15000000
+          },
+          "result": {
+            "matches": 4
+          }
+        },
+        {
+          "name": "ranking.score",
+          "params": {
+            "priorities": [
+              "Good school nearby",
+              "Connectivity",
+              "Clubhouse",
+              "Gated community"
+            ]
+          },
+          "result": {
+            "top": "Sai Silicon Heights",
+            "score": 96
+          }
+        }
+      ],
+      "confidence": 0.94,
+      "nextAction": "Fetch detailed project knowledge",
+      "needsHumanReview": false
+    },
+    {
+      "id": "project-knowledge",
+      "name": "Project Knowledge Agent",
+      "icon": "📚",
+      "objective": "Assemble verified project facts — scale, amenities, location, RERA, approvals & builder details.",
+      "input": {
+        "projectId": "PRJ-SSH",
+        "requested": [
+          "scale",
+          "amenities",
+          "rera",
+          "approvals",
+          "possession",
+          "builder"
+        ]
+      },
+      "processingLogic": [
+        "Pull structured project sheet from the brochure for Sai Silicon Heights",
+        "Validate RERA PRM/KA/RERA/1251/446/PR/180424/006788 (valid)",
+        "Confirm approvals: RERA + BBMP + A-Khatha with CC & OC",
+        "Summarise scale: 2.38 acres · 206 flats · 2 blocks · B+G+14",
+        "Map location benefits vs customer priorities (ITPL, schools, hospitals)"
+      ],
+      "output": {
+        "project": "Sai Silicon Heights",
+        "builder": "United Developers",
+        "rera": "PRM/KA/RERA/1251/446/PR/180424/006788",
+        "possession": "June 2026",
+        "reraVerified": true,
+        "keyBenefit": "Near-ready Whitefield address with ITPL & schools within ~6 km"
+      },
+      "tools": [
+        {
+          "name": "projects.get",
+          "params": {
+            "projectId": "PRJ-SSH"
+          },
+          "result": {
+            "flats": 206,
+            "blocks": "2 (A & B)",
+            "floors": "B+G+14",
+            "possession": "June 2026"
+          }
+        },
+        {
+          "name": "rera.lookup",
+          "params": {
+            "rera": "PRM/KA/RERA/1251/446/PR/180424/006788"
+          },
+          "result": {
+            "valid": true,
+            "status": "Registered"
+          }
+        }
+      ],
+      "confidence": 0.96,
+      "nextAction": "Draft WhatsApp intro message",
+      "needsHumanReview": false
+    },
+    {
+      "id": "whatsapp-comm",
+      "name": "WhatsApp Communication Agent",
+      "icon": "💬",
+      "objective": "Compose & send the personalised intro message (project summary + brochure + maps + CTA) — the exact outreach the sales team sends, auto-generated.",
+      "input": {
+        "to": "+91 98765 43210",
+        "project": "Sai Silicon Heights",
+        "template": "TMPL-INTRO-01",
+        "includeDocs": true
+      },
+      "processingLogic": [
+        "Load the “New Enquiry — Project Introduction” template",
+        "Fill slots from lead + Project Knowledge (Rahul, Instagram Ad, project facts)",
+        "Attach brochure PDF + Google Maps location link",
+        "Add site-visit CTA with quick-reply buttons",
+        "Send via WhatsApp Business API (delivered + read)"
+      ],
+      "output": {
+        "messageId": "WA-OUT-55129",
+        "templateUsed": "TMPL-INTRO-01",
+        "delivered": true,
+        "read": true,
+        "ctaButtons": [
+          "Book Site Visit",
+          "View Pricing",
+          "Talk to Expert"
+        ]
+      },
+      "tools": [
+        {
+          "name": "whatsapp.sendTemplate",
+          "params": {
+            "to": "+91 98765 43210",
+            "template": "TMPL-INTRO-01"
+          },
+          "result": {
+            "messageId": "WA-OUT-55129",
+            "delivered": true,
+            "read": true
+          }
+        },
+        {
+          "name": "media.attach",
+          "params": {
+            "files": [
+              "sai-silicon-heights-brochure.pdf",
+              "maps-link"
+            ]
+          },
+          "result": {
+            "attached": 2
+          }
+        }
+      ],
+      "confidence": 0.93,
+      "nextAction": "Share pricing on request",
+      "needsHumanReview": false
+    },
+    {
+      "id": "pricing",
+      "name": "Pricing Agent",
+      "icon": "💰",
+      "objective": "Compute a transparent all-in cost sheet for ANY unit on demand from the price-list rules: base, amenities, parking, floor rise, GST, registration & EMI.",
+      "input": {
+        "projectId": "PRJ-SSH",
+        "unit": "3 BHK · 1425–1505 sq ft",
+        "loanRequired": true
+      },
+      "processingLogic": [
+        "Target unit: 1505 sq ft · floor 7",
+        "Base = sq ft × ₹9,799; add amenities (₹399/sq ft) + parking + floor rise (₹25/sq ft from 5th)",
+        "Compute 5% GST and ~6.6% stamp duty & registration",
+        "Flat cost ₹1.58 Cr → all-in ₹1.76 Cr",
+        "Estimate 80% loan EMI @ 8.6% / 20 yrs (open Output Detail to price any unit live)"
+      ],
+      "output": {
+        "flatCost": "₹1.58 Cr",
+        "allInclusive": "₹1.76 Cr",
+        "bookingAmount": "₹5,00,000",
+        "gst": "5%",
+        "emi": "₹1,23,006 / month"
+      },
+      "tools": [
+        {
+          "name": "pricing.priceUnit",
+          "real": true,
+          "params": {
+            "sqft": 1505,
+            "floor": 7,
+            "isVilla": false
+          },
+          "result": {
+            "flatCost": 15760865,
+            "gst": 788043,
+            "registration": 1040217,
+            "allInclusive": 17589125
+          }
+        },
+        {
+          "name": "finance.computeEmi",
+          "params": {
+            "principal": 14071300,
+            "rate": 8.6,
+            "years": 20
+          },
+          "result": {
+            "emi": 123006
+          }
+        }
+      ],
+      "confidence": 0.9,
+      "nextAction": "Handle pricing objection",
+      "needsHumanReview": false
+    },
+    {
+      "id": "objection-handling",
+      "name": "Objection Handling Agent",
+      "icon": "🛡️",
+      "objective": "Detect and resolve customer objections with value framing, evidence and live offers.",
+      "input": {
+        "objection": "“Price is slightly high compared to other projects.”",
+        "sentiment": "Hesitant"
+      },
+      "processingLogic": [
+        "Classify objection → Price / Value",
+        "Retrieve evidence from the project knowledge base",
+        "Reframe with location / ROI / near-ready handover narrative",
+        "Surface active offer: Floor-rise waiver + free club membership (₹3.9L value)",
+        "Outcome: resolved"
+      ],
+      "output": {
+        "objectionType": "Price / Value",
+        "response": "I understand 🙂 At ₹9,799/sq ft for a near-ready Whitefield address, Sai Silicon Heights is competitive — and a June 2026 handover saves years of rent-plus-EMI overlap. Only a handful of the 137 3 BHKs remain. Launch benefit: floor-rise waiver + free club membership (₹3.9L value). Shall I block a unit?",
+        "offer": "Floor-rise waiver + free club membership (₹3.9L value)",
+        "offerValue": "₹3.9L",
+        "resolved": true
+      },
+      "tools": [
+        {
+          "name": "kb.retrieve",
+          "params": {
+            "topic": "Price / Value · Whitefield"
+          },
+          "result": {
+            "snippets": 3
+          }
+        },
+        {
+          "name": "offers.getActive",
+          "params": {
+            "projectId": "PRJ-SSH"
+          },
+          "result": {
+            "offer": "Floor-rise waiver + free club membership (₹3.9L value)",
+            "value": "₹3.9L"
+          }
+        }
+      ],
+      "confidence": 0.85,
+      "nextAction": "Move to site-visit scheduling",
+      "needsHumanReview": false
+    },
+    {
+      "id": "site-visit",
+      "name": "Site Visit Scheduling Agent",
+      "icon": "📅",
+      "objective": "Offer available slots, confirm a site visit and sync it to the sales executive’s calendar.",
+      "input": {
+        "project": "Sai Silicon Heights",
+        "preference": "Weekend",
+        "city": "Bangalore"
+      },
+      "processingLogic": [
+        "Fetch open slots from sales calendar",
+        "Filter to weekend per customer preference",
+        "Confirm slot: Sunday, 29 Jun 2026 · 11:00 AM",
+        "Create booking + send calendar invite & WhatsApp confirmation",
+        "Assign sales executive: Priya Nair"
+      ],
+      "output": {
+        "bookingId": "SV-2026-0421",
+        "slot": "Sunday, 29 Jun 2026 · 11:00 AM",
+        "executive": "Priya Nair",
+        "confirmed": true
+      },
+      "tools": [
+        {
+          "name": "calendar.getSlots",
+          "params": {
+            "range": "weekend",
+            "city": "Bangalore"
+          },
+          "result": {
+            "slots": 3
+          }
+        },
+        {
+          "name": "calendar.createBooking",
+          "params": {
+            "slot": "Sunday, 29 Jun 2026 · 11:00 AM",
+            "host": "Priya Nair"
+          },
+          "result": {
+            "bookingId": "SV-2026-0421",
+            "confirmed": true
+          }
+        }
+      ],
+      "confidence": 0.95,
+      "nextAction": "Brief the sales executive",
+      "needsHumanReview": false
+    },
+    {
+      "id": "sales-copilot",
+      "name": "Sales Executive Copilot Agent",
+      "icon": "🧑‍💼",
+      "objective": "Generate a pre-visit briefing so the sales executive walks in fully context-aware.",
+      "input": {
+        "leadId": "LEAD-2026-00871",
+        "bookingId": "SV-2026-0421"
+      },
+      "processingLogic": [
+        "Summarise lead profile, priorities & budget",
+        "List discussed project (Sai Silicon Heights) + active offer",
+        "Flag the open objection and the winning narrative",
+        "Suggest talk-track + closing prompts"
+      ],
+      "output": {
+        "briefing": "HOT lead · family of 4 · self-use · budget ₹1.2–1.5 Cr",
+        "watchOut": "HOT lead — Price / Value objection",
+        "suggestedClose": "Close: offer to block the unit today with a refundable token."
+      },
+      "briefing": [
+        "HOT lead · family of 4 · self-use · budget ₹1.2–1.5 Cr",
+        "Top priorities: school + connectivity + clubhouse + gated",
+        "Lead project: Sai Silicon Heights (96% match). Backup: GreenVista.",
+        "Open objection: price. Anchor on ₹9,799/sq ft + near-ready June 2026 handover.",
+        "Active offer: floor-rise waiver + free club membership (₹3.9L value).",
+        "Close: offer to block the unit today with a refundable token."
+      ],
+      "tools": [
+        {
+          "name": "crm.getActivity",
+          "params": {
+            "leadId": "LEAD-2026-00871"
+          },
+          "result": {
+            "activities": 9
+          }
+        },
+        {
+          "name": "llm.summarise",
+          "params": {
+            "context": "lead + thread + offer + booking"
+          },
+          "result": {
+            "briefingPoints": 6
+          }
+        }
+      ],
+      "confidence": 0.89,
+      "nextAction": "Schedule post-visit follow-ups",
+      "needsHumanReview": true
+    },
+    {
+      "id": "follow-up",
+      "name": "Follow-up Agent",
+      "icon": "🔁",
+      "objective": "Plan and automate a multi-touch follow-up cadence to keep the lead warm to conversion.",
+      "input": {
+        "leadId": "LEAD-2026-00871",
+        "cadence": [
+          "Day 1",
+          "Day 3",
+          "Day 7",
+          "Day 15"
+        ]
+      },
+      "processingLogic": [
+        "Day 1 → Thank you for visiting Sai Silicon Heights! 🙏 Sharing…",
+        "Day 3 → Quick update 🏗️ Finishing works are in full swing for…",
+        "Day 7 → ⏰ Reminder: the launch offer (floor-rise waiver + free…",
+        "Day 15 → Hi Rahul, a premium east-facing 3 BHK in Block A just …",
+        "Schedule via WhatsApp + email automation"
+      ],
+      "output": {
+        "scheduled": 4,
+        "channel": "WhatsApp + Email",
+        "nextTouch": "Day 1 — 30 Jun"
+      },
+      "followups": [
+        {
+          "day": "Day 1",
+          "date": "30 Jun",
+          "text": "Thank you for visiting Sai Silicon Heights! 🙏 Sharing your personalised cost sheet & site photos. Let me know your thoughts."
+        },
+        {
+          "day": "Day 3",
+          "date": "02 Jul",
+          "text": "Quick update 🏗️ Finishing works are in full swing for the June 2026 handover. Here’s a walkthrough + a happy-homeowner testimonial."
+        },
+        {
+          "day": "Day 7",
+          "date": "06 Jul",
+          "text": "⏰ Reminder: the launch offer (floor-rise waiver + free club membership) closes this week. Want me to run your EMI numbers?"
+        },
+        {
+          "day": "Day 15",
+          "date": "14 Jul",
+          "text": "Hi Rahul, a premium east-facing 3 BHK in Block A just freed up 🌅. Shall I block it, or set up a call with our sales head?"
+        }
+      ],
+      "tools": [
+        {
+          "name": "scheduler.enqueue",
+          "params": {
+            "cadence": [
+              "Day 1",
+              "Day 3",
+              "Day 7",
+              "Day 15"
+            ]
+          },
+          "result": {
+            "jobsScheduled": 4
+          }
+        },
+        {
+          "name": "whatsapp.scheduleSend",
+          "params": {
+            "channel": "WhatsApp + Email"
+          },
+          "result": {
+            "nextTouch": "Day 1 · 30 Jun"
+          }
+        }
+      ],
+      "confidence": 0.88,
+      "nextAction": "Update CRM pipeline",
+      "needsHumanReview": false
+    },
+    {
+      "id": "crm-update",
+      "name": "CRM Update Agent",
+      "icon": "🗂️",
+      "objective": "Keep the CRM as the single source of truth — advance pipeline stage and log every interaction.",
+      "input": {
+        "leadId": "LEAD-2026-00871",
+        "finalStage": "Site Visit Scheduled"
+      },
+      "processingLogic": [
+        "Advance stage to: Site Visit Scheduled",
+        "Attach cost sheet, WhatsApp thread & booking",
+        "Log activity timeline with timestamps",
+        "Set next task + reminder for Priya Nair"
+      ],
+      "output": {
+        "stage": "Site Visit Scheduled",
+        "activitiesLogged": 9,
+        "nextTask": "Conduct site visit — Sunday, 29 Jun 2026 · 11:00 AM",
+        "owner": "Priya Nair"
+      },
+      "tools": [
+        {
+          "name": "crm.updateStage",
+          "params": {
+            "to": "Site Visit Scheduled"
+          },
+          "result": {
+            "ok": true
+          }
+        },
+        {
+          "name": "crm.logActivity",
+          "params": {
+            "items": [
+              "cost sheet",
+              "WhatsApp thread",
+              "booking"
+            ]
+          },
+          "result": {
+            "logged": 9
+          }
+        }
+      ],
+      "confidence": 0.97,
+      "nextAction": "Send data to Analytics Agent",
+      "needsHumanReview": false
+    },
+    {
+      "id": "analytics",
+      "name": "Analytics Agent",
+      "icon": "📊",
+      "objective": "Score the deal, predict conversion and recommend the next best action for the team.",
+      "input": {
+        "leadId": "LEAD-2026-00871",
+        "signals": [
+          "HOT",
+          "visit booked",
+          "objection resolved"
+        ]
+      },
+      "processingLogic": [
+        "Aggregate engagement + intent + stage velocity",
+        "Run conversion model → 76% probability",
+        "Composite lead score → 88/100",
+        "Rank next best actions for the team",
+        "Roll up agent performance metrics"
+      ],
+      "output": {
+        "conversionProbability": "76%",
+        "leadScore": 88,
+        "nextBestAction": "Personal call from a senior exec 1 day before the site visit to reinforce the launch offer and pre-empt the price objection.",
+        "pipelineValue": "₹1.76 Cr"
+      },
+      "tools": [
+        {
+          "name": "model.predictConversion",
+          "params": {
+            "signals": [
+              "HOT",
+              "visit"
+            ]
+          },
+          "result": {
+            "probability": "76%"
+          }
+        },
+        {
+          "name": "metrics.rollup",
+          "params": {
+            "leadId": "LEAD-2026-00871"
+          },
+          "result": {
+            "pipelineValue": "₹1.76 Cr",
+            "leadScore": 88
+          }
+        }
+      ],
+      "confidence": 0.86,
+      "nextAction": "Pipeline complete — monitor & re-engage",
+      "needsHumanReview": false
+    }
+  ],
+  "whatsappThread": [
+    {
+      "from": "bot",
+      "time": "10:01 AM",
+      "text": "Discover Your Dream Home at *Sai Silicon Heights*! 🏠✨\n\nHi Rahul, thank you for your interest in our project at Whitefield, Bangalore. We received your inquiry from Digital (Instagram) and look forward to discussing it with you.\n\nAn exclusive residential project by *United Developers*.\n\n🏗️ Land Area: 2.38 acres · 206 flats · 2 blocks · B+G+14\n🏠 Type: 2 / 3 / 4 BHK, Duplex & Villa Mint\n📅 Hand Over: June 2026\n✅ Approvals: RERA · BBMP · A-Khatha (CC & OC)\n📍 Location: maps.app.goo.gl/NpWwK6eJWWpfFoQF8\n\nWhether it's a dream home or a smart investment, Sai Silicon Heights has it all. 🙏"
+    },
+    {
+      "from": "bot",
+      "time": "10:01 AM",
+      "text": "📄 Brochure: /documents/sai-silicon-heights-brochure.pdf\n💰 Price List: /documents/sai-silicon-heights-costsheet.pdf"
+    },
+    {
+      "from": "user",
+      "time": "10:03 AM",
+      "text": "Hi, interested in your Whitefield project I saw on Instagram. Looking at a 3 BHK, budget around 1.2–1.5 Cr, planning in 2-3 months."
+    },
+    {
+      "from": "bot",
+      "time": "10:04 AM",
+      "text": "✅ Based on your needs, here’s the best fit:\n\n🏢 3 BHK · 1425–1505 sq ft\n💰 ~₹1.76 Cr all-in (incl. GST & registration)\n📊 Match score: 96%\n📅 Near-ready — handover June 2026\n✅ RERA approved"
+    },
+    {
+      "from": "bot",
+      "time": "10:04 AM",
+      "text": "Would you like a free site visit this weekend? 👇\n[Book Site Visit] [View Pricing] [Talk to Expert]"
+    },
+    {
+      "from": "user",
+      "time": "10:07 AM",
+      "text": "Price is slightly high compared to other projects."
+    },
+    {
+      "from": "bot",
+      "time": "10:08 AM",
+      "text": "I understand 🙂 At ₹9,799/sq ft for a near-ready Whitefield address, Sai Silicon Heights is competitive — and a June 2026 handover saves years of rent-plus-EMI overlap. Only a handful of the 137 3 BHKs remain. Launch benefit: floor-rise waiver + free club membership (₹3.9L value). Shall I block a unit?"
+    },
+    {
+      "from": "user",
+      "time": "10:10 AM",
+      "text": "Okay, let’s set that up."
+    },
+    {
+      "from": "bot",
+      "time": "10:10 AM",
+      "text": "🎉 Done! Booked for *Sunday, 29 Jun 2026 · 11:00 AM*. Your host: Priya Nair. You’ll get a calendar invite + reminder. 🏡"
+    }
+  ]
+}
