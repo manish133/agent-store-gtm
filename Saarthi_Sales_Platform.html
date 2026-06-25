@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Saarthi AI — Sales Planning Co-Pilot</title>
+<style>
+:root{
+  --bg:#08080a; --panel:#16161c; --panel2:#1e1e25; --line:rgba(240,235,222,.11); --line2:rgba(240,235,222,.18);
+  --ink:#F4EFE2; --soft:#F4EFE2; --grey:#C7C1B2; --grey2:#8B8576;
+  --gold:#d4a820; --goldb:#e8c14d; --goldt:#15110a;
+  --green:#3FBF77; --greenbg:rgba(63,191,119,.12); --red:#D98C8C; --redbg:#211414; --blue:#7FB0E0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--soft);font-family:'Segoe UI',system-ui,Arial,sans-serif;font-size:14px}
+a{color:var(--goldb)}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#2a2620;border-radius:6px}
+.app{display:flex;min-height:100vh}
+/* sidebar */
+.side{width:232px;flex:0 0 232px;background:#0e0e12;border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.brand .logo{display:flex;align-items:center;gap:10px}
+.brand .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#d4a820,#a9831a);display:flex;align-items:center;justify-content:center;font-weight:800;color:#15110a;font-size:18px}
+.brand h1{font-size:16px;margin:0;color:#F4EFE2;font-weight:800;letter-spacing:.3px}
+.brand .sub{font-size:10.5px;color:var(--grey2);margin-top:2px;letter-spacing:.5px;text-transform:uppercase}
+.nav{padding:10px 10px;overflow:auto;flex:1}
+.nav .grp{font-size:10px;color:var(--grey2);letter-spacing:1.5px;margin:14px 10px 6px;text-transform:uppercase}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;color:var(--grey);cursor:pointer;font-size:13.5px;margin-bottom:2px;border:1px solid transparent}
+.nav a .i{width:18px;text-align:center;opacity:.9}
+.nav a:hover{background:#1e1e25;color:#F4EFE2}
+.nav a.active{background:var(--goldt);color:var(--goldb);border-color:rgba(212,168,32,.3);font-weight:600}
+.side .rep{padding:12px 16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.side .rep .av{width:34px;height:34px;border-radius:50%;background:rgba(212,168,32,.18);color:var(--goldb);display:flex;align-items:center;justify-content:center;font-weight:700}
+.side .rep .nm{font-size:12.5px;color:#F4EFE2;font-weight:600}
+.side .rep .zn{font-size:10.5px;color:var(--grey2)}
+/* main */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{position:sticky;top:0;z-index:5;background:rgba(8,8,10,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:13px 22px;display:flex;align-items:center;justify-content:space-between}
+.top .ttl{font-size:18px;font-weight:700;color:#F4EFE2}
+.top .ttl small{display:block;font-size:11.5px;color:var(--grey2);font-weight:400;margin-top:2px}
+.top .meta{display:flex;align-items:center;gap:14px}
+.chip{background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:6px 13px;font-size:12px;color:var(--grey)}
+.chip b{color:var(--goldb)}
+.content{padding:20px 22px 80px;max-width:1280px;width:100%}
+/* generic */
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h3{margin:0 0 3px;font-size:14.5px;color:#F4EFE2}
+.card .desc{font-size:11.5px;color:var(--grey2);margin-bottom:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 16px;position:relative;overflow:hidden}
+.kpi .lab{font-size:11px;color:var(--grey2);text-transform:uppercase;letter-spacing:.5px}
+.kpi .val{font-size:25px;font-weight:800;color:#F4EFE2;margin-top:5px;line-height:1}
+.kpi .sub{font-size:11px;margin-top:6px;color:var(--grey)}
+.kpi .ic{position:absolute;right:12px;top:12px;font-size:20px;opacity:.5}
+.up{color:var(--green)} .down{color:var(--red)} .gold{color:var(--goldb)}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.3px}
+.pill.g{background:var(--greenbg);color:var(--green);border:1px solid #2e5e45}
+.pill.r{background:var(--redbg);color:var(--red);border:1px solid #6e4040}
+.pill.y{background:var(--goldt);color:var(--goldb);border:1px solid rgba(212,168,32,.3)}
+.pill.b{background:#0f1b2b;color:var(--blue);border:1px solid #2b4a6e}
+.pill.s{background:#1e1e25;color:var(--grey);border:1px solid var(--line2)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;color:var(--grey2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:9px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid #1e1e25;color:var(--soft)}
+tr:hover td{background:#1e1e25}
+.btn{background:var(--gold);color:#15110a;border:none;border-radius:9px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:12.5px}
+.btn.ghost{background:transparent;color:var(--goldb);border:1px solid rgba(212,168,32,.3)}
+.btn.sm{padding:5px 10px;font-size:11.5px;border-radius:8px}
+.muted{color:var(--grey2)} .small{font-size:11.5px}
+.grid2{display:grid;grid-template-columns:1.35fr .9fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sec-title{font-size:12px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin:6px 0 10px;font-weight:700}
+.hidden{display:none!important}
+.bar{height:8px;border-radius:6px;background:#1e1e25;overflow:hidden}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,#d4a820,#e8c14d);border-radius:6px}
+.tag{display:inline-block;background:#1e1e25;border:1px solid var(--line2);border-radius:7px;padding:3px 8px;font-size:11px;color:var(--soft);margin:2px 3px 2px 0}
+.reason{font-size:11.5px;color:var(--grey);margin-top:4px;padding-left:14px;position:relative}
+.reason:before{content:"▸";position:absolute;left:0;color:var(--gold)}
+.visit{border:1px solid var(--line);border-radius:13px;margin-bottom:12px;overflow:hidden;background:var(--panel)}
+.visit .head{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer}
+.visit .seq{width:30px;height:30px;border-radius:50%;background:var(--gold);color:#15110a;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 30px}
+.visit .body{padding:0 15px 15px;border-top:1px solid var(--line);display:none}
+.visit.open .body{display:block}
+.kv{display:flex;gap:7px;font-size:12px;margin:3px 0}
+.kv .k{color:var(--grey2);min-width:96px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--grey);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.slider{width:100%}
+.fld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fld label{font-size:11.5px;color:var(--grey2)}
+.fld input[type=range]{accent-color:var(--gold)}
+.scenario{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px;background:var(--panel2)}
+.heat td{text-align:center;font-size:11px;padding:6px;border:1px solid rgba(240,235,222,.11)}
+/* assistant */
+.fab{position:fixed;right:22px;bottom:22px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#d4a820,#a9831a);color:#15110a;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.5);z-index:30;border:none}
+.assistant{position:fixed;right:22px;bottom:88px;width:360px;max-width:92vw;height:520px;max-height:74vh;background:#16161c;border:1px solid var(--line2);border-radius:16px;display:none;flex-direction:column;z-index:30;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+.assistant.open{display:flex}
+.assistant .ah{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:#16161c}
+.assistant .ah .t{font-weight:700;color:#F4EFE2;font-size:14px;display:flex;align-items:center;gap:8px}
+.assistant .lang{display:flex;border:1px solid var(--line2);border-radius:20px;overflow:hidden}
+.assistant .lang button{background:transparent;border:none;color:var(--grey);padding:4px 11px;font-size:11.5px;cursor:pointer}
+.assistant .lang button.on{background:var(--gold);color:#15110a;font-weight:700}
+.amsgs{flex:1;overflow:auto;padding:13px;display:flex;flex-direction:column;gap:10px}
+.amsg{max-width:88%;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.5}
+.amsg.bot{background:#1e1e25;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:3px}
+.amsg.me{background:var(--goldt);border:1px solid rgba(212,168,32,.3);color:#f0e6c8;align-self:flex-end;border-bottom-right-radius:3px}
+.aquick{display:flex;gap:6px;flex-wrap:wrap;padding:0 13px 8px}
+.aquick button{background:#1e1e25;border:1px solid var(--line2);color:var(--soft);border-radius:18px;padding:6px 11px;font-size:11px;cursor:pointer}
+.aquick button:hover{border-color:var(--gold);color:var(--goldb)}
+.ainput{display:flex;gap:8px;padding:11px;border-top:1px solid var(--line)}
+.ainput input{flex:1;background:#0e0e12;border:1px solid var(--line2);border-radius:10px;padding:9px 11px;color:#F4EFE2;font-size:12.5px;outline:none}
+.vguide{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
+.vstep{flex:0 0 150px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:11px}
+.vstep .n{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#15110a;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:12px;margin-bottom:7px}
+.vstep .h{font-size:12.5px;color:#F4EFE2;font-weight:600;margin-bottom:3px}
+.vstep .p{font-size:11px;color:var(--grey)}
+@media(max-width:980px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}.side{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="brand">
+      <div class="logo"><div class="mark">सा</div><div><h1>Saarthi&nbsp;AI</h1><div class="sub">Sales Planning Co-Pilot</div></div></div>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="grp">Plan &amp; Sell</div>
+      <a data-view="plan" class="active"><span class="i">📋</span> Today's Plan</a>
+      <a data-view="route"><span class="i">🗺️</span> Beat Route Operations</a>
+      <div class="grp">Intelligence</div>
+      <a data-view="segment"><span class="i">📍</span> Outlet Segmentation</a>
+      <a data-view="cross"><span class="i">🔗</span> Cross-sell &amp; Replenish</a>
+      <a data-view="promo"><span class="i">🎯</span> Trade Promo Optimizer</a>
+      <a data-view="analytics"><span class="i">📊</span> Analytics &amp; SKU IQ</a>
+    </nav>
+    <div class="rep">
+      <div class="av">RK</div>
+      <div><div class="nm">Rajesh Kumar</div><div class="zn">Pune Zone • MetalEdge Parts</div></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="top">
+      <div class="ttl" id="topTitle">Today's Plan<small id="topSub">Your precise sell-plan for the day</small></div>
+      <div class="meta">
+        <span class="chip">📅 <b id="todayDate"></b></span>
+        <span class="chip">🏭 Machine Parts • India</span>
+        <button class="btn sm" onclick="toggleAssistant(true)">🤖 Ask Saarthi</button>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<!-- ASSISTANT -->
+<button class="fab" onclick="toggleAssistant()">🤖</button>
+<div class="assistant" id="assistant">
+  <div class="ah">
+    <div class="t">🤖 Saarthi Assistant</div>
+    <div class="lang">
+      <button id="langEN" class="on" onclick="setLang('en')">EN</button>
+      <button id="langHI" onclick="setLang('hi')">हिंदी</button>
+    </div>
+  </div>
+  <div class="amsgs" id="amsgs"></div>
+  <div class="aquick" id="aquick"></div>
+  <div class="ainput">
+    <input id="ainput" placeholder="Ask about an outlet, SKU, route…" onkeydown="if(event.key==='Enter')sendAsk()"/>
+    <button class="btn sm" onclick="sendAsk()">Send</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Saarthi AI — fully offline. Deterministic mock data + real
+   cosine-similarity recommender + nearest-neighbour/2-opt route.
+   ============================================================ */
+const rupee = n => '₹'+Number(Math.round(n)).toLocaleString('en-IN');
+const k = n => n>=10000000?(n/10000000).toFixed(2)+' Cr':n>=100000?(n/100000).toFixed(1)+' L':n>=1000?(n/1000).toFixed(1)+'k':n;
+// deterministic PRNG
+let _s=20260625; const rnd=()=>{_s=(_s*1103515245+12345)&0x7fffffff;return _s/0x7fffffff;};
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const ri=(a,b)=>Math.floor(rnd()*(b-a+1))+a;
+
+/* ---------- SKU master (India machine-parts) ---------- */
+const CATS=['Bearings','Power Transmission','Seals & Gaskets','Filters','Fasteners','Lubricants','Hydraulics'];
+const SKUS=[
+ {c:'BRG-6205',n:'Deep Groove Ball Bearing 6205',cat:'Bearings',p:185,m:.28},
+ {c:'BRG-6305',n:'Deep Groove Ball Bearing 6305',cat:'Bearings',p:240,m:.27},
+ {c:'BRG-30205',n:'Taper Roller Bearing 30205',cat:'Bearings',p:430,m:.30},
+ {c:'BRG-22210',n:'Spherical Roller Bearing 22210',cat:'Bearings',p:1180,m:.26},
+ {c:'BRG-UCP205',n:'Pillow Block UCP205',cat:'Bearings',p:520,m:.31},
+ {c:'PT-VB65',n:'V-Belt B-65',cat:'Power Transmission',p:210,m:.34},
+ {c:'PT-CHN08B',n:'Roller Chain 08B-1 (3m)',cat:'Power Transmission',p:640,m:.29},
+ {c:'PT-SPR17',n:'Sprocket 08B-17T',cat:'Power Transmission',p:380,m:.33},
+ {c:'PT-GEAR40',n:'Spur Gear M2 40T',cat:'Power Transmission',p:760,m:.30},
+ {c:'PT-CPL',n:'Flexible Coupling L-095',cat:'Power Transmission',p:540,m:.32},
+ {c:'SEAL-OS25',n:'Oil Seal 25x47x7 (TC)',cat:'Seals & Gaskets',p:48,m:.40},
+ {c:'SEAL-ORK',n:'O-Ring Assorted Kit (382 pc)',cat:'Seals & Gaskets',p:430,m:.45},
+ {c:'SEAL-HYK',n:'Hydraulic Seal Kit 50mm',cat:'Seals & Gaskets',p:690,m:.38},
+ {c:'SEAL-GSK',n:'Gasket Sheet 1.5mm (1m²)',cat:'Seals & Gaskets',p:520,m:.36},
+ {c:'FLT-OIL',n:'Spin-on Oil Filter',cat:'Filters',p:165,m:.35},
+ {c:'FLT-AIR',n:'Air Filter Element',cat:'Filters',p:290,m:.34},
+ {c:'FLT-HYD',n:'Hydraulic Return Filter',cat:'Filters',p:850,m:.33},
+ {c:'FAS-HEX10',n:'Hex Bolt M10 Grade 8.8 (100)',cat:'Fasteners',p:380,m:.42},
+ {c:'FAS-ALN',n:'Allen Bolt Set M6-M12',cat:'Fasteners',p:260,m:.44},
+ {c:'LUB-GRS',n:'Lithium Grease EP2 500g',cat:'Lubricants',p:175,m:.38},
+ {c:'LUB-HYO',n:'Hydraulic Oil ISO 68 (5L)',cat:'Lubricants',p:1250,m:.22},
+ {c:'HYD-CYL',n:'Hydraulic Cylinder Repair (Seal+Rod)',cat:'Hydraulics',p:2150,m:.30}
+];
+const skuByCode=Object.fromEntries(SKUS.map(s=>[s.c,s]));
+// industry profiles -> category propensity (drives realistic basket clusters)
+const PROFILES={
+ 'Auto Garage':{'Bearings':1,'Seals & Gaskets':1,'Filters':1,'Lubricants':.8,'Power Transmission':.5,'Fasteners':.6,'Hydraulics':.2},
+ 'Agri / Pumpset':{'Bearings':1,'Power Transmission':1,'Seals & Gaskets':.8,'Lubricants':.7,'Filters':.4,'Fasteners':.7,'Hydraulics':.3},
+ 'Industrial MRO':{'Bearings':1,'Power Transmission':.9,'Seals & Gaskets':.8,'Filters':.7,'Fasteners':.8,'Lubricants':.6,'Hydraulics':.8},
+ 'Hydraulics Shop':{'Hydraulics':1,'Seals & Gaskets':1,'Filters':.9,'Lubricants':.9,'Bearings':.5,'Power Transmission':.3,'Fasteners':.5},
+ 'General Hardware':{'Fasteners':1,'Bearings':.7,'Lubricants':.7,'Power Transmission':.6,'Seals & Gaskets':.6,'Filters':.5,'Hydraulics':.2}
+};
+
+/* ---------- Outlets (Pune zone) with location intelligence ---------- */
+const AREAS=['Bhosari MIDC','Chinchwad','Hadapsar','Pimpri','Shivajinagar','Chakan','Ranjangaon MIDC','Kothrud','Wagholi','Katraj'];
+const TYPES=['Distributor','Dealer','Retailer'];
+const NAMES=['Shree','Balaji','Maharashtra','Jai','Ganesh','Tirupati','Krishna','Sai','Om','Vijay','National','Bharat','Pioneer','Apex','United'];
+const SUR=['Auto Parts','Engineering','Bearings','Traders','Industrial Supplies','Spares','Hardware','Sales Corp.','Agencies','Enterprises'];
+const OUTLETS=[];
+const N_OUT=15;
+for(let i=0;i<N_OUT;i++){
+  const prof=pick(Object.keys(PROFILES));
+  const type=rnd()<.18?'Distributor':(rnd()<.5?'Dealer':'Retailer');
+  const potential=ri(40000,520000)*(type==='Distributor'?2.4:type==='Dealer'?1.3:1);
+  const real=Math.min(.95,Math.max(.18,rnd()*.9));            // realization fraction
+  const mtd=Math.round(potential*real*(.55+rnd()*.35));
+  const out={
+    id:'OUT'+(101+i),
+    name:pick(NAMES)+' '+pick(SUR),
+    type, area:pick(AREAS), profile:prof,
+    x:60+rnd()*860, y:50+rnd()*470,                            // map coords
+    potential:Math.round(potential), mtdSales:mtd, realization:real,
+    target:Math.round(potential*(.7+rnd()*.2)),
+    outstanding: rnd()<.55?ri(8000,240000):0,
+    duesDays: 0, lastVisitDays: ri(2,46), credLimit:0, score:0,
+    basket:{}, seg:''
+  };
+  if(out.outstanding>0) out.duesDays=ri(5,72);
+  out.credLimit=Math.round(out.potential*0.6);
+  // build a purchase basket from profile (qty over last 6 months)
+  const prop=PROFILES[prof];
+  SKUS.forEach(s=>{
+    const base=prop[s.cat]||0;
+    if(base>0 && rnd()<base*0.78){
+      const qty=Math.max(1,Math.round(base*ri(2,18)*(type==='Distributor'?3:type==='Dealer'?1.6:1)));
+      out.basket[s.c]={qty, lastDays: ri(4,60), cycle: ri(18,45)};
+    }
+  });
+  OUTLETS.push(out);
+}
+const outById=Object.fromEntries(OUTLETS.map(o=>[o.id,o]));
+
+/* ---------- Segmentation (potential vs realization) ---------- */
+function segmentOf(o){
+  const hi=o.potential>=260000, real=o.realization>=0.55;
+  if(hi&&!real) return {key:'Develop',col:'#e8c14d',d:'High potential, under-served — biggest upside'};
+  if(hi&&real)  return {key:'Defend', col:'#3FBF77',d:'High value, well-served — protect & grow share'};
+  if(!hi&&real) return {key:'Maintain',col:'#7FB0E0',d:'Loyal smaller outlet — keep efficient'};
+  return {key:'Nurture',col:'#C7C1B2',d:'Low now — nurture selectively'};
+}
+OUTLETS.forEach(o=>{o.segObj=segmentOf(o);o.seg=o.segObj.key;});
+
+/* ---------- Cosine similarity (item-based) ---------- */
+// vector per SKU = purchase qty across outlets
+const skuVec={}; SKUS.forEach(s=>skuVec[s.c]=OUTLETS.map(o=>o.basket[s.c]?o.basket[s.c].qty:0));
+function cosine(a,b){let d=0,na=0,nb=0;for(let i=0;i<a.length;i++){d+=a[i]*b[i];na+=a[i]*a[i];nb+=b[i]*b[i];}return (na&&nb)?d/(Math.sqrt(na)*Math.sqrt(nb)):0;}
+const simMatrix={}; SKUS.forEach(a=>{simMatrix[a.c]={};SKUS.forEach(b=>{simMatrix[a.c][b.c]=a.c===b.c?1:cosine(skuVec[a.c],skuVec[b.c]);});});
+function topSimilar(code,n=3){return SKUS.filter(s=>s.c!==code).map(s=>({c:s.c,sim:simMatrix[code][s.c]})).sort((x,y)=>y.sim-x.sim).slice(0,n);}
+// cross-sell recommendation for an outlet: score SKUs not (well) stocked by affinity to its basket
+function recommendForOutlet(o,n=4){
+  const owned=Object.keys(o.basket);
+  const scores={};
+  SKUS.forEach(s=>{
+    if(o.basket[s.c]) return; // not currently bought -> white space
+    let sc=0,why=null,best=0;
+    owned.forEach(b=>{const sim=simMatrix[s.c][b];if(sim>0){sc+=sim*(o.basket[b].qty);if(sim>best){best=sim;why=b;}}});
+    if(sc>0) scores[s.c]={score:sc,sim:best,via:why};
+  });
+  return Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).slice(0,n)
+    .map(([c,v])=>({sku:skuByCode[c],sim:v.sim,via:skuByCode[v.via]}));
+}
+// replenishment: items due to reorder (lastDays >= cycle*0.8)
+function replenForOutlet(o){
+  return Object.entries(o.basket).map(([c,b])=>{
+    const due=b.lastDays-b.cycle; const ratio=b.lastDays/b.cycle;
+    return {sku:skuByCode[c],lastDays:b.lastDays,cycle:b.cycle,overdue:due,ratio,qty:b.qty};
+  }).filter(x=>x.ratio>=0.8).sort((a,b)=>b.ratio-a.ratio);
+}
+
+/* ---------- Route optimization (nearest neighbour + 2-opt) ---------- */
+const DEPOT={name:'MetalEdge Depot (Bhosari)',x:40,y:40};
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)/42;} // ~km scale
+function routeLen(seq){let d=0,p=DEPOT;seq.forEach(o=>{d+=dist(p,o);p=o;});return d;}
+function nearestNeighbour(list){const rem=list.slice();const seq=[];let cur=DEPOT;
+  while(rem.length){let bi=0,bd=1e9;rem.forEach((o,i)=>{const dd=dist(cur,o);if(dd<bd){bd=dd;bi=i;}});seq.push(rem[bi]);cur=rem[bi];rem.splice(bi,1);}return seq;}
+function twoOpt(seq){let best=seq.slice(),improved=true;
+  while(improved){improved=false;for(let i=0;i<best.length-1;i++){for(let j=i+1;j<best.length;j++){
+    const ns=best.slice(0,i).concat(best.slice(i,j+1).reverse(),best.slice(j+1));
+    if(routeLen(ns)<routeLen(best)-1e-6){best=ns;improved=true;}}}}return best;}
+function planRoute(list){const nn=nearestNeighbour(list);const opt=twoOpt(nn);
+  return {opt,optLen:routeLen(opt),naiveLen:routeLen(list)};}
+
+/* ---------- Build today's plan ---------- */
+// choose ~8 outlets to visit: prioritise overdue collections, replenishment-due, high segment, time since visit
+function planScore(o){
+  let s=0; if(o.outstanding>0) s+=o.outstanding/50000 + o.duesDays/12;
+  s+=replenForOutlet(o).length*1.4; s+=o.lastVisitDays/10;
+  s+={'Develop':3,'Defend':2.2,'Maintain':1.2,'Nurture':.6}[o.seg];
+  return s;
+}
+const TODAY=OUTLETS.slice().sort((a,b)=>planScore(b)-planScore(a)).slice(0,8);
+const ROUTE=planRoute(TODAY);
+const PLAN=ROUTE.opt;
+// time windows
+let _t=9*60+30;
+PLAN.forEach((o,i)=>{const leg=i===0?dist(DEPOT,o):dist(PLAN[i-1],o);_t+=Math.round(leg*9)+ri(18,30);o.arr=_t; o.stay=ri(20,35);_t+=o.stay;});
+function hhmm(m){let h=Math.floor(m/60),mm=m%60;return (h>12?h-12:h)+':'+String(mm).padStart(2,'0')+(h>=12?' PM':' AM');}
+
+/* ---------- talking points (EN + HI) ---------- */
+function talkPoints(o){
+  const rep=replenForOutlet(o)[0], rec=recommendForOutlet(o,1)[0];
+  const en=[], hi=[];
+  if(rep){en.push(`${rep.sku.n} is due for reorder (last lifted ${rep.lastDays}d ago, cycle ${rep.cycle}d) — push ${Math.ceil(rep.qty*0.6)} units.`);
+          hi.push(`${rep.sku.n} दोबारा ऑर्डर का समय आ गया है (पिछली बार ${rep.lastDays} दिन पहले, साइकिल ${rep.cycle} दिन) — ${Math.ceil(rep.qty*0.6)} यूनिट का ऑर्डर लें।`);}
+  if(rec){en.push(`Pitch ${rec.sku.n} — high affinity (cosine ${rec.sim.toFixed(2)}) with ${rec.via.n} they already stock.`);
+          hi.push(`${rec.sku.n} दिखाएँ — जो ${rec.via.n} वे पहले से रखते हैं, उससे मेल खाता है (cosine ${rec.sim.toFixed(2)})।`);}
+  if(o.outstanding>0){en.push(`Collect outstanding ${rupee(o.outstanding)} (${o.duesDays} days overdue) before booking fresh order.`);
+                      hi.push(`नया ऑर्डर लेने से पहले बकाया ${rupee(o.outstanding)} (${o.duesDays} दिन से ड्यू) वसूल करें।`);}
+  if(o.seg==='Develop'){en.push(`This is a Develop outlet — share the scheme & open a 2nd category to grow wallet share.`);
+                        hi.push(`यह Develop आउटलेट है — स्कीम बताएँ और दूसरी कैटेगरी खोलकर हिस्सेदारी बढ़ाएँ।`);}
+  return {en,hi};
+}
+
+/* =========================================================
+   VIEWS
+   ========================================================= */
+const content=document.getElementById('content');
+const TITLES={
+ plan:['Today\'s Plan','Your precise sell-plan for the day'],
+ route:['Beat Route Operations','Where to go • what to sell • collect • follow-up'],
+ segment:['Outlet Segmentation','Location-intelligence driven outlet strategy'],
+ cross:['Cross-sell & Replenishment','Cosine-similarity recommender + reorder engine'],
+ promo:['Trade Promo Optimizer','Scenario ROI for schemes & promotions'],
+ analytics:['Analytics & SKU Intelligence','The matching-engine backbone']
+};
+function setActive(v){document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));
+  document.getElementById('topTitle').innerHTML=TITLES[v][0]+'<small>'+TITLES[v][1]+'</small>';}
+
+function svgMap(seq,withPath){
+  let pts='',path='M '+DEPOT.x+' '+DEPOT.y+' ';
+  seq.forEach((o)=>{path+='L '+o.x+' '+o.y+' ';});
+  const segColor={'Develop':'#e8c14d','Defend':'#3FBF77','Maintain':'#7FB0E0','Nurture':'#C7C1B2'};
+  let nodes=OUTLETS.map(o=>{const inplan=seq.includes(o);const idx=seq.indexOf(o);
+    return `<circle cx="${o.x}" cy="${o.y}" r="${inplan?9:5}" fill="${segColor[o.seg]}" opacity="${inplan?1:.35}" stroke="#15110a" stroke-width="1.5"/>`+
+    (inplan?`<text x="${o.x}" y="${o.y+3.5}" font-size="9" font-weight="800" fill="#15110a" text-anchor="middle">${idx+1}</text>`:'');
+  }).join('');
+  return `<svg viewBox="0 0 940 540" style="width:100%;height:auto;background:
+    radial-gradient(circle at 30% 20%,#16161c,#0e0e12);border-radius:12px;border:1px solid var(--line)">
+    <defs><pattern id="g" width="60" height="60" patternUnits="userSpaceOnUse">
+    <path d="M60 0H0V60" fill="none" stroke="#1d1e23" stroke-width="1"/></pattern></defs>
+    <rect width="940" height="540" fill="url(#g)"/>
+    ${withPath?`<path d="${path}" fill="none" stroke="#d4a820" stroke-width="2.2" stroke-dasharray="2 0" opacity=".9"/>`:''}
+    <circle cx="${DEPOT.x}" cy="${DEPOT.y}" r="8" fill="#F4EFE2"/><text x="${DEPOT.x+12}" y="${DEPOT.y+4}" font-size="11" fill="#F4EFE2">Depot</text>
+    ${nodes}
+  </svg>`;
+}
+
+function viewPlan(){
+  const target=PLAN.reduce((s,o)=>s+Math.round((replenForOutlet(o)[0]?.qty||4)*(replenForOutlet(o)[0]?.sku.p||200)*0.7)+ (recommendForOutlet(o,1)[0]?Math.round(recommendForOutlet(o,1)[0].sku.p*5):0),0);
+  const coll=PLAN.reduce((s,o)=>s+o.outstanding,0);
+  let visits=PLAN.map((o,i)=>{
+    const recs=recommendForOutlet(o,3), rep=replenForOutlet(o), tp=talkPoints(o);
+    const why=[];
+    if(rep[0]) why.push(`${rep[0].sku.n} due (${rep[0].lastDays}d/${rep[0].cycle}d cycle)`);
+    if(recs[0]) why.push(`White-space: ${recs[0].sku.cat} (affinity ${recs[0].sim.toFixed(2)})`);
+    if(o.outstanding>0) why.push(`Collect ${rupee(o.outstanding)} • ${o.duesDays}d overdue`);
+    why.push(`${o.seg} segment`);
+    return `<div class="visit" onclick="this.classList.toggle('open')">
+      <div class="head">
+        <div class="seq">${i+1}</div>
+        <div style="flex:1">
+          <div style="color:#F4EFE2;font-weight:600">${o.name} <span class="pill s">${o.type}</span> <span class="pill" style="background:${o.segObj.col}22;color:${o.segObj.col};border:1px solid ${o.segObj.col}55">${o.seg}</span></div>
+          <div class="small muted">📍 ${o.area} • ⏰ ${hhmm(o.arr)} • stay ~${o.stay}m</div>
+        </div>
+        <div style="text-align:right">
+          <div class="small muted">Pitch value</div>
+          <div class="gold" style="font-weight:800">${rupee((rep[0]?rep[0].qty*rep[0].sku.p*0.7:0)+(recs[0]?recs[0].sku.p*5:0))}</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="grid2" style="margin-top:12px">
+          <div>
+            <div class="sec-title">What to sell &amp; why</div>
+            ${rep[0]?`<div style="margin-bottom:8px"><b>↻ Replenish:</b> ${rep[0].sku.n} <span class="pill y">DUE</span><div class="reason">Last lifted ${rep[0].lastDays}d ago vs ${rep[0].cycle}d cycle — suggest ${Math.ceil(rep[0].qty*0.7)} units</div></div>`:''}
+            ${recs.map(r=>`<div style="margin-bottom:7px"><b>➕ Cross-sell:</b> ${r.sku.n} <span class="pill b">cos ${r.sim.toFixed(2)}</span><div class="reason">Buyers of <b>${r.via.n}</b> (which they stock) also buy this — ${r.sku.cat}</div></div>`).join('')}
+          </div>
+          <div>
+            <div class="sec-title">Talking points <span class="muted small" id="tpLang_${o.id}">(EN)</span></div>
+            <div id="tp_${o.id}">${tp.en.map(t=>`<div class="reason" style="margin-bottom:6px">${t}</div>`).join('')}</div>
+            <button class="btn ghost sm" style="margin-top:6px" onclick="event.stopPropagation();toggleTP('${o.id}')">हिंदी / EN</button>
+            <div class="sec-title" style="margin-top:14px">Collections &amp; follow-up</div>
+            ${o.outstanding>0?`<div class="kv"><span class="k">Outstanding</span><span class="down" style="font-weight:700">${rupee(o.outstanding)} • ${o.duesDays}d</span></div>`:`<div class="kv"><span class="k">Outstanding</span><span class="up">Clear ✓</span></div>`}
+            <div class="kv"><span class="k">Credit limit</span><span>${rupee(o.credLimit)}</span></div>
+            <div class="kv"><span class="k">Follow-up</span><span>${rep[1]?('Confirm '+rep[1].sku.n+' next visit'):'Share new scheme on WhatsApp'}</span></div>
+          </div>
+        </div>
+      </div></div>`;
+  }).join('');
+  content.innerHTML=`
+  <div class="kpis">
+    <div class="kpi"><div class="ic">🏬</div><div class="lab">Outlets to visit</div><div class="val">${PLAN.length}</div><div class="sub up">Optimised beat • ${ROUTE.optLen.toFixed(0)} km</div></div>
+    <div class="kpi"><div class="ic">🎯</div><div class="lab">Planned order value</div><div class="val">${rupee(target)}</div><div class="sub muted">AI-recommended SKUs</div></div>
+    <div class="kpi"><div class="ic">💰</div><div class="lab">Collections to pick</div><div class="val">${rupee(coll)}</div><div class="sub down">${PLAN.filter(o=>o.outstanding>0).length} outlets overdue</div></div>
+    <div class="kpi"><div class="ic">⏱️</div><div class="lab">Route saving</div><div class="val">${Math.max(0,Math.round((1-ROUTE.optLen/ROUTE.naiveLen)*100))}%</div><div class="sub up">vs un-optimised order</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Your beat for today</h3><div class="desc">Optimised stop sequence — tap a stop to expand the sell-plan.</div>${visits}</div>
+    <div>
+      <div class="card" style="margin-bottom:16px"><h3>Route map</h3><div class="desc">Nearest-neighbour + 2-opt optimisation from depot.</div>${svgMap(PLAN,true)}
+        <div class="legend"><span><i class="dot" style="background:#e8c14d"></i>Develop</span><span><i class="dot" style="background:#3FBF77"></i>Defend</span><span><i class="dot" style="background:#7FB0E0"></i>Maintain</span><span><i class="dot" style="background:#C7C1B2"></i>Nurture</span></div>
+      </div>
+      <div class="card"><h3>Visual guidance</h3><div class="desc">How to run each call.</div>
+        <div class="vguide">
+          <div class="vstep"><div class="n">1</div><div class="h">Greet &amp; collect</div><div class="p">Open with relationship, clear overdue dues first.</div></div>
+          <div class="vstep"><div class="n">2</div><div class="h">Replenish</div><div class="p">Confirm due SKUs from the reorder list.</div></div>
+          <div class="vstep"><div class="n">3</div><div class="h">Cross-sell</div><div class="p">Pitch affinity SKUs with the cosine reason.</div></div>
+          <div class="vstep"><div class="n">4</div><div class="h">Scheme &amp; close</div><div class="p">Apply best trade promo, book order, set follow-up.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+window.toggleTP=(id)=>{const o=outById[id];const tp=talkPoints(o);const el=document.getElementById('tp_'+id);const lab=document.getElementById('tpLang_'+id);
+  const isHi=lab.textContent.includes('HI');lab.textContent=isHi?'(EN)':'(HI)';
+  el.innerHTML=(isHi?tp.en:tp.hi).map(t=>`<div class="reason" style="margin-bottom:6px">${t}</div>`).join('');};
+
+function viewRoute(){
+  let rows=PLAN.map((o,i)=>{const rep=replenForOutlet(o)[0],rec=recommendForOutlet(o,1)[0];
+    return `<tr><td><b>${i+1}</b></td><td>${o.name}<div class="small muted">${o.area}</div></td>
+      <td>${hhmm(o.arr)}</td>
+      <td>${rep?rep.sku.n.split(' ').slice(0,3).join(' '):'—'} ${rec?`<span class="pill b">+${rec.sku.cat}</span>`:''}</td>
+      <td>${o.outstanding>0?`<span class="down">${rupee(o.outstanding)}</span>`:'<span class="up">—</span>'}</td>
+      <td>${o.lastVisitDays>30?'<span class="pill r">re-engage</span>':'<span class="pill g">active</span>'}</td></tr>`;}).join('');
+  content.innerHTML=`
+   <div class="kpis">
+    <div class="kpi"><div class="lab">Optimised distance</div><div class="val">${ROUTE.optLen.toFixed(0)} <span style="font-size:14px">km</span></div><div class="sub up">2-opt applied</div></div>
+    <div class="kpi"><div class="lab">Un-optimised</div><div class="val">${ROUTE.naiveLen.toFixed(0)} <span style="font-size:14px">km</span></div><div class="sub muted">as listed</div></div>
+    <div class="kpi"><div class="lab">Distance saved</div><div class="val up">${Math.max(0,(ROUTE.naiveLen-ROUTE.optLen)).toFixed(0)} km</div><div class="sub up">${Math.max(0,Math.round((1-ROUTE.optLen/ROUTE.naiveLen)*100))}% shorter</div></div>
+    <div class="kpi"><div class="lab">On-road window</div><div class="val">9:30<span style="font-size:13px">–</span>${hhmm(PLAN[PLAN.length-1].arr+PLAN[PLAN.length-1].stay).replace(' ','')}</div><div class="sub muted">incl. ${PLAN.length} stops</div></div>
+   </div>
+   <div class="grid2">
+    <div class="card"><h3>Optimised beat route</h3><div class="desc">Where to go, in order — minimise travel, maximise selling time.</div>${svgMap(PLAN,true)}</div>
+    <div class="card"><h3>Field operations sheet</h3><div class="desc">Stop-by-stop: what to sell, collect, follow-up.</div>
+     <table><thead><tr><th>#</th><th>Outlet</th><th>ETA</th><th>What to sell</th><th>Collect</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
+    </div>
+   </div>`;
+}
+
+function viewSegment(){
+  // 2x2 bubble: x=realization, y=potential
+  const W=560,H=420,pad=46;
+  const maxPot=Math.max(...OUTLETS.map(o=>o.potential));
+  const bx=o=>pad+o.realization*(W-pad*2);
+  const by=o=>H-pad-(o.potential/maxPot)*(H-pad*2);
+  const bubbles=OUTLETS.map(o=>`<circle cx="${bx(o)}" cy="${by(o)}" r="${6+Math.sqrt(o.mtdSales)/55}" fill="${o.segObj.col}" opacity=".82" stroke="#15110a"/>`).join('');
+  const segCounts={}; OUTLETS.forEach(o=>segCounts[o.seg]=(segCounts[o.seg]||0)+1);
+  const segCards=['Develop','Defend','Maintain','Nurture'].map(sgk=>{
+    const list=OUTLETS.filter(o=>o.seg===sgk);const col=list[0]?list[0].segObj.col:'#8B8576';const d=list[0]?list[0].segObj.d:'';
+    const pot=list.reduce((s,o)=>s+o.potential,0),cur=list.reduce((s,o)=>s+o.mtdSales,0);
+    return `<div class="card" style="border-left:3px solid ${col}">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="color:${col}">${sgk}</h3><span class="pill s">${list.length} outlets</span></div>
+      <div class="desc">${d}</div>
+      <div class="kv"><span class="k">Potential</span><b>${rupee(pot)}</b></div>
+      <div class="kv"><span class="k">Current MTD</span><span>${rupee(cur)} (${Math.round(cur/pot*100)}%)</span></div>
+      <div class="bar" style="margin-top:6px"><i style="width:${Math.round(cur/pot*100)}%;background:${col}"></i></div>
+    </div>`;}).join('');
+  // white-space (location intelligence): areas with high potential, low realization
+  const areaAgg={};OUTLETS.forEach(o=>{areaAgg[o.area]=areaAgg[o.area]||{p:0,c:0,n:0};areaAgg[o.area].p+=o.potential;areaAgg[o.area].c+=o.mtdSales;areaAgg[o.area].n++;});
+  const ws=Object.entries(areaAgg).map(([a,v])=>({a,gap:v.p-v.c,real:v.c/v.p,n:v.n})).sort((x,y)=>y.gap-x.gap).slice(0,5);
+  content.innerHTML=`
+   <div class="kpis">
+    <div class="kpi"><div class="lab">Outlets mapped</div><div class="val">${OUTLETS.length}</div><div class="sub muted">${Object.keys(areaAgg).length} micro-markets</div></div>
+    <div class="kpi"><div class="lab">Develop (upside)</div><div class="val gold">${segCounts['Develop']||0}</div><div class="sub up">priority for growth</div></div>
+    <div class="kpi"><div class="lab">Territory realization</div><div class="val">${Math.round(OUTLETS.reduce((s,o)=>s+o.mtdSales,0)/OUTLETS.reduce((s,o)=>s+o.potential,0)*100)}%</div><div class="sub muted">MTD vs potential</div></div>
+    <div class="kpi"><div class="lab">Untapped potential</div><div class="val">${rupee(OUTLETS.reduce((s,o)=>s+(o.potential-o.mtdSales),0))}</div><div class="sub down">white-space</div></div>
+   </div>
+   <div class="grid2">
+     <div class="card"><h3>Potential × Realization matrix</h3><div class="desc">Bubble size = current monthly sales. Position drives strategy.</div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;background:radial-gradient(circle at 70% 10%,#16161c,#0e0e12);border-radius:12px;border:1px solid var(--line)">
+        <line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="rgba(240,235,222,.18)"/>
+        <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="rgba(240,235,222,.18)"/>
+        <line x1="${(W)/2}" y1="${pad}" x2="${(W)/2}" y2="${H-pad}" stroke="#2a2620" stroke-dasharray="3 3"/>
+        <line x1="${pad}" y1="${(H)/2}" x2="${W-pad}" y2="${(H)/2}" stroke="#2a2620" stroke-dasharray="3 3"/>
+        <text x="${pad-30}" y="${pad+4}" fill="#8B8576" font-size="10" transform="rotate(-90 ${pad-30} ${pad+4})">POTENTIAL →</text>
+        <text x="${W-pad-90}" y="${H-pad+26}" fill="#8B8576" font-size="10">REALIZATION →</text>
+        <text x="${pad+8}" y="${pad+14}" fill="#e8c14d" font-size="11" font-weight="700">DEVELOP</text>
+        <text x="${W/2+8}" y="${pad+14}" fill="#3FBF77" font-size="11" font-weight="700">DEFEND</text>
+        <text x="${pad+8}" y="${H/2+16}" fill="#C7C1B2" font-size="11" font-weight="700">NURTURE</text>
+        <text x="${W/2+8}" y="${H/2+16}" fill="#7FB0E0" font-size="11" font-weight="700">MAINTAIN</text>
+        ${bubbles}
+      </svg>
+     </div>
+     <div class="grid2" style="grid-template-columns:1fr;gap:16px">${segCards}</div>
+   </div>
+   <div class="card" style="margin-top:16px"><h3>📍 Location-intelligence: white-space by micro-market</h3><div class="desc">Where the gap between potential and current sales is largest — plan beats here.</div>
+    <table><thead><tr><th>Micro-market</th><th>Outlets</th><th>Realization</th><th>Untapped value</th><th>Action</th></tr></thead><tbody>
+    ${ws.map(w=>`<tr><td>${w.a}</td><td>${w.n}</td><td><div class="bar" style="width:120px"><i style="width:${Math.round(w.real*100)}%"></i></div><span class="small muted">${Math.round(w.real*100)}%</span></td><td class="gold">${rupee(w.gap)}</td><td>${w.real<0.5?'<span class="pill y">add coverage</span>':'<span class="pill g">deepen</span>'}</td></tr>`).join('')}
+    </tbody></table>
+   </div>`;
+}
+
+function viewCross(){
+  // heatmap of cosine similarity (top categories) + per-outlet recs + replenishment
+  const show=SKUS.slice(0,12);
+  let head='<tr><th></th>'+show.map(s=>`<th style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px">${s.c}</th>`).join('')+'</tr>';
+  let body=show.map(a=>'<tr><td style="text-align:left;font-size:10px;white-space:nowrap">'+a.c+'</td>'+show.map(b=>{const v=simMatrix[a.c][b.c];const g=Math.round(v*255);return `<td class="heat" style="background:rgba(201,162,39,${v.toFixed(2)});color:${v>0.5?'#15110a':'#8B8576'}">${v.toFixed(2)}</td>`;}).join('')+'</tr>').join('');
+  // outlet selector recs
+  const outOpts=OUTLETS.map(o=>`<option value="${o.id}">${o.name} (${o.type}, ${o.area})</option>`).join('');
+  const replenAll=OUTLETS.map(o=>({o,items:replenForOutlet(o)})).filter(x=>x.items.length).sort((a,b)=>b.items[0].ratio-a.items[0].ratio).slice(0,8);
+  content.innerHTML=`
+   <div class="kpis">
+    <div class="kpi"><div class="lab">SKUs in catalogue</div><div class="val">${SKUS.length}</div><div class="sub muted">${CATS.length} categories</div></div>
+    <div class="kpi"><div class="lab">Affinity pairs (cos≥0.6)</div><div class="val gold">${(()=>{let c=0;SKUS.forEach(a=>SKUS.forEach(b=>{if(a.c<b.c&&simMatrix[a.c][b.c]>=0.6)c++;}));return c;})()}</div><div class="sub up">strong cross-sell links</div></div>
+    <div class="kpi"><div class="lab">Outlets due to reorder</div><div class="val">${OUTLETS.filter(o=>replenForOutlet(o).length).length}</div><div class="sub down">replenishment now</div></div>
+    <div class="kpi"><div class="lab">Replenishment value</div><div class="val">${rupee(OUTLETS.reduce((s,o)=>s+replenForOutlet(o).reduce((t,r)=>t+r.qty*r.sku.p*0.7,0),0))}</div><div class="sub muted">next-cycle estimate</div></div>
+   </div>
+   <div class="grid2">
+     <div class="card"><h3>🔗 Cross-sell recommender</h3><div class="desc">Item-based collaborative filtering on cosine similarity of purchase vectors.</div>
+       <select id="outSel" onchange="renderRecs()" style="width:100%;background:#0e0e12;color:#F4EFE2;border:1px solid var(--line2);border-radius:9px;padding:9px;margin-bottom:12px">${outOpts}</select>
+       <div id="recBox"></div>
+     </div>
+     <div class="card"><h3>SKU affinity heatmap (cosine)</h3><div class="desc">Brighter = more often bought together across outlets.</div>
+       <div style="overflow:auto"><table class="heat">${head}${body}</table></div>
+     </div>
+   </div>
+   <div class="card" style="margin-top:16px"><h3>↻ Replenishment program</h3><div class="desc">Predicted reorders — flagged when days-since-last ≥ 80% of the outlet's buying cycle.</div>
+     <table><thead><tr><th>Outlet</th><th>SKU due</th><th>Last lifted</th><th>Cycle</th><th>Urgency</th><th>Suggested qty</th><th>Value</th></tr></thead><tbody>
+     ${replenAll.map(x=>{const r=x.items[0];const u=Math.min(100,Math.round(r.ratio*100));return `<tr><td>${x.o.name}<div class="small muted">${x.o.area}</div></td><td>${r.sku.n}</td><td>${r.lastDays}d ago</td><td>${r.cycle}d</td><td><div class="bar" style="width:90px"><i style="width:${u}%;background:${u>=100?'#D98C8C':'#d4a820'}"></i></div><span class="small ${u>=100?'down':'muted'}">${u}%</span></td><td>${Math.ceil(r.qty*0.7)}</td><td class="gold">${rupee(r.qty*r.sku.p*0.7)}</td></tr>`;}).join('')}
+     </tbody></table>
+   </div>`;
+  renderRecs();
+}
+window.renderRecs=()=>{const id=document.getElementById('outSel').value;const o=outById[id];
+  const recs=recommendForOutlet(o,5);const owns=Object.keys(o.basket).map(c=>skuByCode[c].n);
+  document.getElementById('recBox').innerHTML=`
+   <div class="small muted" style="margin-bottom:8px">Currently stocks: ${owns.map(n=>`<span class="tag">${n.split(' ').slice(0,3).join(' ')}</span>`).join('')||'<i>new outlet</i>'}</div>
+   <div class="sec-title">Recommended to add (ranked)</div>
+   ${recs.map(r=>`<div class="scenario"><div style="display:flex;justify-content:space-between;align-items:center"><b>${r.sku.n}</b><span class="pill b">cosine ${r.sim.toFixed(2)}</span></div>
+      <div class="reason">Similar to <b>${r.via.n}</b> they already buy • ${r.sku.cat} • ${rupee(r.sku.p)}/unit • margin ${Math.round(r.sku.m*100)}%</div></div>`).join('')||'<i class="muted">Fully covered.</i>'}`;
+};
+
+function viewPromo(){
+  content.innerHTML=`
+   <div class="card" style="margin-bottom:16px"><h3>🎯 Trade promo optimizer</h3><div class="desc">Model a scheme, see incremental volume, margin impact and ROI before you commit. Output feeds the rep's plan.</div>
+     <div class="grid3">
+       <div class="fld"><label>Target SKU</label><select id="pSku" onchange="calcPromo()" style="background:#0e0e12;color:#F4EFE2;border:1px solid var(--line2);border-radius:9px;padding:8px">${SKUS.map(s=>`<option value="${s.c}">${s.n}</option>`).join('')}</select></div>
+       <div class="fld"><label>Target segment</label><select id="pSeg" onchange="calcPromo()" style="background:#0e0e12;color:#F4EFE2;border:1px solid var(--line2);border-radius:9px;padding:8px"><option>Develop</option><option>Defend</option><option>Maintain</option><option>Nurture</option><option>All</option></select></div>
+       <div class="fld"><label>Promo type</label><select id="pType" onchange="calcPromo()" style="background:#0e0e12;color:#F4EFE2;border:1px solid var(--line2);border-radius:9px;padding:8px"><option value="disc">Price discount</option><option value="qps">Qty scheme (10+2)</option><option value="slab">Slab incentive</option></select></div>
+     </div>
+     <div class="grid3">
+       <div class="fld"><label>Discount / scheme depth: <b id="pDiscL" class="gold">8%</b></label><input class="slider" type="range" id="pDisc" min="2" max="25" value="8" oninput="calcPromo()"></div>
+       <div class="fld"><label>Duration (weeks): <b id="pDurL" class="gold">4</b></label><input class="slider" type="range" id="pDur" min="1" max="12" value="4" oninput="calcPromo()"></div>
+       <div class="fld"><label>Price elasticity: <b id="pElL" class="gold">1.6</b></label><input class="slider" type="range" id="pEl" min="8" max="30" value="16" oninput="calcPromo()"></div>
+     </div>
+   </div>
+   <div class="grid2"><div id="promoOut"></div>
+     <div class="card"><h3>Recommended promos (auto-ranked)</h3><div class="desc">Best scheme per high-upside SKU, by ROI.</div><div id="promoRank"></div></div>
+   </div>`;
+  calcPromo();
+}
+function promoModel(sku,seg,depth,dur,elast,type){
+  const segOutlets=OUTLETS.filter(o=>seg==='All'||o.seg===seg);
+  const baseUnits=segOutlets.reduce((s,o)=>s+(o.basket[sku.c]?o.basket[sku.c].qty:Math.round(o.potential/8000)),0)*(dur/4);
+  let upliftPct=depth*elast/100;
+  if(type==='qps') upliftPct*=0.9; if(type==='slab') upliftPct*=1.1;
+  const incUnits=baseUnits*upliftPct;
+  const totalUnits=baseUnits+incUnits;
+  const netPrice=sku.p*(1-(type==='disc'?depth/100:depth/100*0.7));
+  const baseMargin=baseUnits*sku.p*sku.m;
+  const promoMargin=totalUnits*(netPrice-sku.p*(1-sku.m));
+  const incMargin=promoMargin-baseMargin;
+  const promoCost=totalUnits*sku.p*(depth/100)*(type==='disc'?1:0.7);
+  const roi=promoCost>0?incMargin/promoCost:0;
+  return {baseUnits,incUnits,totalUnits,incMargin,promoCost,roi,upliftPct,outlets:segOutlets.length};
+}
+window.calcPromo=()=>{
+  const sku=skuByCode[document.getElementById('pSku').value];
+  const seg=document.getElementById('pSeg').value;
+  const depth=+document.getElementById('pDisc').value, dur=+document.getElementById('pDur').value, el=(+document.getElementById('pEl').value)/10, type=document.getElementById('pType').value;
+  document.getElementById('pDiscL').textContent=depth+'%';document.getElementById('pDurL').textContent=dur;document.getElementById('pElL').textContent=el.toFixed(1);
+  const r=promoModel(sku,seg,depth,dur,el,type);
+  const good=r.roi>=1.2;
+  document.getElementById('promoOut').innerHTML=`<div class="card"><h3>Scenario outcome</h3>
+    <div class="kpis" style="grid-template-columns:repeat(2,1fr);margin-bottom:8px">
+      <div class="kpi"><div class="lab">Incremental units</div><div class="val up">+${Math.round(r.incUnits)}</div><div class="sub muted">${Math.round(r.upliftPct*100)}% uplift • ${r.outlets} outlets</div></div>
+      <div class="kpi"><div class="lab">Promo ROI</div><div class="val ${good?'up':'down'}">${r.roi.toFixed(2)}×</div><div class="sub ${good?'up':'down'}">${good?'Go ✓':'Re-tune ✗'}</div></div>
+      <div class="kpi"><div class="lab">Incremental margin</div><div class="val">${rupee(r.incMargin)}</div></div>
+      <div class="kpi"><div class="lab">Promo spend</div><div class="val">${rupee(r.promoCost)}</div></div>
+    </div>
+    <div class="reason">${good?'Healthy payback — roll this to the '+seg+' segment and it auto-appears as a scheme on rep plans.':'ROI below 1.2× — reduce depth or narrow the segment.'}</div></div>`;
+  // ranking
+  const rank=SKUS.map(s=>{let best={roi:-1};for(let d=4;d<=18;d+=2){const m=promoModel(s,'All',d,4,1.6,'disc');if(m.roi>best.roi)best={...m,depth:d};}return {s,...best};}).sort((a,b)=>b.roi-a.roi).slice(0,6);
+  document.getElementById('promoRank').innerHTML=`<table><thead><tr><th>SKU</th><th>Best depth</th><th>ROI</th><th>Inc. margin</th></tr></thead><tbody>${rank.map(x=>`<tr><td>${x.s.n.split(' ').slice(0,3).join(' ')}</td><td>${x.depth}%</td><td class="${x.roi>=1.2?'up':'down'}">${x.roi.toFixed(2)}×</td><td>${rupee(x.incMargin)}</td></tr>`).join('')}</tbody></table>`;
+};
+
+function viewAnalytics(){
+  // SKU intelligence: movers
+  const skuSales=SKUS.map(s=>{const u=OUTLETS.reduce((t,o)=>t+(o.basket[s.c]?o.basket[s.c].qty:0),0);return {s,u,val:u*s.p};}).sort((a,b)=>b.val-a.val);
+  const top=skuSales.slice(0,8);
+  const maxv=Math.max(...top.map(t=>t.val));
+  const catMix={};SKUS.forEach(s=>catMix[s.cat]=0);OUTLETS.forEach(o=>Object.entries(o.basket).forEach(([c,b])=>catMix[skuByCode[c].cat]+=b.qty*skuByCode[c].p));
+  const catTot=Object.values(catMix).reduce((a,b)=>a+b,0);
+  const ach=Math.round(OUTLETS.reduce((s,o)=>s+o.mtdSales,0)/OUTLETS.reduce((s,o)=>s+o.target,0)*100);
+  content.innerHTML=`
+   <div class="kpis">
+    <div class="kpi"><div class="lab">Target achievement</div><div class="val ${ach>=85?'up':'gold'}">${ach}%</div><div class="sub muted">MTD vs target</div></div>
+    <div class="kpi"><div class="lab">Active outlets</div><div class="val">${OUTLETS.filter(o=>o.lastVisitDays<30).length}/${OUTLETS.length}</div><div class="sub down">${OUTLETS.filter(o=>o.lastVisitDays>=30).length} to re-engage</div></div>
+    <div class="kpi"><div class="lab">Avg lines / outlet</div><div class="val">${(OUTLETS.reduce((s,o)=>s+Object.keys(o.basket).length,0)/OUTLETS.length).toFixed(1)}</div><div class="sub muted">range = cross-sell upside</div></div>
+    <div class="kpi"><div class="lab">Total outstanding</div><div class="val down">${rupee(OUTLETS.reduce((s,o)=>s+o.outstanding,0))}</div><div class="sub muted">${OUTLETS.filter(o=>o.outstanding>0).length} outlets</div></div>
+   </div>
+   <div class="grid2">
+     <div class="card"><h3>SKU intelligence — top movers</h3><div class="desc">By value lifted across the territory (6-month basket).</div>
+       ${top.map(t=>`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12.5px"><span>${t.s.n.split(' ').slice(0,4).join(' ')}</span><b class="gold">${rupee(t.val)}</b></div><div class="bar" style="margin-top:4px"><i style="width:${Math.round(t.val/maxv*100)}%"></i></div></div>`).join('')}
+     </div>
+     <div>
+       <div class="card" style="margin-bottom:16px"><h3>Category mix</h3><div class="desc">Where the territory's value sits.</div>
+         ${Object.entries(catMix).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>${c}</span><span class="muted">${Math.round(v/catTot*100)}%</span></div><div class="bar"><i style="width:${Math.round(v/catTot*100)}%"></i></div></div>`).join('')}
+       </div>
+       <div class="card"><h3>The matching engine</h3><div class="desc">How Saarthi turns data into the rep's plan.</div>
+         <div class="reason"><b>Location intelligence</b> → clusters outlets into micro-markets &amp; segments (potential × realization).</div>
+         <div class="reason"><b>Cosine similarity</b> → item-based CF on purchase vectors drives cross-sell &amp; replenishment.</div>
+         <div class="reason"><b>Beat optimization</b> → nearest-neighbour + 2-opt sequences the daily route.</div>
+         <div class="reason"><b>Promo model</b> → elasticity-based ROI picks the right scheme per SKU/segment.</div>
+         <div class="reason"><b>Output</b> → all of it lands on the rep's "Today's Plan" — what, why, who, when.</div>
+       </div>
+     </div>
+   </div>`;
+}
+
+const VIEWS={plan:viewPlan,route:viewRoute,segment:viewSegment,cross:viewCross,promo:viewPromo,analytics:viewAnalytics};
+function go(v){setActive(v);VIEWS[v]();window.scrollTo(0,0);}
+document.getElementById('nav').addEventListener('click',e=>{const a=e.target.closest('a');if(a){go(a.dataset.view);}});
+document.getElementById('todayDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+
+/* ---------------- Assistant ---------------- */
+let LANG='en';
+function toggleAssistant(force){const a=document.getElementById('assistant');const open=force!==undefined?force:!a.classList.contains('open');a.classList.toggle('open',open);if(open&&!a.dataset.init){a.dataset.init=1;botSay(LANG==='en'?'Namaste Rajesh! I\'m Saarthi. Ask me what to sell at any outlet, who to visit, or why.':'नमस्ते राजेश! मैं सारथी हूँ। किसी भी आउटलेट पर क्या बेचें, किससे मिलें या क्यों — पूछिए।');renderQuick();}}
+function setLang(l){LANG=l;document.getElementById('langEN').classList.toggle('on',l==='en');document.getElementById('langHI').classList.toggle('on',l==='hi');botSay(l==='en'?'Switched to English. How can I help with today\'s beat?':'हिंदी में बदल दिया। आज की बीट में कैसे मदद करूँ?');renderQuick();}
+function botSay(t){const m=document.createElement('div');m.className='amsg bot';m.innerHTML=t;document.getElementById('amsgs').appendChild(m);scrollA();}
+function meSay(t){const m=document.createElement('div');m.className='amsg me';m.textContent=t;document.getElementById('amsgs').appendChild(m);scrollA();}
+function scrollA(){const x=document.getElementById('amsgs');x.scrollTop=x.scrollHeight;}
+function renderQuick(){const q=LANG==='en'?['Who to visit first?','Best cross-sell today','Whose payment is overdue?','Top promo to run']:['सबसे पहले किससे मिलें?','आज का बेस्ट क्रॉस-सेल','किसका पेमेंट बाकी है?','कौन सी स्कीम चलाएँ'];
+  document.getElementById('aquick').innerHTML=q.map(s=>`<button onclick="ask('${s.replace(/'/g,"\\'")}')">${s}</button>`).join('');}
+function sendAsk(){const v=document.getElementById('ainput').value.trim();if(!v)return;document.getElementById('ainput').value='';ask(v);}
+window.ask=(q)=>{meSay(q);const a=answer(q.toLowerCase());setTimeout(()=>botSay(a),250);};
+function answer(q){
+  const hi=LANG==='hi';
+  const first=PLAN[0],coll=PLAN.filter(o=>o.outstanding>0).sort((a,b)=>b.outstanding-a.outstanding)[0];
+  if(/first|पहले|who.*visit|किससे/.test(q)){
+    const rep=replenForOutlet(first)[0];
+    return hi?`सबसे पहले <b>${first.name}</b> (${first.area}) जाएँ — ${first.seg} सेगमेंट${rep?`, ${rep.sku.n} रीऑर्डर ड्यू है`:''}${first.outstanding>0?`, और ${rupee(first.outstanding)} बकाया वसूलें`:''}। ETA ${hhmm(first.arr)}।`
+            :`Start with <b>${first.name}</b> (${first.area}) — ${first.seg} segment${rep?`, ${rep.sku.n} is due for reorder`:''}${first.outstanding>0?`, and collect ${rupee(first.outstanding)} overdue`:''}. ETA ${hhmm(first.arr)}.`;
+  }
+  if(/cross|upsell|क्रॉस|बेस्ट/.test(q)){
+    let best=null;PLAN.forEach(o=>{const r=recommendForOutlet(o,1)[0];if(r&&(!best||r.sim>best.sim))best={o,...r};});
+    return hi?`<b>${best.sku.n}</b> को <b>${best.o.name}</b> पर पिच करें — वे जो ${best.via.n} रखते हैं उससे ${best.sim.toFixed(2)} cosine मैच है।`
+            :`Pitch <b>${best.sku.n}</b> at <b>${best.o.name}</b> — ${best.sim.toFixed(2)} cosine affinity with the ${best.via.n} they already stock.`;
+  }
+  if(/overdue|payment|बकाया|पेमेंट/.test(q)){
+    return coll?(hi?`<b>${coll.name}</b> का ${rupee(coll.outstanding)} ${coll.duesDays} दिन से बकाया है — नया ऑर्डर लेने से पहले वसूलें।`
+                    :`<b>${coll.name}</b> has ${rupee(coll.outstanding)} overdue by ${coll.duesDays} days — collect before booking a fresh order.`)
+                :(hi?'आज की बीट में कोई बकाया नहीं है। 👍':'No overdue collections on today\'s beat. 👍');
+  }
+  if(/promo|scheme|स्कीम|प्रोमो/.test(q)){
+    let best={roi:-1};SKUS.forEach(s=>{const m=promoModel(s,'All',10,4,1.6,'disc');if(m.roi>best.roi)best={...m,s};});
+    return hi?`<b>${best.s.n}</b> पर ~10% स्कीम सबसे अच्छी — ROI ${best.roi.toFixed(2)}× और +${Math.round(best.incUnits)} यूनिट। Develop आउटलेट्स पर चलाएँ।`
+            :`Best scheme: ~10% on <b>${best.s.n}</b> — ROI ${best.roi.toFixed(2)}× with +${Math.round(best.incUnits)} units. Run it on Develop outlets.`;
+  }
+  // try outlet name match
+  const o=OUTLETS.find(o=>q.includes(o.name.toLowerCase().split(' ')[0]));
+  if(o){const rep=replenForOutlet(o)[0],rec=recommendForOutlet(o,1)[0];
+    return hi?`<b>${o.name}</b> — ${o.seg} सेगमेंट। ${rep?`${rep.sku.n} ड्यू है। `:''}${rec?`${rec.sku.n} क्रॉस-सेल करें (cos ${rec.sim.toFixed(2)})। `:''}${o.outstanding>0?`बकाया ${rupee(o.outstanding)}।`:''}`
+            :`<b>${o.name}</b> — ${o.seg} segment. ${rep?`${rep.sku.n} is due. `:''}${rec?`Cross-sell ${rec.sku.n} (cos ${rec.sim.toFixed(2)}). `:''}${o.outstanding>0?`Outstanding ${rupee(o.outstanding)}.`:''}`;
+  }
+  return hi?'मैं आउटलेट, SKU, रूट, क्रॉस-सेल, बकाया या प्रोमो पर मदद कर सकता हूँ। आउटलेट का नाम भी पूछ सकते हैं।'
+          :'I can help with outlets, SKUs, route, cross-sell, collections or promos. You can also type an outlet name.';
+}
+
+go('plan');
+</script>
+</body>
+</html>
