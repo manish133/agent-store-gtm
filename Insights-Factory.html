@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Insights Factory — Strategic Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0C0E13; --bg-2:#0F1218; --panel:#12151C; --panel-2:#151922; --raise:#1A1F29;
+  --line-1:#1E2330; --line-2:#2A3040; --line-3:#39414F;
+  --ink-0:#EEF1F6; --ink-1:#C6CCD8; --ink-2:#9AA2B1; --ink-3:#6E7686; --ink-4:#4D5462;
+  --indigo:#8C8DFF; --indigo-2:#6E76FF; --indigo-dim:rgba(140,141,255,.12);
+  --gold:#E6B65C; --gold-dim:rgba(230,182,92,.12);
+  --em:#5FD09A; --em-dim:rgba(95,208,154,.12);
+  --am:#E7AC55; --rose:#F08A80; --rose-dim:rgba(240,138,128,.12);
+  --serif:'Newsreader',Georgia,serif; --sans:'Inter',-apple-system,system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  --r:9px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink-1);font:14px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit;color:inherit;background:none;border:none;outline:none}
+::selection{background:rgba(140,141,255,.28)}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--mono)}
+
+/* ---------- shell ---------- */
+.app{display:flex;flex-direction:column;height:100vh}
+.top{display:flex;align-items:center;gap:22px;padding:0 20px;height:52px;border-bottom:1px solid var(--line-1);background:var(--bg-2);flex:none}
+.brand{display:flex;align-items:center;gap:9px;font:500 14px/1 var(--sans);letter-spacing:-.01em;color:var(--ink-0)}
+.brand .sub{color:var(--ink-3);font-weight:400}
+.nav{display:flex;gap:2px;margin-left:8px}
+.nav button{padding:6px 11px;border-radius:6px;color:var(--ink-3);font-size:13px;letter-spacing:-.005em;transition:.14s}
+.nav button:hover{color:var(--ink-1);background:var(--panel)}
+.nav button.on{color:var(--ink-0);background:var(--panel-2)}
+.env{margin-left:auto;display:flex;align-items:center;gap:8px;font:400 11px/1 var(--mono);color:var(--ink-4);border:1px solid var(--line-1);padding:6px 10px;border-radius:20px}
+.env i{width:5px;height:5px;border-radius:50%;background:var(--em);display:block}
+.main{flex:1;overflow:hidden;position:relative}
+.view{position:absolute;inset:0;overflow:auto;opacity:0;pointer-events:none;transition:opacity .22s}
+.view.on{opacity:1;pointer-events:auto}
+
+/* ---------- lane tokens ---------- */
+.lane-performance{--lane:var(--em);--laneDim:var(--em-dim)}
+.lane-hybrid{--lane:var(--gold);--laneDim:var(--gold-dim)}
+.lane-strategic{--lane:var(--indigo);--laneDim:var(--indigo-dim)}
+.pill{display:inline-flex;align-items:center;gap:6px;height:21px;padding:0 8px;border-radius:5px;font:500 10px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--lane,var(--ink-3));background:var(--laneDim,transparent);border:1px solid color-mix(in srgb,var(--lane,var(--line-2)) 28%,transparent);white-space:nowrap}
+.pill i{width:5px;height:5px;border-radius:1px;background:currentColor;display:block}
+
+/* ---------- ask ---------- */
+.ask{max-width:1080px;margin:0 auto;padding:56px 32px 72px}
+.eyebrow{font:500 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-4);margin-bottom:16px}
+.h1{font:400 40px/1.12 var(--serif);letter-spacing:-.018em;color:var(--ink-0);margin-bottom:12px}
+.h1 em{font-style:italic;color:var(--indigo)}
+.lede{font-size:14.5px;color:var(--ink-2);max-width:600px;margin-bottom:32px;line-height:1.62}
+.searchwrap{position:relative;margin-bottom:14px}
+.search{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line-2);border-radius:11px;padding:0 14px;height:52px;transition:.16s}
+.search:focus-within{border-color:var(--line-3);background:var(--panel-2)}
+.search input{flex:1;font-size:14.5px;height:100%}
+.search input::placeholder{color:var(--ink-4)}
+.go{height:32px;padding:0 14px;border-radius:7px;background:var(--indigo-2);color:#fff;font:500 12.5px/1 var(--sans);display:flex;align-items:center;gap:6px;transition:.14s}
+.go:hover{background:var(--indigo)}
+.go:disabled{opacity:.35;cursor:default}
+.hint{font:400 11.5px/1 var(--mono);color:var(--ink-4);margin-bottom:40px}
+
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+.lanecol{background:var(--panel);border:1px solid var(--line-1);border-radius:var(--r);overflow:hidden}
+.lanehead{padding:14px 14px 12px;border-bottom:1px solid var(--line-1)}
+.lanehead .t{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.lanehead .n{font:500 10px/1 var(--mono);color:var(--ink-4)}
+.lanehead p{font-size:12.2px;color:var(--ink-3);line-height:1.5}
+.qitem{display:block;width:100%;text-align:left;padding:13px 14px;border-bottom:1px solid var(--line-1);transition:.14s;cursor:pointer}
+.qitem:last-child{border-bottom:none}
+.qitem:hover{background:var(--panel-2)}
+.qitem .q{font-size:13px;color:var(--ink-1);line-height:1.48;margin-bottom:7px}
+.qitem:hover .q{color:var(--ink-0)}
+.qitem .m{font:400 10.5px/1.4 var(--mono);color:var(--ink-4)}
+/* ---------- classify ---------- */
+.scrim{position:absolute;inset:0;background:rgba(8,9,13,.72);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s;z-index:20}
+.scrim.on{opacity:1;pointer-events:auto}
+.cls{width:660px;max-width:calc(100vw - 40px);background:var(--panel);border:1px solid var(--line-2);border-radius:13px;padding:26px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.cls .qt{font:400 20px/1.35 var(--serif);color:var(--ink-0);margin-bottom:20px;letter-spacing:-.01em}
+.clsrow{display:flex;align-items:center;gap:10px;padding:9px 0;font-size:12.5px;color:var(--ink-3);opacity:.25;transition:.3s}
+.clsrow.on{opacity:1}
+.clsrow .tick{width:15px;height:15px;flex:none;border-radius:50%;border:1.5px solid var(--line-3);position:relative}
+.clsrow.done .tick{border-color:var(--em);background:var(--em-dim)}
+.clsrow.done .tick:after{content:'';position:absolute;left:4px;top:1.5px;width:4px;height:8px;border:solid var(--em);border-width:0 1.5px 1.5px 0;transform:rotate(43deg)}
+.clsrow b{color:var(--ink-1);font-weight:450}
+.clsres{margin-top:18px;padding-top:18px;border-top:1px solid var(--line-1);opacity:0;transform:translateY(4px);transition:.3s}
+.clsres.on{opacity:1;transform:none}
+.clstop{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+.clswhy{font-size:12.8px;color:var(--ink-2);line-height:1.6;margin-bottom:16px}
+.pathprev{background:var(--bg-2);border:1px solid var(--line-1);border-radius:8px;padding:12px 13px;margin-bottom:18px}
+.pathprev .h{font:500 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:9px}
+.pathprev ol{list-style:none;counter-reset:s}
+.pathprev li{counter-increment:s;font:400 11.5px/1.5 var(--mono);color:var(--ink-2);padding:2.5px 0 2.5px 22px;position:relative}
+.pathprev li:before{content:counter(s);position:absolute;left:0;color:var(--lane);font-size:10px}
+.clsbtn{display:flex;gap:9px;justify-content:flex-end}
+.btn{height:34px;padding:0 15px;border-radius:7px;font:450 12.5px/1 var(--sans);border:1px solid var(--line-2);color:var(--ink-2);display:flex;align-items:center;transition:.14s}
+.btn:hover{border-color:var(--line-3);color:var(--ink-0)}
+.btn.pri{background:var(--indigo-2);border-color:var(--indigo-2);color:#fff}
+.btn.pri:hover{background:var(--indigo)}
+
+/* ---------- workspace ---------- */
+.ws{display:grid;grid-template-columns:290px 1fr 430px;height:100%}
+.pane{overflow-y:auto;overflow-x:hidden}
+.pane.l{border-right:1px solid var(--line-1);background:var(--bg-2)}
+.pane.r{border-left:1px solid var(--line-1);background:var(--bg-2)}
+.pane.c{background:var(--bg)}
+.ph .wsub{font:400 10.5px/1 var(--mono);color:var(--ink-4);margin-top:7px}
+.sublbl{font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4);margin:0 0 10px}
+.fublock{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-1)}
+.fuchips{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.fuchip{text-align:left;padding:8px 10px;border:1px solid var(--line-2);border-radius:7px;font-size:11.8px;line-height:1.4;color:var(--ink-2);transition:.14s;background:var(--panel)}
+.fuchip:hover{border-color:var(--lane);color:var(--ink-0);background:var(--panel-2)}
+.fubar{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line-2);border-radius:8px;padding:0 6px 0 10px;height:36px;transition:.14s}
+.fubar:focus-within{border-color:var(--line-3)}
+.fubar input{flex:1;font-size:12.2px;height:100%}
+.fubar input::placeholder{color:var(--ink-4)}
+.fubar button{width:26px;height:26px;border-radius:6px;background:var(--indigo-2);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;transition:.14s}
+.fubar button:hover{background:var(--indigo)}
+#threadBlock{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-1)}
+.thi{display:flex;gap:9px;padding:8px 9px;border-radius:7px;cursor:pointer;transition:.14s;margin-bottom:3px}
+.thi:hover{background:var(--panel)}
+.thi.on{background:var(--panel-2)}
+.thi .tn{font:500 9.5px/1.6 var(--mono);color:var(--ink-4);flex:none}
+.thi.on .tn{color:var(--lane)}
+.thi .tt{font-size:11.8px;line-height:1.45;color:var(--ink-3)}
+.thi.on .tt{color:var(--ink-0)}
+.ph{padding:14px 16px;border-bottom:1px solid var(--line-1);position:sticky;top:0;background:inherit;z-index:5}
+.ph .lbl{font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4)}
+.ph .qq{font:400 13.5px/1.45 var(--serif);color:var(--ink-0);margin-top:8px}
+.pbody{padding:14px 16px}
+
+/* solve path (left) */
+.step{display:flex;gap:11px;padding:11px 0;opacity:.3;transition:.35s}
+.step.on{opacity:1}
+.step .rail{display:flex;flex-direction:column;align-items:center;flex:none;width:16px}
+.step .dot{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--line-3);position:relative;flex:none;transition:.25s;background:var(--bg-2)}
+.step.run .dot{border-color:var(--lane);box-shadow:0 0 0 3px var(--laneDim)}
+.step.done .dot{border-color:var(--em);background:var(--em-dim)}
+.step.done .dot:after{content:'';position:absolute;left:4px;top:1.5px;width:4px;height:8px;border:solid var(--em);border-width:0 1.5px 1.5px 0;transform:rotate(43deg)}
+.step .line{width:1px;flex:1;background:var(--line-1);margin:5px 0 -11px}
+.step:last-child .line{display:none}
+.step .c{padding-bottom:4px;min-width:0}
+.step .n{font-size:12.6px;color:var(--ink-1);line-height:1.4}
+.step.done .n{color:var(--ink-0)}
+.step .d{font:400 10.6px/1.45 var(--mono);color:var(--ink-4);margin-top:3px}
+.step .ms{font:400 9.5px/1 var(--mono);color:var(--ink-4);opacity:0;transition:.2s}
+.step.done .ms{opacity:1}
+
+/* working (center) */
+.work{padding:16px 18px 40px}
+.art{margin-bottom:20px;opacity:0;transform:translateY(6px);animation:rise .38s forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.arth{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
+.arth .k{font:500 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--lane)}
+.arth .t{font-size:12.8px;color:var(--ink-1)}
+.card{background:var(--panel);border:1px solid var(--line-1);border-radius:8px;overflow:hidden}
+pre.code{padding:13px 14px;font:400 11.6px/1.65 var(--mono);color:var(--ink-2);overflow-x:auto;white-space:pre}
+pre.code .kw{color:var(--indigo)}
+pre.code .fn{color:var(--gold)}
+pre.code .cm{color:var(--ink-4)}
+pre.code .st{color:var(--em)}
+table.dt{width:100%;border-collapse:collapse;font:400 11.8px/1.5 var(--mono)}
+table.dt th{text-align:left;font-size:9.6px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-4);font-weight:500;padding:10px 12px;border-bottom:1px solid var(--line-2);background:var(--bg-2);white-space:nowrap}
+table.dt td{padding:8px 12px;border-bottom:1px solid var(--line-1);color:var(--ink-2);white-space:nowrap}
+table.dt tr:last-child td{border-bottom:none}
+table.dt tr.hi td{background:var(--laneDim)}
+table.dt td b{color:var(--ink-0);font-weight:500}
+table.dt .num{text-align:right}
+.pos{color:var(--em)} .neg{color:var(--rose)} .warn{color:var(--am)}
+.note{display:flex;gap:10px;padding:12px 13px;border-radius:8px;font-size:12.4px;line-height:1.55;border:1px solid}
+.note.info{background:var(--panel);border-color:var(--line-1);color:var(--ink-2)}
+.note.ok{background:var(--em-dim);border-color:rgba(95,208,154,.25);color:#BEEBD5}
+.note.warn{background:var(--rose-dim);border-color:rgba(240,138,128,.28);color:#F6C6C1}
+.note .ic{font:500 10px/1.5 var(--mono);flex:none;opacity:.8}
+.note b{color:var(--ink-0);font-weight:500}
+.note.warn b{color:#FFD9D5}
+.bars{padding:13px 14px;display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:1fr 54px;gap:11px;align-items:center}
+.bar .bn{font:400 11.6px/1.4 var(--mono);color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .bt{grid-column:1/-1;height:5px;background:var(--line-1);border-radius:3px;overflow:hidden;margin-top:-3px}
+.bar .bt i{display:block;height:100%;border-radius:3px;background:var(--lane);width:0;transition:width .7s cubic-bezier(.22,1,.36,1)}
+.bar .bt i.mut{background:var(--line-3)}
+.bar .bv{font:500 11.6px/1 var(--mono);color:var(--ink-0);text-align:right}
+.scat{padding:14px}
+.scat svg{width:100%;height:210px;display:block}
+.scat .axl{font:400 9.5px var(--mono);fill:var(--ink-4)}
+.verdict{display:flex;gap:11px;align-items:flex-start;padding:13px 14px;border-radius:8px;border:1px solid}
+.verdict.ok{background:var(--em-dim);border-color:rgba(95,208,154,.3)}
+.verdict.rej{background:var(--rose-dim);border-color:rgba(240,138,128,.3)}
+.verdict .vt{font:500 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:4px 7px;border-radius:4px;flex:none}
+.verdict.ok .vt{background:rgba(95,208,154,.2);color:var(--em)}
+.verdict.rej .vt{background:rgba(240,138,128,.2);color:var(--rose)}
+.verdict .vx{font-size:12.6px;line-height:1.55;color:var(--ink-1)}
+.verdict .vx b{color:var(--ink-0);font-weight:500}
+/* answer (center) */
+.ans{padding:0 0 30px}
+.asec{padding:15px 16px;border-bottom:1px solid var(--line-1)}
+.asec .h{font:500 9.5px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);margin-bottom:11px}
+.ahead{font:400 15px/1.5 var(--serif);color:var(--ink-0);letter-spacing:-.005em}
+.ahead .hl{color:var(--gold);font-style:italic}
+.abody{font-size:12.8px;line-height:1.65;color:var(--ink-2);margin-top:9px}
+.abody strong{color:var(--ink-0);font-weight:500}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{background:var(--panel);border:1px solid var(--line-1);border-radius:7px;padding:10px}
+.kpi .kl{font:400 9.5px/1.3 var(--mono);color:var(--ink-4);margin-bottom:5px}
+.kpi .kv{font:400 19px/1 var(--serif);color:var(--ink-0)}
+.kpi .kv.s{font-size:15px}
+.reco{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-1)}
+.reco:last-child{border-bottom:none}
+.reco .rn{font:500 10px/1.5 var(--mono);color:var(--lane);flex:none}
+.reco .rt{font-size:12.6px;color:var(--ink-0);line-height:1.45;margin-bottom:4px}
+.reco .rd{font-size:11.8px;color:var(--ink-3);line-height:1.5}
+.conf{display:flex;align-items:center;gap:13px;margin-bottom:11px}
+.ring{width:52px;height:52px;flex:none;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 13px/1 var(--mono);color:var(--ink-0)}
+.conf .cl{font-size:12.4px;color:var(--ink-1);font-weight:500}
+.conf .cd{font-size:11.4px;color:var(--ink-3);margin-top:2px;line-height:1.45}
+.rlist{list-style:none;display:flex;flex-direction:column;gap:6px}
+.rlist li{font-size:11.6px;color:var(--ink-3);line-height:1.5;padding-left:13px;position:relative}
+.rlist li:before{content:'';position:absolute;left:0;top:7px;width:4px;height:4px;border-radius:50%;background:var(--line-3)}
+.rlist.warn li:before{background:var(--am)}
+.evd{padding:9px 0;border-bottom:1px solid var(--line-1)}
+.evd:last-child{border-bottom:none}
+.evd .en{font:500 11.4px/1 var(--mono);color:var(--ink-1);display:flex;justify-content:space-between;gap:8px}
+.evd .en span{color:var(--ink-4);font-weight:400;font-size:10.4px}
+.evd .ed{font-size:11.4px;color:var(--ink-3);line-height:1.5;margin-top:5px}
+
+/* method map */
+.mm{max-width:1120px;margin:0 auto;padding:44px 32px 70px}
+.mmgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:26px 0 34px}
+.mmc{background:var(--panel);border:1px solid var(--line-1);border-radius:var(--r);padding:16px}
+.mmc .t{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.mmc h3{font:500 13px/1 var(--sans);color:var(--ink-0)}
+.mmc p{font-size:12.2px;color:var(--ink-3);line-height:1.55;margin-bottom:12px}
+.mmc .sig{font:400 10.4px/1.55 var(--mono);color:var(--ink-4);border-top:1px solid var(--line-1);padding-top:10px}
+.mmc .sig b{color:var(--lane);font-weight:500;display:block;margin-bottom:3px}
+.mmt{background:var(--panel);border:1px solid var(--line-1);border-radius:var(--r);overflow:hidden}
+.mmt table{width:100%;border-collapse:collapse}
+.mmt th{text-align:left;font:500 9.6px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-4);padding:12px;border-bottom:1px solid var(--line-2);background:var(--bg-2)}
+.mmt td{padding:12px;border-bottom:1px solid var(--line-1);vertical-align:top;font-size:12.4px;color:var(--ink-2);line-height:1.5}
+.mmt tr:last-child td{border-bottom:none}
+.mmt tr{cursor:pointer;transition:.13s}
+.mmt tbody tr:hover{background:var(--panel-2)}
+.mmt .qc{color:var(--ink-0);max-width:300px}
+.mmt .mc{font:400 11.2px/1.5 var(--mono);color:var(--ink-3);max-width:230px}
+.mmt .oc{font:400 11.2px/1.5 var(--mono);color:var(--ink-4)}
+
+/* data view */
+.dv{max-width:1000px;margin:0 auto;padding:44px 32px 70px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px;margin-bottom:30px}
+.ds{background:var(--panel);border:1px solid var(--line-1);border-radius:7px;padding:11px 12px}
+.ds .dn{font:500 11.4px/1 var(--mono);color:var(--ink-1);margin-bottom:6px}
+.ds .dr{font:400 10.4px/1 var(--mono);color:var(--ink-4)}
+.sec-h{font:400 21px/1.3 var(--serif);color:var(--ink-0);margin:0 0 8px;letter-spacing:-.01em}
+.sec-p{font-size:13px;color:var(--ink-3);line-height:1.6;max-width:640px;margin-bottom:20px}
+
+@media (max-width:1220px){.ws{grid-template-columns:250px 1fr 310px}.lanes,.mmgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.ansC{max-width:660px;margin:0 auto;padding:30px 34px 70px}
+.ansC .lead{font:500 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--lane);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ansC .lead:after{content:'';flex:1;height:1px;background:var(--line-1)}
+.ansC .ahead{font:400 27px/1.32 var(--serif);color:var(--ink-0);letter-spacing:-.015em;margin-bottom:16px}
+.ansC .ahead .hl{color:var(--gold);font-style:italic}
+.ansC .abody{font-size:14.5px;line-height:1.72;color:var(--ink-2)}
+.ansC .abody strong{color:var(--ink-0);font-weight:500}
+.ansC .abody code{font:400 13px var(--mono);color:var(--ink-1)}
+.ansC .blk{margin-top:32px;padding-top:22px;border-top:1px solid var(--line-1)}
+.ansC .blk>.h{font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px}
+.ansC .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.ansC .kpi{background:var(--panel);border:1px solid var(--line-1);border-radius:8px;padding:12px}
+.ansC .kpi .kl{font:400 9.5px/1.35 var(--mono);color:var(--ink-4);margin-bottom:7px;min-height:26px}
+.ansC .kpi .kv{font:400 20px/1 var(--serif);color:var(--ink-0)}
+.ansC .kpi .kv.s{font-size:14px;line-height:1.25}
+.ansC .reco{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-1)}
+.ansC .reco:last-child{border-bottom:none}
+.ansC .reco .rn{font:500 10px/1.6 var(--mono);color:var(--lane);flex:none}
+.ansC .reco .rt{font-size:13.6px;color:var(--ink-0);line-height:1.45;margin-bottom:4px}
+.ansC .reco .rd{font-size:12.6px;color:var(--ink-3);line-height:1.55}
+.ansC .cf{display:flex;gap:26px;align-items:flex-start}
+.ansC .cfl{flex:none;text-align:center}
+.ansC .cfl .cll{font:400 9.5px/1 var(--mono);color:var(--ink-4);margin-top:8px}
+.ansC .cfr{flex:1}
+.ansC .cfr .cl{font-size:13.4px;color:var(--ink-0);font-weight:500;margin-bottom:9px}
+.ansC .two{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.ansC .evd{padding:10px 0;border-bottom:1px solid var(--line-1)}
+.ansC .evd:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="7.4" stroke="#8C8DFF" stroke-width="1.1" opacity=".55"/><circle cx="8.5" cy="8.5" r="3.1" fill="#8C8DFF" opacity=".9"/><path d="M8.5 1.1v14.8M1.1 8.5h14.8" stroke="#8C8DFF" stroke-width=".7" opacity=".28"/></svg>
+      Insights Factory <span class="sub">Strategic Intelligence</span>
+    </div>
+    <div class="nav">
+      <button data-view="ask" class="on">Ask</button>
+      <button data-view="workspace">Investigation</button>
+      <button data-view="method">Method map</button>
+      <button data-view="data">Data</button>
+    </div>
+    <div class="env"><i></i>Amazing Stores · Oral Care · 15 stores · 10 wks · synthetic</div>
+  </div>
+  <div class="main">
+    <!-- ASK -->
+    <div class="view on" id="v-ask">
+      <div class="ask">
+        <div class="eyebrow">Strategic insights workspace</div>
+        <h1 class="h1">Ask a question about the category.<br/>Insights Factory picks the <em>method</em> that fits it.</h1>
+        <p class="lede">Not every question is the same kind of question. Some are answered by counting; some need a model, an optimiser and a forecast. Insights Factory classifies first, then shows its working — including when the data does not support the answer you were hoping for.</p>
+        <div class="searchwrap">
+          <div class="search">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="flex:none"><circle cx="6.6" cy="6.6" r="4.9" stroke="#6E7686" stroke-width="1.2"/><path d="M10.3 10.3L13.6 13.6" stroke="#6E7686" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <input id="ask" autocomplete="off" placeholder="Where should Visible White Purple be placed?"/>
+            <button class="go" id="goBtn" disabled>Classify<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5h8.4M6 2l3.5 3.5L6 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+        <div class="hint">8 questions mapped to the dataset · classified into 3 methods</div>
+        <div class="lanes" id="lanes"></div>
+      </div>
+    </div>
+    <!-- WORKSPACE -->
+    <div class="view" id="v-workspace">
+      <div class="ws" id="ws">
+        <div class="pane l">
+          <div class="ph"><div class="lbl" id="wsLbl">Investigation</div><div class="qq" id="wsQ">—</div></div>
+          <div class="pbody">
+            <div class="sublbl">Solve path</div>
+            <div id="steps"></div>
+            <div class="fublock">
+              <div class="sublbl">Ask a follow-up</div>
+              <div id="fuChips" class="fuchips"></div>
+              <div class="fubar">
+                <input id="fuAsk" autocomplete="off" placeholder="Ask anything about this result…"/>
+                <button id="fuGo" aria-label="Run follow-up"><svg width="12" height="12" viewBox="0 0 11 11" fill="none"><path d="M1 5.5h8.4M6 2l3.5 3.5L6 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </div>
+            </div>
+            <div id="threadBlock" style="display:none">
+              <div class="sublbl">Thread</div>
+              <div id="thread"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pane c"><div class="ansC" id="ans"></div></div>
+        <div class="pane r">
+          <div class="ph"><div class="lbl">Working</div><div class="wsub" id="wsSub">the analysis behind the answer</div></div>
+          <div class="work" id="work"></div>
+        </div>
+      </div>
+    </div>
+    <!-- METHOD MAP -->
+    <div class="view" id="v-method"><div class="mm" id="mm"></div></div>
+    <!-- DATA -->
+    <div class="view" id="v-data"><div class="dv" id="dv"></div></div>
+    <!-- CLASSIFY -->
+    <div class="scrim" id="scrim"><div class="cls" id="cls"></div></div>
+  </div>
+</div>
+<script>
+const PTS=[[52,18],[69,29],[57,31],[83,40],[77,61],[89,34],[75,42],[69,57],[93,35],[93,9],[67,46],[79,11],[74,8],[92,43],[62,40],[68,58],[68,51],[58,9],[89,59],[81,36],[75,56],[68,62],[67,44],[70,40],[78,60],[87,78],[74,40],[73,34],[60,29],[45,68],[76,11],[87,57],[92,51],[94,41],[70,33],[74,35],[75,34],[83,36],[68,41],[64,16],[84,44],[84,9],[84,63],[100,50],[84,6],[62,48],[71,39],[79,36],[78,15],[91,15],[58,30],[89,24],[87,52],[75,39],[83,49],[81,32],[77,33],[92,45],[70,41],[83,36],[57,43],[64,38],[78,43],[53,49],[75,51],[68,8],[77,14],[63,37],[78,40],[77,15],[99,21],[81,19],[87,50],[80,32],[70,43],[67,40],[100,36],[93,53],[87,24],[98,40],[72,10],[72,16],[100,61],[87,68],[78,17],[90,26],[84,42],[65,79],[81,45],[63,19],[95,50],[70,49],[76,11],[85,33],[81,56],[88,33]];
+/* ============================ LANES ============================ */
+const LANES = {
+  performance:{
+    key:'performance', name:'Performance Explorer', tag:'Performance',
+    desc:'Descriptive. The answer already exists in the data — it just has to be counted correctly.',
+    sig:'Deterministic aggregation. No causal claim, no recommendation.',
+    path:['Resolve metrics','Build the query','Run the aggregation','Validate sample & confounds','Read the result'],
+    rt:'~3s'
+  },
+  hybrid:{
+    key:'hybrid', name:'Hybrid', tag:'Both',
+    desc:'Measure first, then reason. The number is easy; knowing whether it means anything is not.',
+    sig:'A measured result, then a causal test that can overturn it.',
+    path:['Measure the effect','Test whether it behaves causally','Rule out confounds & alternatives','Look for a control group','Decide — or refuse to'],
+    rt:'~6s'
+  },
+  strategic:{
+    key:'strategic', name:'Strategic Investigation', tag:'Strategic',
+    desc:'No answer exists in the data. It has to be modelled, optimised and forecast under constraints.',
+    sig:'Fitted model → optimiser → forecast, with confidence and caveats.',
+    path:['Frame the decision & scope','Fit the model','Establish the baseline','Optimise under constraints','Forecast to target'],
+    rt:'~9s'
+  }
+};
+
+const SQL = s => s.replace(/\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|JOIN|ON|AND|CASE|WHEN|THEN|ELSE|END|AS|HAVING|WITH|OVER|PARTITION BY|DESC|COUNT|AVG|SUM|CORR|STDDEV)\b/g,'<span class="kw">$1</span>')
+  .replace(/(--[^\n]*)/g,'<span class="cm">$1</span>').replace(/('[^']*')/g,'<span class="st">$1</span>');
+
+/* ============================ QUESTIONS ============================ */
+const Q = {
+
+/* ------------------------------- Q1 ------------------------------- */
+q1:{ id:'q1', lane:'strategic',
+  text:'Where should Visible White Purple be placed & minimum number of facings required to double the Market Share growth by State by estimated months to hit target?',
+  short:'VWP placement, facings & months to target',
+  why:'Three things are asked that no query can return: a <b>placement decision</b>, a <b>minimum</b> (an optimisation), and <b>months to target</b> (a forecast). Each needs a fitted model of how facings and position convert into units, then share.',
+  method:'OLS on 150 store-weeks → per-state optimiser → time-to-target forecast',
+  tables:['POS_Weekly','Shelf_Audit','Syndicated_Market','Marketing_Investment'],
+  output:'Per-state facings plan + months to +2pt',
+  steps:[
+    {n:'Frame the decision & scope', d:'VWP · 10 states · 150 store-weeks', ms:'0.4s', arts:[
+      {k:'scope', t:'What has to be produced', type:'note', tone:'info', ic:'01',
+       html:'Three outputs, not one: <b>where</b> (a shelf position), <b>how many facings</b> (a minimum, per state), and <b>when</b> (months to hit target). The dataset has no column for any of them — they have to be modelled.'}
+    ]},
+    {n:'Fit the model', d:'units ~ facings + eye-level + promo', ms:'1.2s', arts:[
+      {k:'query', t:'Pull the estimation sample', type:'sql', code:"SELECT p.STORE_ID, p.STATE, p.WEEK_START,\n       p.UNITS_SOLD, p.FACINGS, p.EYE_LEVEL_FLAG,\n       p.PROMO_DISCOUNT_PCT\nFROM POS_Weekly p\nWHERE p.SKU_ID = 'COL-VWP-100'   -- Visible White Purple\n-- 150 rows: 15 stores x 10 weeks"},
+      {k:'model', t:'Ordinary least squares · n = 150', type:'model',
+       rows:[['FACINGS','+2.00','units per additional facing'],['EYE_LEVEL_FLAG','+8.97','units when at eye level'],['PROMO_DISCOUNT_PCT','−0.14','negative — premium SKU'],['intercept','27.2','']],
+       fit:'units = 2.00 × facings + 8.97 × eye_level + 27.2'},
+      {k:'check', t:'Eye-level effect, measured directly', type:'note', tone:'ok', ic:'✓',
+       html:'At eye level VWP averages <b>45.2 units/week</b>; off it, <b>35.9</b>. A <b>+26%</b> gap that survives controlling for facings, price and promo — this is the single largest lever available.'}
+    ]},
+    {n:'Establish the baseline', d:'growth to double = ?', ms:'0.9s', arts:[
+      {k:'baseline', t:'Colgate Whitening share growth by state · 10 weeks', type:'bars', unit:'pt/mo', max:6,
+       items:[{n:'Uttar Pradesh',v:5.74},{n:'Telangana',v:4.20},{n:'West Bengal',v:3.38},{n:'Maharashtra',v:2.84},{n:'Kerala',v:0.53},{n:'Delhi',v:-0.48},{n:'Rajasthan',v:-1.05},{n:'Gujarat',v:-1.45},{n:'Tamil Nadu',v:-1.84},{n:'Karnataka',v:-4.19}]},
+      {k:'reject', t:'These slopes cannot be used', type:'verdict', status:'rej',
+       html:'<b>Ten weeks is too short to fit a state-level trend.</b> The slopes swing from −4.19 to +5.74 pt/month — a spread no real market produces in a quarter. Fitting to them would produce a plan built on noise, and "double UP\'s 5.74" would be undeliverable. <b>The national trend (+0.49 pt/month) is the honest baseline.</b>'}
+    ]},
+    {n:'Optimise under constraints', d:'minimum facings per state', ms:'2.1s', arts:[
+      {k:'solve', t:'Smallest facings count at eye level that adds ≥ 0.49 pt/month', type:'table',
+       cols:['State','Share','Eye-level now','Min facings','Units','New growth','Months to +2pt'],
+       rows:[['Rajasthan','53.0%','20%','<b>3</b>','+14.6%','1.04 pt/mo','1.9'],
+             ['Uttar Pradesh','53.6%','30%','<b>3</b>','+16.2%','1.06 pt/mo','1.9'],
+             ['Karnataka','55.7%','15%','<b>3</b>','+15.7%','1.04 pt/mo','1.9'],
+             ['West Bengal','55.6%','45%','<b>5</b>','+15.3%','1.05 pt/mo','1.9'],
+             ['Maharashtra','56.2%','40%','<b>5</b>','+18.1%','1.11 pt/mo','1.8'],
+             ['Kerala','56.6%','40%','<b>5</b>','+16.0%','1.01 pt/mo','2.0'],
+             ['Gujarat','57.5%','50%','<b>5</b>','+14.1%','0.99 pt/mo','2.0'],
+             ['Telangana','55.9%','40%','<b>6</b>','+18.1%','1.15 pt/mo','1.7'],
+             ['Delhi','57.7%','40%','<b>6</b>','+17.8%','1.11 pt/mo','1.8'],
+             ['Tamil Nadu','58.0%','60%','<b>6</b>','+13.4%','0.98 pt/mo','2.0']],
+       hi:[0,1,2],
+       note:'Highlighted states need only 3 facings — their eye-level rate is so low (15–30%) that moving the pack does the work.'}
+    ]},
+    {n:'Forecast to target', d:'+2pt at the new growth rate', ms:'0.7s', arts:[
+      {k:'spend', t:'Is spend an alternative lever?', type:'table',
+       cols:['SKU','Marketing ₹/unit','Read'],
+       rows:[['Visible White Purple','<b>₹1,187</b>','4.5× the cost of its sibling'],['Visible White','₹262','same category, same shopper']],
+       note:'VWP already carries the heaviest media cost in the range. The shelf is where that spend is being wasted, so more spend cannot be the answer.'}
+    ]}
+  ],
+  ans:{
+    head:'Eye level everywhere — then <span class="hl">3, 5 or 6 facings</span> depending on the state.',
+    body:'Placement is the lever: at eye level VWP sells <strong>+26%</strong> more, and today it only holds eye level 15–60% of the time. Minimum facings are <strong>3</strong> in Rajasthan, UP and Karnataka (where eye level alone does it), <strong>5</strong> in West Bengal, Maharashtra, Kerala and Gujarat, and <strong>6</strong> in Telangana, Delhi and Tamil Nadu. That takes growth from 0.49 to ~1.0–1.15 pt/month and reaches +2pt in <strong>1.7–2.0 months</strong>.',
+    kpis:[['Best lever','Eye level'],['Uplift at eye level','+26%'],['Facings range','3 – 6'],['Months to +2pt','1.7 – 2.0']],
+    recos:[
+      {t:'Move VWP to eye level in all 10 states', d:'Costs nothing but a reset cycle and is worth +26% on its own.'},
+      {t:'Set facings by state: 3 / 5 / 6', d:'Spend the extra space where eye-level rates are worst, not evenly.'},
+      {t:'Hold media flat; convert on shelf', d:'₹1,187/unit is already 4.5× the sibling SKU. The gap is visibility, not awareness.'}
+    ],
+    conf:{pct:74, level:'Moderate — model is sound, baseline is thin'},
+    reasons:['150 store-weeks for the units model — adequate','Eye-level effect stable across formats and states','Share modelled via VWP\'s share of Colgate Whitening'],
+    caveats:['Baseline growth is a national average — 10 weeks cannot support state-level trends','+2pt target and 3-month ramp are assumptions, not data','Synthetic dataset: the method is real, the market is not'],
+    ev:[{n:'POS_Weekly',m:'150 store-wks',d:'The estimation sample for units ~ facings + eye-level.'},
+        {n:'Shelf_Audit',m:'position',d:'Eye-level rate by state: 15% (Karnataka) to 60% (Tamil Nadu).'},
+        {n:'Syndicated_Market',m:'share',d:'Whitening share 53.0–58.0% and the +0.49 pt/month national baseline.'},
+        {n:'Marketing_Investment',m:'₹/unit',d:'₹1,187 on VWP vs ₹262 on Visible White.'}]
+  }
+},
+
+/* ------------------------------- Q2 ------------------------------- */
+q2:{ id:'q2', lane:'performance',
+  text:'What is the correlation between planogram score & offtakes?',
+  short:'Planogram score vs offtake',
+  why:'This asks for <b>a statistic</b>, not a decision. Both columns exist; the answer is a number that either is or is not there. No model, no hypotheses — just compute it correctly and check it is not an artefact.',
+  method:'Pearson r, then within-SKU control, then decompose the score',
+  tables:['POS_Weekly','Shelf_Audit'],
+  output:'Correlation coefficient + component breakdown',
+  steps:[
+    {n:'Resolve metrics', d:'planogram_score · units_sold', ms:'0.2s', arts:[
+      {k:'semantic', t:'Semantic layer resolution', type:'note', tone:'info', ic:'01',
+       html:'<b>planogram score</b> → <code>Shelf_Audit.PLANOGRAM_SCORE</code> (0–100 composite, also mirrored on POS_Weekly). <b>offtakes</b> → <code>POS_Weekly.UNITS_SOLD</code> (units per SKU × store × week). Grain matches: both are SKU × store × week.'}
+    ]},
+    {n:'Build the query', d:'Colgate SKUs · 1,500 rows', ms:'0.2s', arts:[
+      {k:'query', t:'Correlation over the full panel', type:'sql', code:"SELECT CORR(PLANOGRAM_SCORE, UNITS_SOLD) AS r,\n       COUNT(*) AS n\nFROM POS_Weekly\nWHERE SKU_ID LIKE 'COL-%'   -- Colgate range, 10 SKUs x 15 stores x 10 wks"}
+    ]},
+    {n:'Run the aggregation', d:'r = 0.075', ms:'0.5s', arts:[
+      {k:'result', t:'Planogram score vs units sold · n = 1,500', type:'scatter', r:'r = 0.075   ·   r² = 0.006',
+       xlab:'Planogram score →', ylab:'Units sold →',
+       note:'A cloud, not a line. The score explains <b>0.6%</b> of the variance in offtake.'}
+    ]},
+    {n:'Validate sample & confounds', d:'control for SKU scale', ms:'0.4s', arts:[
+      {k:'control', t:'Could SKU scale be hiding a relationship?', type:'note', tone:'info', ic:'✓',
+       html:'Big SKUs sell more <i>and</i> tend to score higher, which could mask or fake a correlation. Re-computing <b>within each SKU</b> (z-scored) lifts r only to <b>0.116</b>. The relationship is genuinely absent, not hidden by mix.'}
+    ]},
+    {n:'Read the result', d:'decompose the composite', ms:'0.5s', arts:[
+      {k:'decompose', t:'The score vs its own components', type:'bars', unit:'r', max:.25, dec:3,
+       items:[{n:'Eye-level flag',v:.230},{n:'Facings',v:.185},{n:'Compliance %',v:.089},{n:'Planogram score (composite)',v:.075,mut:true}],
+       note:'The components predict 2–3× better than the score built from them.'},
+      {k:'why', t:'Why the composite is weaker than its parts', type:'note', tone:'warn', ic:'!',
+       html:'Averaging a strong signal (eye-level, r = 0.230) together with weak ones (compliance, r = 0.089) <b>dilutes it</b>. The composite is not measuring badly — it is measuring several things at once and cancelling itself out.'}
+    ]}
+  ],
+  ans:{
+    head:'Effectively <span class="hl">none — r = 0.075</span>.',
+    body:'The planogram score explains <strong>0.6%</strong> of the variance in offtake, and controlling for SKU scale only lifts it to 0.116. The signal is in the components the score is built from: <strong>eye-level (r = 0.230)</strong> and <strong>facings (r = 0.185)</strong> predict 2–3× better. Averaging them with weaker inputs like compliance dilutes the very effect you want to see.',
+    kpis:[['Correlation','0.075'],['Variance explained','0.6%'],['Within-SKU','0.116'],['Best component','0.230']],
+    recos:[
+      {t:'Do not manage to the composite score', d:'At r = 0.075 it cannot predict or defend an offtake decision.'},
+      {t:'Report eye-level % and facings directly', d:'These are the two inputs that carry the signal.'},
+      {t:'If a composite is needed, re-weight it onto eye-level', d:'A proxy is only useful if it tracks the thing it proxies.'}
+    ],
+    conf:{pct:91, level:'High — a direct measurement'},
+    reasons:['1,500 SKU × store × week observations','Within-SKU control rules out a scale artefact','Components tested independently','Sign and magnitude stable across all 10 weeks'],
+    caveats:['A null result, not proof the score is worthless for compliance auditing','Synthetic dataset — real planogram scores may be built differently'],
+    ev:[{n:'POS_Weekly',m:'1,500 rows',d:'Units and planogram score at matching grain.'},
+        {n:'Shelf_Audit',m:'components',d:'Eye-level, facings and compliance tested separately against units.'}]
+  }
+},
+
+/* ------------------------------- Q3 ------------------------------- */
+q3:{ id:'q3', lane:'performance',
+  text:'Which is the best shelf for placement of kids TP?',
+  short:'Best shelf for Kids toothpaste',
+  why:'"Best" here means <b>highest selling</b>, and every shelf has already been tried across 15 stores. This is a ranking the data can return directly — the only work is checking the groups are comparable.',
+  method:'Group by vertical position, rank on units, check group balance',
+  tables:['Shelf_Audit','POS_Weekly','Planogram_Constraints'],
+  output:'Ranked shelf table',
+  steps:[
+    {n:'Resolve metrics', d:'Kids SKU · vertical position', ms:'0.2s', arts:[
+      {k:'semantic', t:'Semantic layer resolution', type:'note', tone:'info', ic:'01',
+       html:'<b>kids TP</b> → <code>COL-KID-80</code> (Kids Strawberry, the only Kids SKU in the range). <b>shelf</b> → <code>Shelf_Audit.VERTICAL_POSITION</code>, which maps to <code>SHELF_NO</code> 1–5, top to bottom.'}
+    ]},
+    {n:'Build the query', d:'join audit to POS', ms:'0.2s', arts:[
+      {k:'query', t:'Units by vertical position', type:'sql', code:"SELECT s.VERTICAL_POSITION, s.SHELF_NO,\n       AVG(p.UNITS_SOLD) AS units_wk,\n       COUNT(*) AS n\nFROM Shelf_Audit s\nJOIN POS_Weekly p\n  ON p.STORE_ID = s.STORE_ID\n AND p.SKU_ID   = s.SKU_ID\n AND p.WEEK_START = s.WEEK_START\nWHERE s.SKU_ID = 'COL-KID-80'\nGROUP BY 1, 2\nORDER BY units_wk DESC"}
+    ]},
+    {n:'Run the aggregation', d:'5 positions ranked', ms:'0.4s', arts:[
+      {k:'result', t:'Kids Strawberry · units per week by shelf', type:'table',
+       cols:['Shelf','Position','Units/wk','n','vs best'],
+       rows:[['<b>3</b>','<b>Eye Level</b>','<b>19.6</b>','29','—'],
+             ['2','Upper Middle','18.6','30','−5%'],
+             ['5','Bottom','16.0','25','<span class="neg">−18%</span>'],
+             ['4','Lower Middle','15.9','36','<span class="neg">−19%</span>'],
+             ['1','Top','15.5','30','<span class="neg">−21%</span>']],
+       hi:[0]}
+    ]},
+    {n:'Validate sample & confounds', d:'are the groups comparable?', ms:'0.4s', arts:[
+      {k:'check', t:'Group balance', type:'note', tone:'ok', ic:'✓',
+       html:'All five positions carry <b>25–36 observations</b> and similar facing counts, so no position is winning simply because it was given more space. The spread is position, not resource.'}
+    ]},
+    {n:'Read the result', d:'Shelf 3 · 19.6 u/wk', ms:'0.4s', arts:[
+      {k:'read', t:'The counter-intuitive part', type:'note', tone:'warn', ic:'!',
+       html:'The child-height <b>bottom shelf is 18% worse</b> than adult eye level. The buyer is the parent, not the child — the pack has to be in the <b>parent\'s</b> sight-line. Note this is an observed ranking, not a controlled experiment: it says where Kids <i>sells</i> best, not that moving it there causes the lift.'},
+      {k:'rule', t:'Cross-check against the planogram rules', type:'note', tone:'info', ic:'✓',
+       html:'<code>Planogram_Constraints</code> already carries a <b>"Kids products not on bottom shelf"</b> rule in every store. The data supports the rule that is already written.'}
+    ]}
+  ],
+  ans:{
+    head:'<span class="hl">Shelf 3 — adult eye level</span>, at 19.6 units/week.',
+    body:'The full ranking is eye level (19.6), upper-middle (18.6), bottom (16.0), lower-middle (15.9), top (15.5). The intuitive child-height bottom shelf is <strong>18% worse</strong> than eye level, because the parent completes the purchase and the pack needs to sit in their sight-line. Shelf 2 is an acceptable fallback at −5%.',
+    kpis:[['Best shelf','Shelf 3'],['Units/wk','19.6'],['vs bottom shelf','+23%'],['vs top shelf','+26%']],
+    recos:[
+      {t:'Place Kids Strawberry on Shelf 3', d:'Eye level for the adult, not the child.'},
+      {t:'Use Shelf 2 where eye level is full', d:'Upper-middle costs only 5% versus the best position.'},
+      {t:'Keep the existing no-bottom-shelf rule', d:'It is already encoded and the data backs it.'}
+    ],
+    conf:{pct:72, level:'Moderate — observed, not controlled'},
+    reasons:['All five positions observed, 25–36 rows each','Facings comparable across positions','Consistent with the existing planogram rule'],
+    caveats:['Observational: stores chose these positions, so unmeasured store factors may drive part of the gap','150 rows for one SKU — a real test would randomise position by store','Synthetic dataset'],
+    ev:[{n:'Shelf_Audit',m:'150 rows',d:'Kids units by Top / Upper-mid / Eye / Lower-mid / Bottom.'},
+        {n:'POS_Weekly',m:'units',d:'Weekly units used to rank positions on velocity.'},
+        {n:'Planogram_Constraints',m:'rules',d:'Carries the existing "no kids on bottom shelf" rule.'}]
+  }
+},
+
+/* ------------------------------- Q4 ------------------------------- */
+q4:{ id:'q4', lane:'hybrid',
+  text:'Does placing Colgate Total Sensitive lead to better or worse offtakes when placed next to Sensodyne?',
+  short:'Total Sensitive next to Sensodyne',
+  why:'The measurement is trivial — <code>SKU_Adjacency</code> has an uplift column. But the question says <b>"lead to"</b>, which is a causal claim. So this is two jobs: read the number (Performance), then test whether it can carry the weight being put on it (Strategic).',
+  method:'Read uplift, then test the distance gradient and look for a control',
+  tables:['SKU_Adjacency','POS_Weekly','Competition_Pricing'],
+  output:'Measured effect + causal verdict',
+  steps:[
+    {n:'Measure the effect', d:'uplift vs matched base', ms:'0.6s', arts:[
+      {k:'query', t:'Read the adjacency table', type:'sql', code:"SELECT AVG(FOCUS_UPLIFT_VS_BASE) AS uplift,\n       AVG(FOCUS_UNITS_SOLD)    AS units,\n       COUNT(*)                 AS n\nFROM SKU_Adjacency\nWHERE FOCUS_SKU_ID = 'COL-TS-100'   -- Total Sensitive"},
+      {k:'result', t:'The headline number', type:'table',
+       cols:['Focus SKU','Neighbour','Uplift vs base','Units/wk','n'],
+       rows:[['Total Sensitive','Sensodyne','<b class="pos">+6.6%</b>','42.0','150']],
+       note:'Taken at face value this says: place it beside Sensodyne, gain 6.6%. That is where a dashboard would stop.'}
+    ]},
+    {n:'Test whether it behaves causally', d:'does the lift decay with distance?', ms:'1.4s', arts:[
+      {k:'test', t:'If proximity causes the lift, it must fade with distance', type:'bars', unit:'% uplift', max:14,
+       items:[{n:'0 packs away',v:0.2},{n:'1 pack away',v:9.5},{n:'2 packs away',v:4.9},{n:'3 packs away',v:11.9}],
+       note:'No gradient. The closest position is the <b>weakest</b> of the four.'},
+      {k:'corr', t:'Distance vs uplift', type:'verdict', status:'rej',
+       html:'<b>corr(distance, uplift) = +0.127.</b> A real proximity effect must be <b>negative</b> — closer should mean stronger. This is the wrong sign. The "adjacency effect" does not decay with distance, which means it is not an adjacency effect.'}
+    ]},
+    {n:'Rule out confounds & alternatives', d:'break out by relationship', ms:'1.1s', arts:[
+      {k:'breakout', t:'Uplift by actual shelf relationship', type:'table',
+       cols:['Relationship','Uplift','n','Is it even adjacent?'],
+       rows:[['Different Shelf','<b class="pos">+11.7%</b>','38','<span class="neg">No</span>'],
+             ['Same Shelf','+7.1%','35','Loosely'],
+             ['Immediate Right','+4.4%','37','<b>Yes</b>'],
+             ['Immediate Left','<b class="neg">+3.2%</b>','40','<b>Yes</b>']],
+       hi:[0],
+       note:'The effect is strongest where the two products are NOT next to each other, and weakest where they are.'},
+      {k:'flip', t:'The ranking is inverted', type:'verdict', status:'rej',
+       html:'Being <b>immediately beside Sensodyne is the worst of the four conditions (+3.2% / +4.4%)</b>. Being on a <b>different shelf entirely scores +11.7%</b> — three times higher. Whatever this column is picking up, it is not the effect of standing next to Sensodyne.'}
+    ]},
+    {n:'Look for a control group', d:'compare against a non-Sensodyne neighbour', ms:'0.7s', arts:[
+      {k:'control', t:'Neighbour brands present for Total Sensitive', type:'table',
+       cols:['Neighbour brand','Rows'],
+       rows:[['Sensodyne','150'],['<i>any other brand</i>','<b class="neg">0</b>']],
+       note:'Every observation has Sensodyne as the neighbour.'},
+      {k:'nocontrol', t:'There is no counterfactual', type:'verdict', status:'rej',
+       html:'With <b>no non-Sensodyne comparison</b>, "+6.6% vs base" is measured against a modelled baseline, not against the alternative placement. Even if the number were clean, it could not answer <b>better or worse than what?</b>'}
+    ]},
+    {n:'Decide — or refuse to', d:'verdict', ms:'0.5s', arts:[
+      {k:'verdict', t:'What can honestly be claimed', type:'note', tone:'warn', ic:'!',
+       html:'<b>The +6.6% does not survive testing.</b> It has no distance gradient, the sign is inverted against the causal prediction, the closest positions are the weakest, and there is no control group. Reporting "place beside Sensodyne for +6.6%" would be a <b>false positive</b> — the most expensive kind of insight, because it looks actionable.<br/><br/>What <i>is</i> solid: Total Sensitive sells <b>42 units/week at ₹145 against Sensodyne\'s ₹190</b>, at a 32% margin. The price gap is real. The adjacency story is not.'}
+    ]}
+  ],
+  ans:{
+    head:'The data <span class="hl">cannot answer this</span> — and the +6.6% headline is an artefact.',
+    body:'Read naively, <code>SKU_Adjacency</code> says Total Sensitive gains <strong>+6.6%</strong> beside Sensodyne. It does not hold. The lift shows <strong>no decay with distance</strong> (corr = +0.127, wrong sign), and breaking it out inverts the story: <strong>immediately beside Sensodyne is the worst position (+3.2%)</strong> while a <strong>different shelf scores +11.7%</strong>. Every one of the 150 rows has Sensodyne as the neighbour, so there is no control. The honest answer is that this dataset cannot establish the effect either way.',
+    kpis:[['Headline uplift','+6.6%'],['Adjacent (L/R)','+3.2 / +4.4%'],['Different shelf','+11.7%'],['Control group','none']],
+    recos:[
+      {t:'Do not act on the +6.6%', d:'It inverts under testing. Acting on it would attribute a gain to a placement that does not produce it.'},
+      {t:'Run a real test to settle it', d:'Randomise Total Sensitive next to Sensodyne in half the stores, hold the rest as control, read 8 weeks.'},
+      {t:'The price gap is the real asset', d:'₹145 vs ₹190 at a 32% margin is solid and does not depend on adjacency.'}
+    ],
+    conf:{pct:88, level:'High — confident there is no reliable effect'},
+    reasons:['150 adjacency observations examined','Distance gradient tested — absent, and inverted','Relationship breakout contradicts the average','Absence of a control group is definitive, not a judgement call'],
+    caveats:['High confidence in the null, not in an effect size','A properly randomised test could still find a real effect','Synthetic dataset — this pattern may be an artefact of how the data was generated'],
+    ev:[{n:'SKU_Adjacency',m:'150 rows',d:'Uplift, distance in packs and shelf relationship — the basis of the reversal.'},
+        {n:'POS_Weekly',m:'42 u/wk',d:'Total Sensitive velocity and 32% gross margin.'},
+        {n:'Competition_Pricing',m:'₹145 vs ₹190',d:'The price gap, which holds regardless of placement.'}]
+  }
+},
+
+/* ------------------------------- Q5 ------------------------------- */
+q5:{ id:'q5', lane:'performance',
+  text:'Does placing max fresh blue with all other blue products lead to better offtakes than when it is placed away from other blue products and with Maxfresh red?',
+  short:'MaxFresh Blue colour blocking',
+  why:'Three named conditions, all present in the data, all measurable. Unlike the Sensodyne question this one has <b>internal comparisons</b> — the conditions are compared against each other, not against a modelled base — so a straight aggregation answers it.',
+  method:'Three-way conditional split, checked for group balance',
+  tables:['SKU_Adjacency','POS_Weekly','SKU_Master'],
+  output:'Three-condition comparison',
+  steps:[
+    {n:'Resolve metrics', d:'3 conditions from the brief', ms:'0.2s', arts:[
+      {k:'semantic', t:'Turning the question into three groups', type:'note', tone:'info', ic:'01',
+       html:'<b>(1) With other blue</b> → <code>SAME_COLOR_BLOCK_FLAG = 1</code>. <b>(2) Away from blue</b> → flag = 0 and neighbour is not MaxFresh Red. <b>(3) With MaxFresh Red</b> → neighbour = <code>COL-MFR-150</code>. The three are mutually exclusive and cover all 300 rows.'}
+    ]},
+    {n:'Build the query', d:'CASE split · 300 rows', ms:'0.2s', arts:[
+      {k:'query', t:'Three-way conditional aggregation', type:'sql', code:"SELECT CASE\n         WHEN SAME_COLOR_BLOCK_FLAG = 1        THEN 'In blue block'\n         WHEN NEIGHBOR_SKU_ID = 'COL-MFR-150'  THEN 'With MaxFresh Red'\n         ELSE 'Away from blue'\n       END AS condition,\n       AVG(FOCUS_UPLIFT_VS_BASE) AS uplift,\n       AVG(FOCUS_UNITS_SOLD)     AS units,\n       AVG(DISTANCE_PACKS)       AS avg_distance,\n       COUNT(*)                  AS n\nFROM SKU_Adjacency\nWHERE FOCUS_SKU_ID = 'COL-MFB-150'   -- MaxFresh Blue\nGROUP BY 1"}
+    ]},
+    {n:'Run the aggregation', d:'blue block wins', ms:'0.5s', arts:[
+      {k:'result', t:'MaxFresh Blue · three placement conditions', type:'table',
+       cols:['Condition','Uplift','Units/wk','Avg distance','n'],
+       rows:[['<b>In a blue block</b>','<b class="pos">+7.2%</b>','<b>41.0</b>','1.45','143'],
+             ['Away from blue','+4.7%','40.0','1.43','70'],
+             ['With MaxFresh Red','<b class="neg">+3.9%</b>','39.7','1.59','87']],
+       hi:[0]},
+      {k:'bars', t:'The gap, visualised', type:'bars', unit:'% uplift', max:8,
+       items:[{n:'In a blue block',v:7.2},{n:'Away from blue',v:4.7},{n:'With MaxFresh Red',v:3.9,mut:true}]}
+    ]},
+    {n:'Validate sample & confounds', d:'distance & facings balanced?', ms:'0.4s', arts:[
+      {k:'check', t:'Are the three groups comparable?', type:'note', tone:'ok', ic:'✓',
+       html:'Average neighbour distance is <b>1.45 / 1.43 / 1.59 packs</b> — near identical, so the gap is not proximity in disguise. Facings are comparable across conditions. Group sizes (143 / 70 / 87) are all adequate. Unlike the Sensodyne question, <b>here the conditions compare against each other</b>, so no external control is needed.'}
+    ]},
+    {n:'Read the result', d:'+7.2% vs +4.7% vs +3.9%', ms:'0.4s', arts:[
+      {k:'read', t:'Both halves of the question, answered', type:'note', tone:'info', ic:'✓',
+       html:'<b>Better than away from blue?</b> Yes — +7.2% vs +4.7%, a 2.5pt gap. <b>Better than with MaxFresh Red?</b> Yes, and by more — +7.2% vs +3.9%, nearly <b>double</b>. Red is the worst neighbour of the three: it breaks the blue wall so it stops reading as one freshness signpost.'}
+    ]}
+  ],
+  ans:{
+    head:'Yes — <span class="hl">+7.2%</span> in a blue block, and pairing with Red is the worst option.',
+    body:'The ranking is unambiguous: <strong>blue block +7.2%</strong>, away from blue <strong>+4.7%</strong>, with MaxFresh Red <strong>+3.9%</strong>. So blocking beats scattering by 2.5pt, and beats the Red pairing by nearly <strong>double</strong>. Distance and facings are balanced across the three groups, so this is the colour block itself, not proximity or space. Red breaks the wall and the block stops signposting freshness.',
+    kpis:[['In a blue block','+7.2%'],['Away from blue','+4.7%'],['With MaxFresh Red','+3.9%'],['Observations','300']],
+    recos:[
+      {t:'Keep MaxFresh Blue in a contiguous blue block', d:'Best of the three conditions on both units and uplift.'},
+      {t:'Move MaxFresh Red off the blue shelf', d:'It is the worst neighbour — nearly half the block effect.'},
+      {t:'Extend the block with teal Sensorials', d:'Teal reads with blue and lengthens the freshness signpost.'}
+    ],
+    conf:{pct:81, level:'High — clean internal comparison'},
+    reasons:['300 observations across three mutually exclusive conditions','Distance balanced (1.45 / 1.43 / 1.59) — not proximity in disguise','Conditions compare against each other, not a modelled base','Ranking consistent in both uplift and absolute units'],
+    caveats:['Observational: stores were not randomised into conditions','Gap is modest — 41.0 vs 39.7 units is ~1.3 units/week','Synthetic dataset'],
+    ev:[{n:'SKU_Adjacency',m:'300 rows',d:'Colour-block flag, neighbour SKU and distance across three conditions.'},
+        {n:'SKU_Master',m:'pack colour',d:'Defines the block: MaxFresh Blue, Red as disruptor, Sensorials teal.'},
+        {n:'POS_Weekly',m:'units',d:'41.0 / 40.0 / 39.7 units per week by condition.'}]
+  }
+},
+
+/* ------------------------------- Q6 ------------------------------- */
+q6:{ id:'q6', lane:'hybrid',
+  text:'Define the best shelf for Maxfresh depending on marketing investments, offtakes and market share to grow faster than closeup?',
+  short:'Best shelf for MaxFresh vs Closeup',
+  why:'The shelf ranking is a straight aggregation (Performance). But <b>"to grow faster than Closeup"</b> asks which lever actually closes a competitive gap — that needs the alternatives (space, spend) ruled out before a shelf can be named.',
+  method:'Rank positions, then eliminate space and spend as explanations',
+  tables:['Shelf_Audit','POS_Weekly','Syndicated_Market','Marketing_Investment'],
+  output:'Shelf choice + eliminated levers',
+  steps:[
+    {n:'Measure the effect', d:'MaxFresh units by position', ms:'0.7s', arts:[
+      {k:'query', t:'Units by vertical position', type:'sql', code:"SELECT s.VERTICAL_POSITION, s.SHELF_NO,\n       AVG(p.UNITS_SOLD) AS units_wk, COUNT(*) AS n\nFROM Shelf_Audit s\nJOIN POS_Weekly p USING (STORE_ID, SKU_ID, WEEK_START)\nWHERE s.SKU_ID IN ('COL-MFB-150','COL-MFR-150')  -- MaxFresh Blue + Red\nGROUP BY 1, 2 ORDER BY units_wk DESC"},
+      {k:'result', t:'MaxFresh · units per week by shelf', type:'table',
+       cols:['Shelf','Position','Units/wk','n','vs best'],
+       rows:[['<b>2</b>','<b>Upper Middle</b>','<b>50.1</b>','69','—'],
+             ['3','Eye Level','46.9','75','−6%'],
+             ['4','Lower Middle','39.5','41','−21%'],
+             ['1','Top','39.2','52','−22%'],
+             ['5','Bottom','37.0','63','<span class="neg">−26%</span>']],
+       hi:[0],
+       note:'MaxFresh peaks at Upper Middle — not eye level. This differs from VWP and Kids, so position optima are SKU-specific, not universal.'}
+    ]},
+    {n:'Test whether it behaves causally', d:'benchmark against Closeup', ms:'1.2s', arts:[
+      {k:'bench', t:'MaxFresh vs Closeup, like for like', type:'table',
+       cols:['Metric','MaxFresh','Closeup','Gap'],
+       rows:[['Units / store / week','<b>86.4</b>','61.0','<span class="pos">+42%</span>'],
+             ['Freshness share','42.9%','41.6%','<span class="warn">+1.3pt only</span>'],
+             ['Facings','4.47','4.51','<span class="warn">parity</span>'],
+             ['At eye level','48%','42%','+6pt'],
+             ['Marketing ₹/unit','<b class="neg">₹639</b>','₹356','<span class="neg">1.8× more</span>']],
+       note:'MaxFresh outsells Closeup by 42% on units but leads share by only 1.3pt — while spending 1.8× more per unit.'}
+    ]},
+    {n:'Rule out confounds & alternatives', d:'is it space? is it spend?', ms:'1.3s', arts:[
+      {k:'space', t:'Lever 1 — buy more space', type:'verdict', status:'rej',
+       html:'<b>Facings are already at parity: 4.47 vs 4.51.</b> Closeup is not out-spacing MaxFresh, so there is no space deficit to close. Adding facings would spend shelf to fix a problem that is not a shelf-quantity problem.'},
+      {k:'spend', t:'Lever 2 — outspend them', type:'verdict', status:'rej',
+       html:'<b>MaxFresh already costs ₹639/unit against Closeup\'s ₹356 — 1.8× more, and ₹76L against ₹30L in total.</b> Outspending is already the strategy in play, and it has bought a 1.3pt share lead. More of it is the most expensive lever on the table.'},
+      {k:'pos', t:'Lever 3 — position', type:'verdict', status:'ok',
+       html:'<b>13.1 units/week separate the best shelf from the worst</b> (50.1 vs 37.0) — a 26% swing that costs nothing but a reset. MaxFresh holds its best position only part of the time. This is the only lever with a gap left in it.'}
+    ]},
+    {n:'Look for a control group', d:'is the position effect general?', ms:'0.6s', arts:[
+      {k:'gen', t:'Does the ranking hold outside MaxFresh?', type:'note', tone:'info', ic:'✓',
+       html:'The same positional pattern appears across the Colgate range (position index: Upper Middle 1.142, Eye Level 1.105, Bottom 0.911) — so the Shelf 2 result is <b>consistent with a general position effect</b>, not a MaxFresh-only quirk. That raises confidence it will replicate on a reset.'}
+    ]},
+    {n:'Decide — or refuse to', d:'Shelf 2, Upper Middle', ms:'0.5s', arts:[
+      {k:'decide', t:'The recommendation, and its honest limit', type:'note', tone:'warn', ic:'!',
+       html:'Shelf 2 is the right target, but the <b>50.1 vs 46.9</b> gap over eye level is a <b>3.2 unit/week</b> difference on observational data — real, but not enormous. The confident half of this answer is the <b>elimination</b>: space is at parity and spend is already 1.8× the rival. The shelf is where the remaining room is.'}
+    ]}
+  ],
+  ans:{
+    head:'<span class="hl">Shelf 2 — Upper Middle</span>, at 50.1 units/week. Not more space, and definitely not more spend.',
+    body:'MaxFresh peaks at <strong>Upper Middle (50.1)</strong>, ahead of eye level (46.9) and 26% clear of the bottom shelf. The competitive read is what settles it: MaxFresh already outsells Closeup <strong>86.4 to 61.0</strong> yet leads share by only <strong>1.3pt</strong> — while facings are at <strong>parity (4.47 vs 4.51)</strong> and marketing already runs <strong>₹639/unit against ₹356</strong>. Space and spend are exhausted as levers. Position is not.',
+    kpis:[['Best shelf','Shelf 2'],['Units/wk','50.1'],['Facings vs Closeup','parity'],['Spend vs Closeup','1.8×']],
+    recos:[
+      {t:'Move the MaxFresh block to Shelf 2', d:'Its measured best position — a 26% swing from the worst shelf, at no cost.'},
+      {t:'Run the blue colour block on that shelf', d:'Combine best position with the +7.2% blocking effect from Q5.'},
+      {t:'Hold marketing flat', d:'At 1.8× Closeup per unit for a 1.3pt lead, more spend is the worst-value lever available.'}
+    ],
+    conf:{pct:76, level:'Moderate — strong on elimination, softer on the shelf gap'},
+    reasons:['3,000 POS rows, head-to-head with Closeup','Position pattern replicates across the Colgate range','Facings parity and the spend ratio are direct measurements','Share from the syndicated panel'],
+    caveats:['Shelf 2 vs Shelf 3 is a 3.2 unit/week gap on observational data — worth testing before a full reset','Store choice of position may correlate with store quality','Synthetic dataset'],
+    ev:[{n:'Shelf_Audit',m:'300 rows',d:'MaxFresh units by position — Upper Middle 50.1 vs Eye Level 46.9.'},
+        {n:'POS_Weekly',m:'units, facings',d:'86.4 vs 61.0 units; facings 4.47 vs 4.51 — parity.'},
+        {n:'Marketing_Investment',m:'₹639 vs ₹356',d:'Spend per unit — Colgate outspends Closeup 1.8× for a 1.3pt lead.'},
+        {n:'Syndicated_Market',m:'share',d:'Freshness share 42.9% vs 41.6%.'}]
+  }
+},
+
+/* ------------------------------- Q7 ------------------------------- */
+q7:{ id:'q7', lane:'strategic',
+  text:'Which product should lose 2 facings for Maxfresh Sensorials to gain 2 facings and where should it be placed?',
+  short:'Facings donor & Sensorials placement',
+  why:'"Which should lose" is an <b>optimisation over a scarce resource</b> — it needs a value-per-facing ranking, not a query. "Where should it be placed" then needs a decision that inherits the colour-block and position results from the other investigations.',
+  method:'Rank profit per facing → select donor → place under constraints',
+  tables:['POS_Weekly','Shelf_Audit','SKU_Adjacency','Planogram_Constraints'],
+  output:'Donor SKU + placement + width check',
+  steps:[
+    {n:'Frame the decision & scope', d:'shelf-neutral swap, 10 SKUs', ms:'0.4s', arts:[
+      {k:'scope', t:'The constraint that defines the problem', type:'note', tone:'info', ic:'01',
+       html:'The bay is <b>width-constrained at 120cm per shelf</b>, so Sensorials can only gain what another SKU gives up. The question is not "who is weakest" but <b>"whose space earns least"</b> — a different ranking.'}
+    ]},
+    {n:'Fit the model', d:'value per facing', ms:'1.1s', arts:[
+      {k:'query', t:'Productivity per facing across the range', type:'sql', code:"SELECT SKU_ID,\n       AVG(FACINGS)                          AS facings,\n       AVG(UNITS_SOLD)     / AVG(FACINGS)    AS units_per_facing,\n       AVG(NET_SALES_RS - COGS_RS)\n                           / AVG(FACINGS)    AS profit_per_facing\nFROM POS_Weekly\nWHERE SKU_ID LIKE 'COL-%'\nGROUP BY SKU_ID\nORDER BY profit_per_facing ASC"},
+      {k:'rank', t:'Colgate range ranked by profit per facing', type:'table',
+       cols:['SKU','Facings','Units/facing','Profit/facing'],
+       rows:[['<b>Kids Strawberry</b>','4.5','3.78','<b class="neg">₹93</b>'],
+             ['MaxFresh Sensorials','4.6','2.89','₹118'],
+             ['Cavity Protection','4.6','5.67','₹205'],
+             ['Strong Teeth','4.7','8.74','₹242'],
+             ['MaxFresh Blue','4.3','9.42','₹254'],
+             ['Visible White','4.7','10.46','₹264'],
+             ['Visible White Purple','4.4','8.97','₹294'],
+             ['Total Sensitive','4.6','9.05','₹374'],
+             ['MaxFresh Red','4.6','9.90','₹386'],
+             ['Sensitive Pro Relief','4.1','11.71','<b class="pos">₹579</b>']],
+       hi:[0]}
+    ]},
+    {n:'Establish the baseline', d:'why not the lowest units?', ms:'0.8s', arts:[
+      {k:'trap', t:'Sensorials has the worst units/facing — but it is the recipient', type:'note', tone:'warn', ic:'!',
+       html:'On <b>units per facing</b> Sensorials looks worst (2.89), which would nominate it as its own donor. That is the trap: it is a <b>launch SKU that is starved</b>, and it still earns <b>₹118/facing against Kids\' ₹93</b>. Ranking on profit rather than units picks the right SKU.'}
+    ]},
+    {n:'Optimise under constraints', d:'donor = Kids Strawberry', ms:'1.3s', arts:[
+      {k:'pick', t:'Donor selection', type:'verdict', status:'ok',
+       html:'<b>Kids Strawberry donates 2 facings (4.5 → 3).</b> At ₹93 per facing it is the least productive space in the range — the next candidate, Cavity Protection, earns <b>2.2× more (₹205)</b>. Kids keeps 3 facings and stays on Shelf 3, so the Q3 eye-level result is preserved.'},
+      {k:'width', t:'Width check at 120cm', type:'table',
+       cols:['Move','Facings','Pack width','Linear cm'],
+       rows:[['Kids Strawberry','4.5 → 3','7.0cm','−10.5cm'],['MaxFresh Sensorials','4.6 → 7','8.8cm','<b>+21.1cm</b>'],['<b>Net on the bay</b>','—','—','<b class="pos">+10.6cm — absorbed</b>']],
+       note:'Sensorials packs are wider, so the swap is not exactly neutral in cm; the bay absorbs the difference at 116.8 / 120cm on Shelf 2.'}
+    ]},
+    {n:'Forecast to target', d:'placement decision', ms:'0.7s', arts:[
+      {k:'place', t:'Where Sensorials goes — and why', type:'note', tone:'info', ic:'✓',
+       html:'Sensorials is <b>Freshness, teal</b>. Two results from other investigations decide its home: <b>Q6</b> — MaxFresh\'s best shelf is <b>Shelf 2, Upper Middle (50.1 u/wk)</b>; <b>Q5</b> — a same-colour block is worth <b>+7.2%</b> and MaxFresh Red is the worst neighbour. So: <b>Shelf 2, inside the blue/teal block beside MaxFresh Blue, with Red kept on another shelf.</b>'}
+    ]}
+  ],
+  ans:{
+    head:'<span class="hl">Kids Strawberry</span> gives up the two facings. Sensorials goes to <span class="hl">Shelf 2</span>, in the blue block.',
+    body:'Kids Strawberry earns <strong>₹93 per facing</strong> — the least productive space in the range, and less than half the next candidate (Cavity Protection, ₹205). It drops 4.5 → 3 facings and stays at eye level, so its own best-shelf result survives. Sensorials rises to 7 facings on <strong>Shelf 2 (Upper Middle)</strong> — MaxFresh\'s best position at 50.1 u/wk — inside the <strong>blue/teal freshness block</strong> beside MaxFresh Blue, with MaxFresh Red kept off that shelf.',
+    kpis:[['Donor','Kids Strawberry'],['Its profit/facing','₹93'],['Next candidate','₹205'],['Sensorials shelf','Shelf 2']],
+    recos:[
+      {t:'Move 2 facings: Kids Strawberry → MaxFresh Sensorials', d:'Reclaims the range\'s least productive space for a starved launch.'},
+      {t:'Place Sensorials beside MaxFresh Blue on Shelf 2', d:'Best position plus the blue-block effect, with the teal pack extending the wall.'},
+      {t:'Floor Kids at 3 facings and keep it on Shelf 3', d:'Protects availability and the eye-level placement the data supports.'}
+    ],
+    conf:{pct:79, level:'Moderate-to-high — ranking is solid, launch response is not observed'},
+    reasons:['Profit and units per facing across 3,000 POS rows','All 10 Colgate SKUs ranked on the same basis','Kids is 2.2× below the next donor — not a close call','Placement inherits two independently measured results'],
+    caveats:['Assumes Sensorials responds to facings like an established SKU — a launch may not','Kids at 3 facings is untested; availability should be watched','Synthetic dataset'],
+    ev:[{n:'POS_Weekly',m:'profit/facing',d:'Kids ₹93/facing, lowest of 10 Colgate SKUs; Sensorials at 2.89 units/facing.'},
+        {n:'Shelf_Audit',m:'pack width',d:'Kids 7.0cm vs Sensorials 8.8cm per facing — the cm arithmetic of the swap.'},
+        {n:'SKU_Adjacency',m:'+7.2%',d:'The blue-block effect that makes Shelf 2 the right home for a teal pack.'},
+        {n:'Planogram_Constraints',m:'120cm',d:'The width ceiling the swap has to fit inside.'}]
+  }
+},
+
+/* ------------------------------- Q8 ------------------------------- */
+q8:{ id:'q8', lane:'strategic',
+  text:'Best dynamic planogram by store — Optimization factor of Market Share, Offtakes, Sellin, Net Sales etc. along with exact number of facings depending on bay×shelf dimensions',
+  short:'Dynamic planogram by store',
+  why:'This is a <b>constrained optimisation</b> — a weighted objective solved against physical dimensions. Nothing about it can be looked up; it has to be solved, and the solver has to be told what it is not allowed to do.',
+  method:'Weighted objective → knapsack per shelf → hard block constraints',
+  tables:['Planogram_Constraints','Store_Master','Shelf_Audit','POS_Weekly','SKU_Adjacency'],
+  output:'Bay map with exact facings per shelf',
+  steps:[
+    {n:'Frame the decision & scope', d:'read the physical constraints', ms:'0.5s', arts:[
+      {k:'dims', t:'What the shelves actually are', type:'sql', code:"SELECT AVAILABLE_WIDTH_CM, AVAILABLE_HEIGHT_CM,\n       EYE_LEVEL_FLAG, PLACEMENT_RULE, COUNT(*)\nFROM Planogram_Constraints\nGROUP BY 1,2,3,4   -- 450 rows: 15 stores x bays x 5 shelves"},
+      {k:'dimr', t:'Physical envelope', type:'table',
+       cols:['Constraint','Value'],
+       rows:[['Shelf width','<b>120cm</b> — every shelf, every store'],['Shelves per bay','5'],['Oral-care bays per store','4 – 8'],['Shelf heights','18cm (shelves 1 & 5) · 22cm (2–4)'],['Eye level','Shelf 3, flagged'],['Hard rule','<b>Kids products not on bottom shelf</b>']]}
+    ]},
+    {n:'Fit the model', d:'pack widths + position index', ms:'1.4s', arts:[
+      {k:'pw', t:'Pack width, derived not assumed', type:'sql', code:"SELECT SKU_ID,\n       AVG(LINEAR_SHELF_CM / FACINGS) AS cm_per_facing\nFROM Shelf_Audit\nGROUP BY SKU_ID   -- 7.0cm (Kids) .. 10.4cm (Strong Teeth)"},
+      {k:'pidx', t:'Position index — measured across the whole Colgate range', type:'bars', unit:'index', max:1.2, dec:3, base:0.85,
+       items:[{n:'Upper Middle (Shelf 2)',v:1.142},{n:'Eye Level (Shelf 3)',v:1.105},{n:'Lower Middle (Shelf 4)',v:0.926},{n:'Top (Shelf 1)',v:0.921},{n:'Bottom (Shelf 5)',v:0.911,mut:true}],
+       note:'A 25% swing between best and worst shelf — the single largest term in the objective.'}
+    ]},
+    {n:'Establish the baseline', d:'the weighted objective', ms:'0.8s', arts:[
+      {k:'obj', t:'Objective function', type:'model',
+       rows:[['Market share','0.30','normalised per facing'],['Offtakes (units)','0.30','normalised per facing'],['Net sales','0.25','normalised per facing'],['Sell-in','0.15','normalised per facing']],
+       fit:'score(sku, facings, shelf) = Σ wᵢ · metricᵢ_per_facing × facings^0.72 × position_index[shelf]'},
+      {k:'weights', t:'Do the four factors actually differ?', type:'table',
+       cols:['','Share/facing','Units/facing','Net sales/facing','Sell-in/facing'],
+       rows:[['<b>Share/facing</b>','1.000','<b class="warn">1.000</b>','0.937','0.999'],
+             ['<b>Units/facing</b>','<b class="warn">1.000</b>','1.000','0.936','0.999'],
+             ['<b>Net sales/facing</b>','0.937','0.936','1.000','0.937'],
+             ['<b>Sell-in/facing</b>','0.999','0.999','0.937','1.000']],
+       note:'Correlation between the four objective terms across the Colgate range.'},
+      {k:'collapse', t:'The four-factor objective is really one factor', type:'verdict', status:'rej',
+       html:'<b>The four metrics are the same signal.</b> Share and units correlate at <b>r = 1.000</b>, sell-in at 0.999, net sales at 0.937 — in-store share is derived from units, sell-in replenishes units, and net sales is units × price. Re-running the solve at <b>0.60 share</b> instead of 0.30 returns an <b>identical ranking</b>. The weights are close to cosmetic here: a SKU that sells more units wins on all four. Only an extreme value-led tilt (0.60 net sales) reshuffles the middle, and even then the top and bottom are unchanged.'}
+    ]},
+    {n:'Optimise under constraints', d:'solve, then constrain', ms:'2.2s', arts:[
+      {k:'free', t:'First pass — objective only, no rules', type:'verdict', status:'rej',
+       html:'Left free, the optimiser <b>splits the MaxFresh blue block across two shelves</b> and gives <b>Kids Strawberry 6 facings</b> on the lower-middle shelf. Both maximise the score and both are wrong: it never saw the +7.2% block effect or the ₹93/facing donor logic. <b>A pure objective maximiser produces an illegal planogram.</b>'},
+      {k:'hard', t:'Second pass — blocks as hard constraints', type:'table',
+       cols:['Shelf','Position','SKU','Facings','cm','Shelf fill'],
+       rows:[['1','Top','Strong Teeth','6','62.4','62 / 120'],
+             ['<b>2</b>','<b>Upper Mid</b>','MaxFresh Blue','<b>6</b>','55.2','<b>117 / 120</b>'],
+             ['','','MaxFresh Sensorials','<b>7</b>','61.6',''],
+             ['<b>3</b>','<b>Eye Level</b>','Visible White Purple','<b>6</b>','48.6','<b>109 / 120</b>'],
+             ['','','Visible White','5','39.0',''],
+             ['','','Kids Strawberry','3','21.0',''],
+             ['4','Lower Mid','Total Sensitive','6','50.4','100 / 120'],
+             ['','','Sensitive Pro Relief','6','49.2',''],
+             ['5','Bottom','MaxFresh Red','6','55.2','116 / 120'],
+             ['','','Cavity Protection','6','61.2','']],
+       hi:[1,2,3,4,5],
+       note:'Every shelf inside 120cm. Blue/teal block intact on Shelf 2; whitening and Kids at eye level; Red exiled to Shelf 5.'}
+    ]},
+    {n:'Forecast to target', d:'value at no extra shelf', ms:'0.7s', arts:[
+      {k:'val', t:'What the reallocation is worth', type:'note', tone:'info', ic:'✓',
+       html:'Every lever in the map is one that was measured elsewhere: eye-level <b>+26%</b> (Q1), position spread <b>25%</b> (Q6), colour block <b>+7.2%</b> (Q5), donor reallocation <b>₹93 → ₹118/facing</b> (Q7). Compounded across the bay this models at <b>+8–12% category value with no additional shelf</b> — a modelled projection, not an observed result.'}
+    ]}
+  ],
+  ans:{
+    head:'Solve each store against its own <span class="hl">120cm × 5-shelf</span> bays — with the blocks as hard rules.',
+    body:'Maximise <strong>share 0.30 · offtakes 0.30 · net sales 0.25 · sell-in 0.15</strong> per facing, against real pack widths (7.0–10.4cm), the measured <strong>position index</strong> (Upper Middle 1.142 → Bottom 0.911, a 25% swing) and diminishing returns past 5–6 facings. Two design points matter more than the weights. First, the <strong>four factors you named are one signal</strong> — share, units and sell-in correlate at r ≥ 0.999, so weighting them differently returns the same ranking. Second, left unconstrained the optimiser <strong>breaks the blue block and over-spaces Kids to 6 facings</strong> — blocks and placement rules have to be hard constraints, not objectives. The result puts freshness on Shelf 2, whitening and Kids at eye level, sensitive on Shelf 4, MaxFresh Red on Shelf 5 — every shelf inside 120cm.',
+    kpis:[['Shelf width','120cm'],['Bays per store','4 – 8'],['Position swing','25%'],['Modelled value','+8–12%']],
+    recos:[
+      {t:'Deploy the constrained bay map per store', d:'Solve against each store\'s own bay count, with blocks enforced as rules.'},
+      {t:'Let leadership set the four weights', d:'The weights are a business choice and they change the answer — they should not be a modelling default.'},
+      {t:'Re-solve each reset from live POS', d:'Position index and pack widths are already in the feed, so this can be self-correcting.'}
+    ],
+    conf:{pct:64, level:'Indicative — the method is sound, the +8–12% is a projection'},
+    reasons:['Uses real dimensions from all 450 Planogram_Constraints rows','Pack widths derived from audited linear cm, not assumed','Position index measured across the full Colgate range','Every component lever independently measured elsewhere'],
+    caveats:['The +8–12% is compounded from separate estimates — it has never been observed as a whole','Objective weights are a business input, not a fitted result','Assumes measured position effects transfer when a SKU is moved','Synthetic dataset'],
+    ev:[{n:'Planogram_Constraints',m:'450 rows',d:'120cm × 5 shelves, heights 18/22cm, eye-level flag and the kids rule.'},
+        {n:'Store_Master',m:'4–8 bays',d:'Bays and shelves per store — why the solve must be per store.'},
+        {n:'Shelf_Audit',m:'7.0–10.4cm',d:'Linear cm ÷ facings gives true pack width per SKU.'},
+        {n:'POS_Weekly',m:'4 metrics',d:'Share, units, sell-in and net sales per facing — the objective terms.'},
+        {n:'SKU_Adjacency',m:'blocks',d:'The colour-block effect enforced as a hard constraint.'}]
+  }
+}
+
+};
+
+/* ============================ FOLLOW-UPS ============================ */
+/* each follow-up is a real mini-investigation with its own solve path + artifacts */
+const FU = {
+q1:[
+ {id:'q1a', kw:/(eye level only|no extra|without facing|just move|only move|placement only)/, lane:'performance',
+  text:'What if we only move it to eye level and add no facings?',
+  steps:[{n:'Resolve metrics',d:'hold facings at current',ms:'0.2s',arts:[
+     {k:'setup',t:'Isolating the placement effect',type:'note',tone:'info',ic:'01',
+      html:'Hold each state\'s <b>current</b> facings fixed, set <code>eye_level = 1</code>, and re-predict from the fitted model. This prices the free half of the plan: what placement alone buys, before any facings are spent.'}]},
+   {n:'Run the aggregation',d:'re-predict per state',ms:'0.6s',arts:[
+     {k:'result',t:'Eye level only · no additional facings',type:'table',
+      cols:['State','Eye-level now','Units now','Units at eye level','Gain'],
+      rows:[['<b>Karnataka</b>','15%','36.4','44.1','<b class="pos">+20.9%</b>'],
+            ['<b>Rajasthan</b>','20%','36.8','44.0','<b class="pos">+19.5%</b>'],
+            ['<b>Uttar Pradesh</b>','30%','36.3','42.6','<b class="pos">+17.3%</b>'],
+            ['Maharashtra','40%','39.1','44.5','+13.8%'],['Kerala','40%','39.8','45.2','+13.5%'],
+            ['Delhi','40%','40.9','46.3','+13.2%'],['Telangana','40%','40.8','46.2','+13.2%'],
+            ['West Bengal','45%','40.0','45.0','+12.3%'],['Gujarat','50%','40.5','45.0','+11.1%'],
+            ['Tamil Nadu','60%','42.5','46.1','+8.4%']],
+      hi:[0,1,2]}]},
+   {n:'Read the result',d:'+8.4% to +20.9%',ms:'0.3s',arts:[
+     {k:'read',t:'Placement is most of the plan',type:'note',tone:'ok',ic:'✓',
+      html:'Moving to eye level and spending <b>nothing</b> delivers <b>+8.4% to +20.9%</b>. The gain is largest exactly where eye-level rates are worst — Karnataka (15%), Rajasthan (20%), UP (30%). Facings are the second half of the plan, and the smaller half.'}]}],
+  ans:{head:'Placement alone is worth <span class="hl">+8.4% to +20.9%</span> — and costs nothing.',
+   body:'Holding facings exactly where they are and only moving VWP to eye level: <strong>Karnataka +20.9%</strong>, <strong>Rajasthan +19.5%</strong>, <strong>UP +17.3%</strong>, down to Tamil Nadu at +8.4% (which already holds eye level 60% of the time). The three states that gain most are the three that need only 3 facings — the free lever and the cheap plan point at the same places.',
+   kpis:[['Best state','Karnataka'],['Its gain','+20.9%'],['Worst state','+8.4%'],['Extra facings','0']],
+   recos:[{t:'Sequence placement first, facings second',d:'Take the free +8–21% in the reset cycle before negotiating any additional space.'},
+          {t:'Start with Karnataka, Rajasthan and UP',d:'Lowest eye-level rates, largest gain, and they need no extra facings at all.'},
+          {t:'Treat Tamil Nadu as a facings story',d:'At 60% eye level already, placement is nearly exhausted there — it needs the 6 facings.'}],
+   conf:{pct:74,level:'Moderate — same model, same limits'},
+   reasons:['Re-predicted from the same 150-row OLS fit','Facings held at each state\'s observed mean','Ranking follows eye-level rate exactly, as expected'],
+   caveats:['Model-predicted, not observed — no store has actually made this move','Assumes the eye-level effect is causal and transfers on a reset','Synthetic dataset'],
+   ev:[{n:'POS_Weekly',m:'150 rows',d:'The fitted model re-evaluated at eye_level = 1.'},
+       {n:'Shelf_Audit',m:'eye-level rate',d:'Current eye-level share by state: 15% to 60%.'}]}},
+ {id:'q1b', kw:/(fastest|payback|quickest|soonest|which state first)/, lane:'performance',
+  text:'Which state pays back fastest?',
+  steps:[{n:'Resolve metrics',d:'months to +2pt',ms:'0.2s',arts:[
+     {k:'s',t:'Ranking the optimiser output',type:'note',tone:'info',ic:'01',html:'Sorting the per-state solve by <b>months to the +2pt target</b> at the recommended facings.'}]},
+   {n:'Run the aggregation',d:'rank by months',ms:'0.5s',arts:[
+     {k:'r',t:'Time to +2pt share',type:'table',cols:['State','Min facings','New growth','Months'],
+      rows:[['<b>Telangana</b>','6','1.15 pt/mo','<b class="pos">1.7</b>'],['Maharashtra','5','1.11 pt/mo','1.8'],['Delhi','6','1.11 pt/mo','1.8'],
+            ['Rajasthan','3','1.04 pt/mo','1.9'],['Uttar Pradesh','3','1.06 pt/mo','1.9'],['Karnataka','3','1.04 pt/mo','1.9'],['West Bengal','5','1.05 pt/mo','1.9'],
+            ['Kerala','5','1.01 pt/mo','2.0'],['Gujarat','5','0.99 pt/mo','2.0'],['Tamil Nadu','6','0.98 pt/mo','2.0']],hi:[0]}]},
+   {n:'Read the result',d:'Telangana 1.7 months',ms:'0.3s',arts:[
+     {k:'x',t:'But speed is not the right sort',type:'note',tone:'warn',ic:'!',
+      html:'Telangana is fastest at <b>1.7 months</b> — but the spread is only <b>1.7 to 2.0</b>, which is noise, not a ranking. The real difference is <b>cost</b>: Telangana needs <b>6</b> facings, while Rajasthan, UP and Karnataka reach 1.9 months on <b>3</b>. <b>Sort by facings, not by months.</b>'}]}],
+  ans:{head:'Telangana at 1.7 months — but <span class="hl">the wrong question</span>.',
+   body:'Every state lands between <strong>1.7 and 2.0 months</strong>. That 0.3-month spread is well inside the model\'s error, so ranking on it is false precision. What genuinely separates the states is <strong>cost</strong>: Rajasthan, UP and Karnataka hit 1.9 months on <strong>3 facings</strong>, while Telangana needs <strong>6</strong> for 1.7. Start with the cheap ones.',
+   kpis:[['Fastest','Telangana'],['Its cost','6 facings'],['Cheapest','3 facings'],['Spread','1.7 – 2.0 mo']],
+   recos:[{t:'Sequence by facings required, not months',d:'Rajasthan, UP and Karnataka deliver the same timeline for half the space.'},
+          {t:'Do not present the 0.3-month spread as a ranking',d:'It is inside the model error — treat all ten as "about two months".'},
+          {t:'Hold Telangana and Tamil Nadu for a second wave',d:'They need 6 facings each and gain no time for it.'}],
+   conf:{pct:62,level:'Low-to-moderate — the spread is inside the error'},
+   reasons:['Derived from the same per-state optimiser','Direction (cheap states first) is robust'],
+   caveats:['A 0.3-month spread cannot be resolved by 10 weeks of data','Months-to-target assumes a 3-month linear ramp — an assumption, not a measurement','Synthetic dataset'],
+   ev:[{n:'Syndicated_Market',m:'baseline',d:'The +0.49 pt/month national baseline the forecast runs from.'},
+       {n:'POS_Weekly',m:'model',d:'The facings and eye-level coefficients behind each state solve.'}]}}
+],
+q2:[
+ {id:'q2a', kw:/(state|region|geograph|particular state|any state)/, lane:'performance',
+  text:'Is the correlation different in a particular state?',
+  steps:[{n:'Resolve metrics',d:'split by state',ms:'0.2s',arts:[
+     {k:'setup',t:'Re-running the correlation within each state',type:'note',tone:'info',ic:'01',
+      html:'The national r = 0.075 could be hiding real effects that cancel out across states. Re-computing <code>CORR(PLANOGRAM_SCORE, UNITS_SOLD)</code> within each of the 10 states tests that directly.'}]},
+   {n:'Build the query',d:'GROUP BY state',ms:'0.2s',arts:[
+     {k:'query',t:'Correlation within state',type:'sql',
+      code:"SELECT STATE, COUNT(*) AS n,\n       CORR(PLANOGRAM_SCORE, UNITS_SOLD) AS r\nFROM POS_Weekly\nWHERE SKU_ID LIKE 'COL-%'\nGROUP BY STATE\nORDER BY r DESC"}]},
+   {n:'Run the aggregation',d:'10 states',ms:'0.6s',arts:[
+     {k:'r',t:'Planogram score vs units, by state',type:'table',
+      cols:['State','n','r','Noise threshold (2/√n)','Above it?'],
+      rows:[['<b>Telangana</b>','100','<b>0.250</b>','0.200','<b class="pos">Yes</b>'],
+            ['Rajasthan','100','0.152','0.200','No'],['Tamil Nadu','200','0.118','0.141','No'],
+            ['Gujarat','100','0.110','0.200','No'],['Karnataka','200','0.086','0.141','No'],
+            ['West Bengal','200','0.079','0.141','No'],['Delhi','200','0.069','0.141','No'],
+            ['Maharashtra','200','−0.023','0.141','No'],['Uttar Pradesh','100','−0.066','0.200','No'],
+            ['Kerala','100','−0.072','0.200','No']],hi:[0]}]},
+   {n:'Validate sample & confounds',d:'10 tests, 1 hit',ms:'0.7s',arts:[
+     {k:'mc',t:'One state cleared the bar — is that a finding?',type:'verdict',status:'rej',
+      html:'<b>No. This is what testing ten states looks like when nothing is there.</b> At a 5% threshold you expect roughly <b>1 in 20</b> false hits by chance; testing 10 states, finding 1 marginal result (Telangana, 0.250 against a 0.200 bar, n = 100) is <b>the expected yield of noise</b>. Four states even go negative. If the effect were real but regional, you would see a cluster of states agreeing — not one outlier surrounded by scatter.'}]},
+   {n:'Read the result',d:'no regional effect',ms:'0.3s',arts:[
+     {k:'read',t:'What would change this',type:'note',tone:'info',ic:'i',
+      html:'Telangana is worth a <b>look</b>, not a rollout. With n = 100 (1 state × 10 SKUs × 10 weeks) a single unusual store could produce it. If the score genuinely worked somewhere, the honest next step is to pull Telangana\'s stores and check whether one store is driving it — not to build a regional planogram policy on a 0.250.'}]}],
+  ans:{head:'No — and <span class="hl">Telangana\'s 0.250 is what chance looks like</span>.',
+   body:'Split ten ways, correlations run from <strong>−0.072 (Kerala) to +0.250 (Telangana)</strong>. Only Telangana clears its noise threshold, and testing ten states you expect about one false hit — so that is the <strong>expected yield of nothing</strong>, not a discovery. Four states are negative. A real but regional effect would show a cluster of states agreeing; this is scatter around zero.',
+   kpis:[['Range','−0.07 to 0.25'],['States above noise','1 of 10'],['Expected by chance','~1'],['Negative states','4']],
+   recos:[{t:'Do not build a regional planogram policy on this',d:'One marginal state out of ten is the base rate for noise, not a regional effect.'},
+          {t:'If curious, check Telangana store by store',d:'n = 100 there — a single unusual store could produce the whole 0.250.'},
+          {t:'The national conclusion stands',d:'Manage eye-level and facings directly; the composite score adds nothing in any state.'}],
+   conf:{pct:84,level:'High — confident there is no regional effect'},
+   reasons:['All 10 states tested on the same basis','Threshold applied per state for its own sample size','Four states negative — inconsistent with a real effect','Pattern matches the multiple-comparisons base rate'],
+   caveats:['States carry only 100–200 rows each — a genuine small effect could hide','High confidence in the null, not in Telangana being exactly zero','Synthetic dataset'],
+   ev:[{n:'POS_Weekly',m:'1,500 rows',d:'Score and units split across 10 states, 100–200 rows each.'}]}},
+ {id:'q2b', kw:/(sku|product|any single|per sku|individual)/, lane:'performance',
+  text:'Does it hold for any single SKU?',
+  steps:[{n:'Resolve metrics',d:'split by SKU',ms:'0.2s',arts:[
+     {k:'s',t:'Testing within each SKU',type:'note',tone:'info',ic:'01',html:'Each SKU carries 150 rows (15 stores × 10 weeks). Within a single SKU there is no scale or mix effect to confound the correlation.'}]},
+   {n:'Run the aggregation',d:'10 SKUs',ms:'0.6s',arts:[
+     {k:'r',t:'Score vs units, within SKU · n = 150 each',type:'bars',unit:'r',max:.25,dec:3,base:-0.05,
+      items:[{n:'MaxFresh Red',v:.170},{n:'Cavity Protection',v:.166},{n:'Strong Teeth',v:.160},{n:'Total Sensitive',v:.158},
+             {n:'MaxFresh Sensorials',v:.156},{n:'Visible White Purple',v:.130},{n:'Sensitive Pro Relief',v:.107},
+             {n:'Visible White',v:.082},{n:'Kids Strawberry',v:.045},{n:'MaxFresh Blue',v:-.017,mut:true}],
+      note:'Noise threshold at n = 150 is 2/√150 ≈ <b>0.163</b>.'}]},
+   {n:'Read the result',d:'no SKU clears meaningfully',ms:'0.4s',arts:[
+     {k:'read',t:'The ceiling is the story',type:'note',tone:'warn',ic:'!',
+      html:'The <b>best</b> SKU in the range is MaxFresh Red at <b>0.170</b> — barely at the 0.163 noise line, and explaining <b>under 3%</b> of variance. MaxFresh Blue is <b>negative</b>. Even at its most favourable slice, the planogram score is not a usable predictor of offtake.'}]}],
+  ans:{head:'No — the best SKU reaches <span class="hl">0.170</span>, and that is the ceiling.',
+   body:'Within-SKU correlations run from <strong>−0.017 (MaxFresh Blue) to +0.170 (MaxFresh Red)</strong>. At n = 150 the noise threshold is ~0.163, so even the strongest SKU sits on the line and explains under 3% of variance. There is no SKU where the score earns its keep.',
+   kpis:[['Best SKU','MaxFresh Red'],['Its r','0.170'],['Noise line','0.163'],['Negative SKUs','1']],
+   recos:[{t:'Close the question',d:'National, by state and by SKU all agree — the composite does not predict offtake.'},
+          {t:'Keep the score for compliance only',d:'It may still be a fine audit tool. It is not a sales predictor.'}],
+   conf:{pct:87,level:'High — tested three ways, same answer'},
+   reasons:['All 10 SKUs tested at n = 150 each','Within-SKU removes scale and mix confounds','Best case still below a usable threshold'],
+   caveats:['A null result — does not prove the score is useless for other purposes','Synthetic dataset'],
+   ev:[{n:'POS_Weekly',m:'150 rows/SKU',d:'Within-SKU correlation across the full Colgate range.'}]}},
+ {id:'q2c', kw:/(format|flagship|standard|large|store type)/, lane:'performance',
+  text:'What about by store format?',
+  steps:[{n:'Resolve metrics',d:'split by format',ms:'0.2s',arts:[
+     {k:'s',t:'Three formats',type:'note',tone:'info',ic:'01',html:'Flagship, Large and Standard — 500 rows each. If planogram discipline mattered anywhere, the most controlled format should show it.'}]},
+   {n:'Run the aggregation',d:'3 formats',ms:'0.5s',arts:[
+     {k:'r',t:'Score vs units, by store format',type:'table',cols:['Format','n','r','Read'],
+      rows:[['Standard','500','<b>0.146</b>','Weak but the highest'],['Large','500','0.071','Nothing'],['<b>Flagship</b>','500','<b class="neg">−0.011</b>','<b>Nothing — slightly negative</b>']],hi:[2]}]},
+   {n:'Read the result',d:'backwards if anything',ms:'0.3s',arts:[
+     {k:'read',t:'The pattern runs the wrong way',type:'note',tone:'warn',ic:'!',
+      html:'If the score measured something real, the <b>Flagship</b> stores — the most tightly merchandised — should show it most clearly. They are the ones showing <b>−0.011</b>. The strongest reading is in <b>Standard</b> stores at 0.146, still below its 0.089 noise line by only a little and far from usable. Nothing here rescues the score.'}]}],
+  ans:{head:'No — and <span class="hl">Flagship stores are slightly negative</span>.',
+   body:'Standard 0.146, Large 0.071, Flagship <strong>−0.011</strong>. The ordering is the opposite of what a real effect would produce: the most carefully merchandised format shows the least relationship. Combined with the state and SKU splits, the answer is consistent in every cut — the composite score does not track offtake.',
+   kpis:[['Standard','0.146'],['Large','0.071'],['Flagship','−0.011'],['Verdict','no effect']],
+   recos:[{t:'Stop cutting this question',d:'National, state, SKU and format all agree. Further slicing will find noise eventually — that is the risk, not the reward.'},
+          {t:'Move the conversation to eye-level and facings',d:'Those are where the measurable signal is: 0.230 and 0.185.'}],
+   conf:{pct:85,level:'High'},
+   reasons:['500 rows per format','Ordering contradicts the causal prediction','Consistent with state and SKU splits'],
+   caveats:['Format correlates with city and shopper mix — not a clean isolation','Synthetic dataset'],
+   ev:[{n:'POS_Weekly',m:'1,500 rows',d:'Score and units split across three store formats.'}]}}
+],
+q3:[
+ {id:'q3a', kw:/(format|flagship|standard|large|every store|all stores|store type)/, lane:'performance',
+  text:'Does it hold in every store format?',
+  steps:[{n:'Resolve metrics',d:'Kids × position × format',ms:'0.2s',arts:[
+     {k:'s',t:'Splitting the shelf ranking by format',type:'note',tone:'info',ic:'01',html:'The national answer was Shelf 3. Splitting by format tests whether that is universal or an average hiding disagreement. 50 rows per format.'}]},
+   {n:'Run the aggregation',d:'3 formats × 5 shelves',ms:'0.6s',arts:[
+     {k:'r',t:'Kids Strawberry · units/wk by position and format',type:'table',
+      cols:['Format','Eye Level','Upper Middle','Bottom','Lower Middle','Top','Winner'],
+      rows:[['Flagship','<b>21.0</b>','20.1','17.6','17.1','16.0','<b class="pos">Eye Level</b>'],
+            ['Large','<b>17.7</b>','14.6','14.3','11.8','13.9','<b class="pos">Eye Level</b>'],
+            ['Standard','19.5','<b>21.4</b>','15.8','17.9','16.1','<b class="warn">Upper Middle</b>']],hi:[2]}]},
+   {n:'Validate sample & confounds',d:'50 rows per format',ms:'0.4s',arts:[
+     {k:'v',t:'Is the Standard result solid?',type:'verdict',status:'rej',
+      html:'<b>Not solid enough to act on separately.</b> Standard flips to Upper Middle (21.4 vs 19.5) — a <b>1.9 unit</b> gap on <b>50 observations</b>. That is well inside sampling noise for a single format. Eye level and Upper Middle are the top two positions in all three formats; only their order changes.'}]},
+   {n:'Read the result',d:'holds, with a caveat',ms:'0.3s',arts:[
+     {k:'read',t:'The robust version of the answer',type:'note',tone:'ok',ic:'✓',
+      html:'What replicates across all three formats: <b>the top two shelves are Eye Level and Upper Middle, and the bottom shelf never wins</b>. What does not replicate: which of the two is first. Practically this makes the plan <b>easier</b> — either of the top two shelves is defensible, so Kids can take whichever the bay allows.'}]}],
+  ans:{head:'Mostly — <span class="hl">Eye Level wins in 2 of 3 formats</span>, Standard prefers Upper Middle.',
+   body:'Flagship (21.0) and Large (17.7) both put Kids at eye level. Standard flips to <strong>Upper Middle (21.4 vs 19.5)</strong> — but that is a 1.9-unit gap on 50 rows, inside noise. The finding that survives every format is stronger and simpler: <strong>the top two shelves are Eye Level and Upper Middle, and the bottom shelf never wins</strong>. Which of the two leads is not resolvable at this sample size.',
+   kpis:[['Flagship','Eye Level'],['Large','Eye Level'],['Standard','Upper Middle'],['Rows/format','50']],
+   recos:[{t:'Specify "Shelf 2 or 3" rather than Shelf 3 exactly',d:'Both are defensible in every format and it gives the bay planner room.'},
+          {t:'Do not build a Standard-specific rule',d:'A 1.9-unit gap on 50 rows will not replicate.'},
+          {t:'Keep the bottom shelf ruled out everywhere',d:'That part is consistent across all three formats.'}],
+   conf:{pct:66,level:'Moderate — thin once split three ways'},
+   reasons:['All three formats tested','Top-two finding consistent everywhere','Bottom shelf loses in every format'],
+   caveats:['50 rows per format — enough to rank two shelves, not to separate them','Format correlates with city and shopper mix','Synthetic dataset'],
+   ev:[{n:'Shelf_Audit',m:'150 rows',d:'Kids position by store format, 50 rows each.'},
+       {n:'Store_Master',m:'format',d:'Flagship / Large / Standard classification.'}]}}
+],
+q4:[
+ {id:'q4a', kw:/(test|experiment|proper|randomi|prove|how would)/, lane:'strategic',
+  text:'What would a proper test need?',
+  steps:[{n:'Frame the decision & scope',d:'design the experiment',ms:'0.3s',arts:[
+     {k:'s',t:'What the observational data cannot give',type:'note',tone:'info',ic:'01',
+      html:'The adjacency column fails because <b>stores chose their own layouts</b> and every row has the same neighbour. Both problems are fixed by the same thing: <b>assigning</b> the placement rather than observing it.'}]},
+   {n:'Fit the model',d:'effect size & power',ms:'0.8s',arts:[
+     {k:'p',t:'Design',type:'table',cols:['Parameter','Value','Why'],
+      rows:[['Unit of randomisation','Store','Placement is set at store level'],
+            ['Arms','2 — beside Sensodyne vs current','Gives the missing control'],
+            ['Stores available','15','7 / 8 split'],
+            ['Effect to detect','~5% on 42 u/wk','Roughly the claimed size'],
+            ['Weeks needed','<b>8–12</b>','Store-week variance at n = 15'],
+            ['Blocking','By format & shopper cluster','15 stores is too few to randomise blind']]}]},
+   {n:'Establish the baseline',d:'is 15 stores enough?',ms:'0.6s',arts:[
+     {k:'w',t:'The honest constraint',type:'verdict',status:'rej',
+      html:'<b>15 stores is thin for a 5% effect.</b> Split 7/8 with weekly noise on ~42 units, this design is likely to be <b>underpowered</b> — it would detect a large effect (>10%) but could easily miss a real 5% one. A null result would then be ambiguous rather than conclusive.'}]},
+   {n:'Optimise under constraints',d:'switchback design',ms:'0.7s',arts:[
+     {k:'sw',t:'A better design for 15 stores',type:'note',tone:'ok',ic:'✓',
+      html:'Use a <b>switchback</b>: every store runs both conditions, alternating every 2 weeks over 12 weeks. Each store becomes its own control, which removes store-quality differences — the largest source of noise here — and roughly <b>doubles effective power</b> without needing more stores.'}]},
+   {n:'Forecast to target',d:'decision in 12 weeks',ms:'0.4s',arts:[
+     {k:'c',t:'What it costs to settle this',type:'note',tone:'info',ic:'i',
+      html:'<b>12 weeks, 15 stores, no additional shelf.</b> The only cost is planogram churn — two resets per store. That buys a defensible yes or no on an adjacency claim currently worth <b>±6.6% on 42 units/week across the chain</b>.'}]}],
+  ans:{head:'A <span class="hl">switchback across all 15 stores</span>, 12 weeks.',
+   body:'A simple 2-arm split (7 vs 8 stores) is the obvious design, but at 15 stores it is <strong>underpowered</strong> for a ~5% effect — it would miss a real one as often as not. A <strong>switchback</strong> — every store alternating condition every 2 weeks for 12 weeks — makes each store its own control, removing store quality (the dominant noise source) and roughly doubling effective power. Cost is two planogram resets per store and nothing else.',
+   kpis:[['Design','Switchback'],['Stores','15 (all)'],['Duration','12 weeks'],['Extra shelf','none']],
+   recos:[{t:'Run a switchback, not a store split',d:'At 15 stores, using each store as its own control is the only design with real power.'},
+          {t:'Block by format and shopper cluster',d:'15 stores is too few to trust blind randomisation to balance them.'},
+          {t:'Pre-register the effect size',d:'Decide before the test that under X% is a no — otherwise the +6.6% gets rescued after the fact.'}],
+   conf:{pct:70,level:'Moderate — design is standard, power estimate is rough'},
+   reasons:['Both flaws (no control, self-selected layout) are fixed by randomisation','Switchback is standard where store counts are low','Uses the observed 42 u/wk variance for sizing'],
+   caveats:['Power estimate is indicative — a formal calculation needs the store-week variance','Switchbacks assume no carryover between periods; 2 weeks may be short for habit effects','Synthetic dataset'],
+   ev:[{n:'SKU_Adjacency',m:'the flaw',d:'No control group and self-selected placement — what the design must fix.'},
+       {n:'Store_Master',m:'15 stores',d:'Format and cluster for blocking; the constraint driving the switchback.'},
+       {n:'POS_Weekly',m:'42 u/wk',d:'Baseline velocity and variance used to size the test.'}]}},
+ {id:'q4b', kw:/(other brand|any brand|another|closeup|pepsodent|different neighbour)/, lane:'performance',
+  text:'Does it work next to any other brand?',
+  steps:[{n:'Resolve metrics',d:'neighbour brands for TS',ms:'0.2s',arts:[
+     {k:'q',t:'What neighbours exist in the data',type:'sql',
+      code:"SELECT m.BRAND AS neighbour_brand, COUNT(*) AS n\nFROM SKU_Adjacency a\nJOIN SKU_Master m ON m.SKU_ID = a.NEIGHBOR_SKU_ID\nWHERE a.FOCUS_SKU_ID = 'COL-TS-100'\nGROUP BY 1"}]},
+   {n:'Run the aggregation',d:'1 brand only',ms:'0.4s',arts:[
+     {k:'r',t:'Neighbour brands recorded for Total Sensitive',type:'table',cols:['Neighbour brand','Rows'],
+      rows:[['Sensodyne','<b>150</b>'],['Closeup','<b class="neg">0</b>'],['Pepsodent','<b class="neg">0</b>'],['Dabur','<b class="neg">0</b>'],['Patanjali','<b class="neg">0</b>'],['Himalaya','<b class="neg">0</b>'],['Colgate (own range)','<b class="neg">0</b>']]}]},
+   {n:'Read the result',d:'unanswerable',ms:'0.3s',arts:[
+     {k:'v',t:'The question has no data behind it',type:'verdict',status:'rej',
+      html:'<b>Total Sensitive is only ever recorded next to Sensodyne.</b> There is no alternative neighbour anywhere in the 150 rows, so there is nothing to compare against. This is the same gap that broke the original question — and it is why "+6.6% vs base" could never mean "better than the alternative".'}]}],
+  ans:{head:'Unanswerable — <span class="hl">Sensodyne is the only neighbour in the data</span>.',
+   body:'All <strong>150</strong> adjacency rows for Total Sensitive have Sensodyne as the neighbour. Not one row pairs it with Closeup, Pepsodent, Dabur, or even another Colgate SKU. So there is no comparison to make. This is the same structural gap that sank the original claim: without an alternative neighbour, "+6.6% versus base" is measured against a model, never against a real alternative placement.',
+   kpis:[['Neighbour brands','1'],['Sensodyne rows','150'],['All others','0'],['Comparison','impossible']],
+   recos:[{t:'Add neighbour variation to the audit',d:'If adjacency is a lever the business wants to pull, the data has to record more than one arrangement.'},
+          {t:'Settle it with the switchback test',d:'That design creates the missing counterfactual by assigning placement.'}],
+   conf:{pct:95,level:'Certain — this is a fact about the data, not an estimate'},
+   reasons:['Direct count over all 150 adjacency rows','No modelling involved'],
+   caveats:['Reflects how this synthetic dataset was generated; real audit data may vary neighbours'],
+   ev:[{n:'SKU_Adjacency',m:'150 rows',d:'Every neighbour recorded for Total Sensitive is a Sensodyne SKU.'},
+       {n:'SKU_Master',m:'7 brands',d:'Six other brands exist in the range and none appear as a neighbour.'}]}}
+],
+q5:[
+ {id:'q5a', kw:/(size|how many|block size|bigger|distance|longer)/, lane:'performance',
+  text:'Does the size of the block matter?',
+  steps:[{n:'Resolve metrics',d:'uplift by distance in block',ms:'0.2s',arts:[
+     {k:'s',t:'Using distance as a proxy for block depth',type:'note',tone:'info',ic:'01',
+      html:'Within the blue block, <code>DISTANCE_PACKS</code> measures how far MaxFresh Blue sits from its blue neighbour. If a longer, denser block helps, uplift should be strongest at distance 0–1 and fade as the block loosens.'}]},
+   {n:'Run the aggregation',d:'143 in-block rows',ms:'0.5s',arts:[
+     {k:'r',t:'Uplift by distance, within the blue block',type:'table',cols:['Distance','Uplift','n'],
+      rows:[['0 packs','+10.2%','33'],['1 pack','+8.4%','46'],['2 packs','<b>+13.3%</b>','31'],['3 packs','<b class="neg">−3.3%</b>','33']],
+      note:'corr(distance, uplift) within the block = −0.144'}]},
+   {n:'Validate sample & confounds',d:'is the gradient real?',ms:'0.5s',arts:[
+     {k:'v',t:'Direction is right, shape is not',type:'verdict',status:'rej',
+      html:'The correlation is <b>negative (−0.144)</b> — the right sign for a block effect, unlike the Sensodyne case. But the shape is <b>not monotonic</b>: distance 2 (+13.3%) beats distance 0 (+10.2%). At 31–46 rows per bucket that is noise. <b>The tightness of the block is not resolvable at this sample size.</b>'}]},
+   {n:'Read the result',d:'keep it tight anyway',ms:'0.3s',arts:[
+     {k:'read',t:'What can still be said',type:'note',tone:'ok',ic:'✓',
+      html:'One thing is clear: at <b>3 packs apart the effect disappears entirely (−3.3%)</b>. So the block has a <b>range limit</b> even if its internal gradient is unmeasurable. Keep blue packs within ~2 positions of each other; beyond that they stop working as a block.'}]}],
+  ans:{head:'Cannot resolve the gradient — but <span class="hl">past 3 packs the block dies</span>.',
+   body:'Within the blue block the distance correlation is <strong>−0.144</strong> — the right sign, unlike the Sensodyne case. But the shape is not monotonic (distance 2 at +13.3% beats distance 0 at +10.2%), and with 31–46 rows per bucket that ordering is noise. What does hold: at <strong>3 packs apart the uplift goes negative (−3.3%)</strong>. The block has a working range of roughly 2 positions; how tight it is inside that range is not measurable here.',
+   kpis:[['corr(dist, uplift)','−0.144'],['Tight (0–2 packs)','+8 to +13%'],['3 packs apart','−3.3%'],['Rows per bucket','31–46']],
+   recos:[{t:'Keep blue packs within 2 positions of each other',d:'Beyond that the effect vanishes — that part is visible in the data.'},
+          {t:'Do not specify an optimal block length',d:'The internal gradient is inside noise; a precise rule would be invented, not measured.'},
+          {t:'Fold block depth into the switchback test',d:'If block design matters commercially, it needs assignment, not observation.'}],
+   conf:{pct:58,level:'Low-to-moderate — direction only'},
+   reasons:['Sign of the distance effect is correct, unlike the Sensodyne case','The 3-pack collapse is consistent and large'],
+   caveats:['31–46 rows per distance bucket — too thin for a shape','Distance is a proxy for block depth, not a direct measure','Synthetic dataset'],
+   ev:[{n:'SKU_Adjacency',m:'143 rows',d:'In-block distance and uplift for MaxFresh Blue.'}]}}
+],
+q6:[
+ {id:'q6a', kw:/(which store|wrong shelf|worst store|where|store list|off)/, lane:'performance',
+  text:'Which stores have MaxFresh on the wrong shelf?',
+  steps:[{n:'Measure the effect',d:'upper-middle rate by store',ms:'0.3s',arts:[
+     {k:'q',t:'How often each store holds the best shelf',type:'sql',
+      code:"SELECT s.STORE_ID,\n       AVG(CASE WHEN s.VERTICAL_POSITION = 'Upper Middle'\n                THEN 1.0 ELSE 0 END) * 100 AS pct_best_shelf\nFROM Shelf_Audit s\nWHERE s.SKU_ID IN ('COL-MFB-150','COL-MFR-150')\nGROUP BY s.STORE_ID\nORDER BY pct_best_shelf ASC"}]},
+   {n:'Test whether it behaves causally',d:'rank the gap',ms:'0.6s',arts:[
+     {k:'r',t:'MaxFresh on Upper Middle · % of store-weeks',type:'table',
+      cols:['Store','On best shelf','Gap to best practice'],
+      rows:[['<b>Amazing Lucknow 1</b>','<b class="neg">5%</b>','−40pt'],['<b>Amazing Jaipur 1</b>','<b class="neg">5%</b>','−40pt'],
+            ['Amazing Kolkata 2','10%','−35pt'],['Amazing New Delhi 1','15%','−30pt'],
+            ['Amazing Kolkata 1','15%','−30pt'],['Amazing Chennai 1','15%','−30pt'],
+            ['<i>… 8 more stores</i>','15–40%','—'],['<b>Amazing New Delhi 2</b>','<b class="pos">45%</b>','best in chain']],hi:[0,1]}]},
+   {n:'Rule out confounds & alternatives',d:'nobody is doing it right',ms:'0.5s',arts:[
+     {k:'v',t:'This is not a store compliance problem',type:'verdict',status:'ok',
+      html:'<b>The best store in the chain only manages 45%.</b> No store is close to holding MaxFresh on its best shelf, which means this is not a handful of bad operators — <b>it is that no planogram ever told them to</b>. The opportunity is chain-wide and it is a specification gap, not an execution gap.'}]},
+   {n:'Look for a control group',d:'is 45% enough to prove it?',ms:'0.4s',arts:[
+     {k:'c',t:'No store to learn from',type:'note',tone:'warn',ic:'!',
+      html:'Because no store holds Upper Middle consistently, there is <b>no internal proof case</b> — nowhere to point and say "this store does it and outsells the rest". The 50.1 u/wk figure is assembled from scattered store-weeks, not from any store running it as policy.'}]},
+   {n:'Decide — or refuse to',d:'roll out with a pilot',ms:'0.3s',arts:[
+     {k:'d',t:'The sequenced answer',type:'note',tone:'info',ic:'i',
+      html:'Start with <b>Lucknow and Jaipur at 5%</b> — the largest gap and the cheapest change. But since no store has ever run this as a standing policy, treat the first wave as a <b>pilot</b>: hold MaxFresh on Upper Middle for 8 weeks in 4 stores and confirm the 50.1 before rolling to 15.'}]}],
+  ans:{head:'<span class="hl">All of them</span> — the best store in the chain only reaches 45%.',
+   body:'MaxFresh sits on Upper Middle in just <strong>5% of store-weeks in Lucknow and Jaipur</strong>, rising to <strong>45% in New Delhi 2</strong>, the chain\'s best. No store holds its best shelf even half the time. That reframes the finding: this is not an execution problem with a few stores, it is a <strong>specification gap</strong> — no planogram ever asked for it. It also means there is no internal proof case, so the first wave should be a pilot rather than a chain-wide reset.',
+   kpis:[['Worst stores','5%'],['Best store','45%'],['Stores above 50%','0'],['Nature','spec gap']],
+   recos:[{t:'Pilot in 4 stores for 8 weeks first',d:'No store has ever run this as policy, so confirm the 50.1 before committing 15 stores.'},
+          {t:'Start with Lucknow and Jaipur',d:'At 5% they have the largest gap and the least to lose.'},
+          {t:'Fix the planogram spec, not the stores',d:'Nobody is complying because nobody was asked to. Write it into the bay map.'}],
+   conf:{pct:80,level:'High on the gap, moderate on the prize'},
+   reasons:['Direct count across all 15 stores and 10 weeks','The gap is unambiguous — no store above 45%','Consistent with the chain-wide position index'],
+   caveats:['The 50.1 u/wk best-shelf figure comes from scattered store-weeks, not a store running it as policy','Stores that happen to use Upper Middle may differ in other ways','Synthetic dataset'],
+   ev:[{n:'Shelf_Audit',m:'300 rows',d:'MaxFresh vertical position by store and week.'},
+       {n:'Store_Master',m:'15 stores',d:'Store names and formats for the ranking.'}]}}
+],
+q7:[
+ {id:'q7a', kw:/(protect|kids stay|not kids|instead of kids|someone else|alternative donor)/, lane:'strategic',
+  text:'What if Kids Strawberry is protected?',
+  steps:[{n:'Frame the decision & scope',d:'exclude Kids from the pool',ms:'0.3s',arts:[
+     {k:'s',t:'A realistic constraint',type:'note',tone:'info',ic:'01',
+      html:'Kids is often protected for reasons the P&L does not see — category role, shopper mission, supplier terms. Re-running the donor solve with <b>Kids excluded</b> tests what that protection costs.'}]},
+   {n:'Fit the model',d:'re-rank without Kids',ms:'0.7s',arts:[
+     {k:'r',t:'Donor candidates, Kids excluded',type:'table',cols:['SKU','Facings','Units/facing','Profit/facing'],
+      rows:[['<b>Cavity Protection</b>','4.6','5.67','<b>₹205</b>'],['Strong Teeth','4.7','8.74','₹242'],['MaxFresh Blue','4.3','9.42','₹254'],['Visible White','4.7','10.46','₹264']],hi:[0]}]},
+   {n:'Establish the baseline',d:'what protection costs',ms:'0.6s',arts:[
+     {k:'c',t:'The price of protecting Kids',type:'table',cols:['Donor','Profit/facing given up','2 facings cost'],
+      rows:[['Kids Strawberry (first choice)','₹93','<b class="pos">₹186/wk</b>'],['Cavity Protection (fallback)','₹205','<b class="neg">₹410/wk</b>'],['<b>Difference</b>','₹112','<b class="neg">₹224/wk per store</b>']],
+      note:'Across 15 stores that is roughly ₹3,360/week, or ₹1.7L a year, to keep Kids at 4.5 facings.'}]},
+   {n:'Optimise under constraints',d:'Cavity Protection donates',ms:'0.8s',arts:[
+     {k:'v',t:'It still works — it just costs more',type:'verdict',status:'ok',
+      html:'<b>Cavity Protection is the fallback donor.</b> At ₹205/facing it is the weakest remaining space and it carries 4.6 facings, so it can lose 2 without dropping below a viable 2-facing floor. Its pack is <b>10.2cm</b> — wider than Kids\' 7.0cm — so the swap actually frees <b>more</b> linear space than needed.'}]},
+   {n:'Forecast to target',d:'same placement',ms:'0.4s',arts:[
+     {k:'p',t:'Placement is unchanged',type:'note',tone:'info',ic:'i',
+      html:'Sensorials still goes to <b>Shelf 2, in the blue/teal block</b> — that decision came from the colour-block and position results, not from who donated. Only the source of the facings changes.'}]}],
+  ans:{head:'<span class="hl">Cavity Protection</span> donates instead — at roughly <span class="hl">₹224/store/week</span> more.',
+   body:'With Kids excluded, the next weakest space is <strong>Cavity Protection at ₹205 per facing</strong>. It works: it holds 4.6 facings, so it can give 2 and stay viable, and its 10.2cm pack frees more width than Sensorials needs. But it costs — Kids gives up <strong>₹93/facing</strong> against Cavity\'s <strong>₹205</strong>, so protecting Kids costs about <strong>₹224 per store per week</strong>, roughly ₹1.7L a year across 15 stores. That is the price of the protection, and it should be a conscious decision rather than a default.',
+   kpis:[['Fallback donor','Cavity Protection'],['Its profit/facing','₹205'],['vs Kids','₹93'],['Cost of protecting','₹224/store/wk']],
+   recos:[{t:'Use Cavity Protection if Kids is protected',d:'It is the weakest remaining space and can absorb the loss.'},
+          {t:'Price the protection explicitly',d:'₹1.7L a year across the chain is a defensible cost — but only if it is chosen, not assumed.'},
+          {t:'Placement does not change',d:'Sensorials still goes to Shelf 2 in the blue/teal block regardless of donor.'}],
+   conf:{pct:77,level:'Moderate-to-high'},
+   reasons:['Same profit-per-facing basis as the original solve','Cavity has enough facings to donate without hitting the floor','Width arithmetic checked against the 120cm shelf'],
+   caveats:['Assumes Cavity Protection loses volume proportionally to facings','The ₹224/week gap is a static estimate — it ignores any demand shift','Synthetic dataset'],
+   ev:[{n:'POS_Weekly',m:'profit/facing',d:'Cavity ₹205/facing — the next weakest after Kids at ₹93.'},
+       {n:'Shelf_Audit',m:'10.2cm',d:'Cavity pack width — wider than Kids, so the swap frees more space.'}]}}
+],
+q8:[
+ {id:'q8a', kw:/(weight|share higher|reweight|different weight|factor|objective)/, lane:'strategic',
+  text:'What if we weight market share higher?',
+  steps:[{n:'Frame the decision & scope',d:'0.30 → 0.60 share',ms:'0.3s',arts:[
+     {k:'s',t:'Testing the weights the brief asked for',type:'note',tone:'info',ic:'01',
+      html:'Re-solving with share at <b>0.60</b> (units 0.20, net sales 0.15, sell-in 0.05) against the balanced <b>0.30/0.30/0.25/0.15</b>. If the four factors trade off against each other, the ranking should move.'}]},
+   {n:'Fit the model',d:'re-rank under both',ms:'0.9s',arts:[
+     {k:'r',t:'Ranking under three weightings',type:'table',cols:['Weighting','Top 3','Bottom 3'],
+      rows:[['Balanced (0.30/0.30/0.25/0.15)','Sensitive Pro Relief, Visible White, MaxFresh Red','Cavity, Kids, Sensorials'],
+            ['<b>Share-led (0.60/0.20/0.15/0.05)</b>','<b>Sensitive Pro Relief, Visible White, MaxFresh Red</b>','<b>Cavity, Kids, Sensorials</b>'],
+            ['Value-led (0.10/0.20/0.60/0.10)','Sensitive Pro Relief, MaxFresh Red, Total Sensitive','Cavity, Kids, Sensorials']],
+      note:'Doubling the share weight returns an identical ranking.'}]},
+   {n:'Establish the baseline',d:'why nothing moved',ms:'0.8s',arts:[
+     {k:'c',t:'The four factors are one factor',type:'table',
+      cols:['','Share/f','Units/f','Net sales/f','Sell-in/f'],
+      rows:[['<b>Share/f</b>','1.000','<b class="warn">1.000</b>','0.937','0.999'],
+            ['<b>Units/f</b>','<b class="warn">1.000</b>','1.000','0.936','0.999'],
+            ['<b>Net sales/f</b>','0.937','0.936','1.000','0.937'],
+            ['<b>Sell-in/f</b>','0.999','0.999','0.937','1.000']]},
+     {k:'v',t:'Why they collapse',type:'verdict',status:'rej',
+      html:'<b>These are not four objectives.</b> In-store share <i>is</i> units divided by category units (r = 1.000). Sell-in <i>replenishes</i> units (0.999). Net sales <i>is</i> units × price (0.937). Weighting them differently is weighting the same number four times — which is why the ranking does not move.'}]},
+   {n:'Optimise under constraints',d:'only margin adds anything',ms:'0.7s',arts:[
+     {k:'m',t:'The one real second dimension',type:'note',tone:'ok',ic:'✓',
+      html:'Net sales is the only term that <b>partially</b> departs (0.937), because it carries price. A <b>value-led</b> tilt does reshuffle the middle — MaxFresh Red and Total Sensitive rise past Visible White. So the genuine trade-off is <b>volume vs margin</b>, a two-way choice, not the four-way one in the brief.'}]},
+   {n:'Forecast to target',d:'bay map unchanged',ms:'0.4s',arts:[
+     {k:'f',t:'What this means for the planogram',type:'note',tone:'info',ic:'i',
+      html:'The bay map is <b>unchanged</b> under a share-led weighting. Leadership can stop debating these four weights — the argument worth having is <b>volume versus margin</b>, and even that only moves the middle of the range. The top and bottom are stable under every weighting tested.'}]}],
+  ans:{head:'Nothing moves — <span class="hl">the four factors are one factor</span>.',
+   body:'Doubling share to 0.60 returns an <strong>identical ranking</strong>, because the four terms are the same signal: in-store share <em>is</em> units over category units (<strong>r = 1.000</strong>), sell-in replenishes units (0.999), net sales is units × price (0.937). This is worth saying plainly — the brief asked for a four-factor optimisation, and the data cannot support one. The only real second dimension is <strong>margin</strong>: a value-led tilt reshuffles the middle (MaxFresh Red and Total Sensitive rise), but the top and bottom never change.',
+   kpis:[['Share vs units','r = 1.000'],['Sell-in vs units','r = 0.999'],['Net sales vs units','r = 0.937'],['Ranking change','none']],
+   recos:[{t:'Stop debating the four weights',d:'They are one signal. The debate has no content and it is holding up the bay map.'},
+          {t:'Have the volume-vs-margin argument instead',d:'That is the only genuine trade-off, and it moves the middle of the range.'},
+          {t:'Ship the bay map as it stands',d:'It is stable under every weighting tested, so it does not depend on resolving this.'}],
+   conf:{pct:89,level:'High — a structural property of the metrics'},
+   reasons:['Correlations computed directly across the Colgate range','Three weightings tested, ranking stable in two','Collapse is explained by how the metrics are defined, not a coincidence'],
+   caveats:['Measured across 10 Colgate SKUs — a broader range with more price spread might separate them further','A shopper-cluster split could reveal trade-offs this chain-level view hides','Synthetic dataset'],
+   ev:[{n:'POS_Weekly',m:'4 metrics',d:'Share, units, sell-in and net sales per facing across 10 SKUs.'},
+       {n:'SKU_Master',m:'price',d:'MRP and margin — the only genuine second dimension in the objective.'}]}}
+]
+};
+
+/* honest fallback when a follow-up is out of scope */
+const FU_MISS = {
+  id:'miss', lane:'performance', text:'',
+  steps:[{n:'Resolve metrics',d:'match against the semantic layer',ms:'0.3s',arts:[
+    {k:'parse',t:'Trying to resolve the question',type:'note',tone:'info',ic:'01',
+     html:'Matching the entities and metrics in the follow-up against the 13 tables in the semantic layer.'}]},
+   {n:'Build the query',d:'no resolution',ms:'0.3s',arts:[
+    {k:'fail',t:'Cannot be answered from these tables',type:'verdict',status:'rej',
+     html:'<b>This follow-up does not resolve against the loaded data.</b> Insights Factory will not answer it by inference — a plausible-sounding number with no table behind it is worse than no answer.'}]},
+   {n:'Read the result',d:'suggest what would',ms:'0.2s',arts:[
+    {k:'alt',t:'What this dataset can answer',type:'note',tone:'info',ic:'i',
+     html:'The suggested follow-ups above are the drill-downs this dataset supports. The workspace covers 15 stores, 20 SKUs and 10 weeks across POS, shelf audit, adjacency, syndicated share, marketing spend and planogram constraints.'}]}],
+  ans:{head:'That one is <span class="hl">outside this dataset</span>.',
+   body:'The follow-up did not resolve against the 13 loaded tables, so there is no honest way to answer it. Rather than infer a number, Insights Factory stops. The suggested follow-ups are the drill-downs the data genuinely supports — or ask something covering placement, facings, share, adjacency, colour blocking, spend or planogram constraints.',
+   kpis:[['Status','unresolved'],['Tables loaded','13'],['Guess offered','none'],['Suggested','see left']],
+   recos:[{t:'Try one of the suggested follow-ups',d:'Those are pre-verified against the loaded tables.'},
+          {t:'Or rephrase using a metric in the data',d:'Units, facings, share, uplift, spend, profit per facing, planogram score.'}],
+   conf:{pct:0,level:'No answer attempted'},
+   reasons:['No table in the semantic layer matches the requested entity or metric'],
+   caveats:['This is a prototype with a fixed set of pre-computed investigations','A live deployment would resolve a far wider question space against the same tables'],
+   ev:[]}
+};
+
+/* ============================ ARTIFACT RENDERERS ============================ */
+const esc = s => String(s);
+function artScatter(a){
+  const pts = PTS, W=560, H=200, pad=34;
+  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
+  const x0=Math.min(...xs), x1=Math.max(...xs), y0=0, y1=Math.max(...ys);
+  const sx=v=>pad+(v-x0)/(x1-x0)*(W-pad-10), sy=v=>H-pad-(v-y0)/(y1-y0)*(H-pad-12);
+  // least-squares line
+  const n=pts.length, mx=xs.reduce((a,b)=>a+b,0)/n, my=ys.reduce((a,b)=>a+b,0)/n;
+  let num=0,den=0; for(let i=0;i<n;i++){num+=(xs[i]-mx)*(ys[i]-my);den+=(xs[i]-mx)**2;}
+  const m=num/den, c=my-m*mx;
+  const circles=pts.map(p=>`<circle cx="${sx(p[0]).toFixed(1)}" cy="${sy(p[1]).toFixed(1)}" r="2.6" fill="var(--lane)" opacity=".42"/>`).join('');
+  return `<div class="card scat"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <line x1="${pad}" y1="${H-pad}" x2="${W-8}" y2="${H-pad}" stroke="var(--line-2)"/>
+    <line x1="${pad}" y1="10" x2="${pad}" y2="${H-pad}" stroke="var(--line-2)"/>
+    ${circles}
+    <line x1="${sx(x0)}" y1="${sy(m*x0+c)}" x2="${sx(x1)}" y2="${sy(m*x1+c)}" stroke="var(--gold)" stroke-width="1.6" stroke-dasharray="5 4" opacity=".85"/>
+    <text class="axl" x="${pad}" y="${H-10}">${a.xlab}</text>
+    <text class="axl" x="4" y="18">${a.ylab}</text>
+    <text class="axl" x="${W-8}" y="20" text-anchor="end" style="fill:var(--gold)">${a.r}</text>
+  </svg>${a.note?`<div style="padding:0 14px 12px;font-size:12px;color:var(--ink-3);line-height:1.5">${a.note}</div>`:''}</div>`;
+}
+function artBars(a){
+  const dec=a.dec||1, base=a.base||0, max=a.max;
+  return `<div class="card bars">${a.items.map(it=>{
+    const w=Math.max(0,((it.v-base)/(max-base))*100);
+    return `<div class="bar"><div class="bn">${it.n}</div><div class="bv">${it.v>0&&a.unit&&a.unit.includes('%')?'+':''}${it.v.toFixed(dec)}</div>
+    <div class="bt"><i class="${it.mut?'mut':''}" data-w="${w.toFixed(1)}"></i></div></div>`;}).join('')}
+  ${a.note?`<div style="font-size:12px;color:var(--ink-3);line-height:1.5;margin-top:3px">${a.note}</div>`:''}</div>`;
+}
+function artTable(a){
+  const hi=a.hi||[];
+  return `<div class="card"><table class="dt"><thead><tr>${a.cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+  <tbody>${a.rows.map((r,i)=>`<tr class="${hi.includes(i)?'hi':''}">${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>
+  ${a.note?`<div style="padding:11px 12px;border-top:1px solid var(--line-1);font-size:12px;color:var(--ink-3);line-height:1.5">${a.note}</div>`:''}</div>`;
+}
+function artModel(a){
+  return `<div class="card"><table class="dt"><thead><tr><th>Term</th><th class="num">Coefficient</th><th>Interpretation</th></tr></thead>
+  <tbody>${a.rows.map(r=>`<tr><td><b>${r[0]}</b></td><td class="num"><b>${r[1]}</b></td><td>${r[2]}</td></tr>`).join('')}</tbody></table>
+  <div style="padding:11px 12px;border-top:1px solid var(--line-1);font:400 11.6px/1.5 var(--mono);color:var(--gold)">${a.fit}</div></div>`;
+}
+function artSql(a){ return `<div class="card"><pre class="code">${SQL(a.code)}</pre></div>`; }
+function artNote(a){ return `<div class="note ${a.tone}"><div class="ic">${a.ic||''}</div><div>${a.html}</div></div>`; }
+function artVerdict(a){ return `<div class="verdict ${a.status}"><div class="vt">${a.status==='ok'?'Holds':'Fails'}</div><div class="vx">${a.html}</div></div>`; }
+const ART={sql:artSql,table:artTable,bars:artBars,scatter:artScatter,model:artModel,note:artNote,verdict:artVerdict};
+function renderArt(a){
+  return `<div class="art"><div class="arth"><div class="k">${a.k}</div><div class="t">${a.t}</div></div>${ART[a.type](a)}</div>`;
+}
+
+/* ============================ VIEWS ============================ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let TIMERS=[];
+const at=(ms,fn)=>TIMERS.push(setTimeout(fn,ms));
+const clearT=()=>{TIMERS.forEach(clearTimeout);TIMERS=[]};
+
+function go(v){
+  clearT();
+  $$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+  $$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+  if(v==='method') renderMethod();
+  if(v==='data') renderData();
+}
+
+function renderLanes(){
+  $('#lanes').innerHTML = Object.values(LANES).map(L=>{
+    const qs=Object.values(Q).filter(q=>q.lane===L.key);
+    return `<div class="lanecol lane-${L.key}">
+      <div class="lanehead">
+        <div class="t"><span class="pill"><i></i>${L.tag}</span><span class="n">${qs.length} question${qs.length>1?'s':''} · ${L.rt}</span></div>
+        <p>${L.desc}</p>
+      </div>
+      ${qs.map(q=>`<button class="qitem" data-q="${q.id}"><div class="q">${q.text}</div><div class="m">${q.method}</div></button>`).join('')}
+    </div>`;
+  }).join('');
+  $$('.qitem').forEach(b=>b.onclick=()=>classify(Q[b.dataset.q]));
+}
+
+/* ---------- classify ---------- */
+let PENDING=null;
+function classify(q){
+  PENDING=q; const L=LANES[q.lane];
+  const rows=[['Parsing the question','entities, metrics, scope'],
+              ['Checking the semantic layer','can this be looked up?'],
+              ['Selecting the method',L.name]];
+  $('#cls').className='cls lane-'+q.lane;
+  $('#cls').innerHTML=`<div class="qt">${q.text}</div>
+    <div id="clsRows">${rows.map(r=>`<div class="clsrow"><div class="tick"></div><div><b>${r[0]}</b> · ${r[1]}</div></div>`).join('')}</div>
+    <div class="clsres" id="clsRes">
+      <div class="clstop"><span class="pill"><i></i>${L.tag}</span><span style="font-size:13px;color:var(--ink-0);font-weight:500">${L.name}</span><span style="font:400 10.5px/1 var(--mono);color:var(--ink-4);margin-left:auto">${L.rt}</span></div>
+      <div class="clswhy">${q.why}</div>
+      <div class="pathprev"><div class="h">Solve path — ${L.path.length} steps</div><ol>${L.path.map(p=>`<li>${p}</li>`).join('')}</ol></div>
+      <div class="clsbtn"><button class="btn" id="clsX">Cancel</button><button class="btn pri" id="clsRun">Run investigation</button></div>
+    </div>`;
+  $('#scrim').classList.add('on');
+  const rs=$$('#clsRows .clsrow');
+  rs.forEach((r,i)=>{ at(120+i*260,()=>r.classList.add('on')); at(120+i*260+200,()=>r.classList.add('done')); });
+  at(120+rs.length*260+180,()=>$('#clsRes').classList.add('on'));
+  at(120+rs.length*260+200,()=>{ $('#clsX').onclick=close; $('#clsRun').onclick=()=>{close();run(q);}; });
+  function close(){ clearT(); $('#scrim').classList.remove('on'); }
+}
+
+/* ---------- run investigation (thread-aware) ---------- */
+let ROOT=null, THREAD=[], ACTIVE=0;
+
+function run(q){
+  ROOT=q; THREAD=[{node:q, label:q.short||q.text, kind:'root'}]; ACTIVE=0;
+  $('#ws').className='ws lane-'+q.lane;
+  $('#wsQ').textContent=q.text;
+  go('workspace');
+  exec(q, true);
+}
+
+function askFollow(txt){
+  const t=(txt||'').trim(); if(!t) return;
+  const pool=FU[ROOT.id]||[];
+  let hit=pool.find(f=>f.kw.test(t.toLowerCase()));
+  let node;
+  if(hit){ node=hit; }
+  else { node=Object.assign({},FU_MISS,{text:t}); }
+  THREAD.push({node, label:node.text, kind:'fu'});
+  ACTIVE=THREAD.length-1;
+  $('#fuAsk').value='';
+  exec(node,false);
+}
+
+function openThread(i){
+  ACTIVE=i; exec(THREAD[i].node, i===0);
+}
+
+function exec(q, isRoot){
+  clearT();
+  const L=LANES[q.lane];
+  $('#ws').className='ws lane-'+q.lane;
+  $('#wsLbl').textContent = isRoot ? 'Investigation' : 'Follow-up';
+  $('#wsQ').textContent = q.text;
+  $('#wsSub').textContent = L.name.toLowerCase()+' · '+q.steps.length+' steps';
+  $('#steps').innerHTML=q.steps.map((s,i)=>`<div class="step" id="st${i}">
+    <div class="rail"><div class="dot"></div><div class="line"></div></div>
+    <div class="c"><div class="n">${s.n}</div><div class="d">${s.d}</div><div class="ms">${s.ms}</div></div></div>`).join('');
+  $('#work').innerHTML='';
+  $('#ans').innerHTML='';
+  renderFollowUI();
+  let t=200;
+  q.steps.forEach((s,i)=>{
+    at(t,()=>{ const e=$('#st'+i); if(e) e.classList.add('on','run'); });
+    const dur=Math.max(460, s.arts.length*380);
+    s.arts.forEach((a,j)=>{
+      at(t+150+j*380,()=>{
+        const w=$('#work'); if(!w) return;
+        w.insertAdjacentHTML('beforeend',renderArt(a));
+        w.parentElement.scrollTop=w.parentElement.scrollHeight;
+        $$('.bar .bt i[data-w]').forEach(el=>{ if(!el.style.width) requestAnimationFrame(()=>el.style.width=el.dataset.w+'%'); });
+      });
+    });
+    at(t+dur,()=>{ const e=$('#st'+i); if(e){e.classList.remove('run'); e.classList.add('done');} });
+    t+=dur+100;
+  });
+  at(t+180,()=>renderAnswer(q));
+}
+
+function renderFollowUI(){
+  const pool=(FU[ROOT.id]||[]);
+  const asked=new Set(THREAD.map(x=>x.node.id));
+  const avail=pool.filter(f=>!asked.has(f.id));
+  $('#fuChips').innerHTML=avail.map(f=>`<button class="fuchip" data-f="${f.id}">${f.text}</button>`).join('')
+    || `<div style="font:400 11px/1.5 var(--mono);color:var(--ink-4);padding:2px 0 4px">All suggested follow-ups asked. Type your own below.</div>`;
+  $$('.fuchip').forEach(b=>b.onclick=()=>askFollow(pool.find(f=>f.id===b.dataset.f).text));
+  const tb=$('#threadBlock');
+  if(THREAD.length>1){
+    tb.style.display='block';
+    $('#thread').innerHTML=THREAD.map((x,i)=>`<div class="thi ${i===ACTIVE?'on':''}" data-i="${i}">
+      <div class="tn">${i===0?'Q':'↳'+i}</div><div class="tt">${x.label}</div></div>`).join('');
+    $$('.thi').forEach(el=>el.onclick=()=>openThread(+el.dataset.i));
+  } else tb.style.display='none';
+}
+function renderAnswer(q){
+  const a=q.ans, L=LANES[q.lane];
+  const C=2*Math.PI*26;
+  const ring = a.conf.pct>0 ? `<div class="cfl">
+       <div class="ring" style="width:62px;height:62px"><svg width="62" height="62"><circle cx="31" cy="31" r="26" stroke="var(--line-2)" stroke-width="4" fill="none"/><circle id="ringC" cx="31" cy="31" r="26" stroke="var(--lane)" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" style="transition:stroke-dashoffset 1s cubic-bezier(.22,1,.36,1)"/></svg><div class="v" style="font-size:15px">${a.conf.pct}</div></div>
+       <div class="cll">confidence</div></div>` : '';
+  $('#ans').innerHTML=`
+   <div class="lead">${L.tag} · answer</div>
+   <div class="ahead">${a.head}</div>
+   <div class="abody">${a.body}</div>
+   <div class="blk"><div class="h">Key numbers</div><div class="kpis">${a.kpis.map(k=>`<div class="kpi"><div class="kl">${k[0]}</div><div class="kv ${String(k[1]).length>7?'s':''}">${k[1]}</div></div>`).join('')}</div></div>
+   <div class="blk"><div class="h">What to do</div>${a.recos.map((r,i)=>`<div class="reco"><div class="rn">${String(i+1).padStart(2,'0')}</div><div><div class="rt">${r.t}</div><div class="rd">${r.d}</div></div></div>`).join('')}</div>
+   <div class="blk"><div class="h">Confidence</div>
+     <div class="cf">${ring}
+       <div class="cfr"><div class="cl">${a.conf.level}</div>
+         <ul class="rlist">${a.reasons.map(r=>`<li>${r}</li>`).join('')}</ul></div>
+     </div>
+   </div>
+   <div class="blk"><div class="h">What would change this</div><ul class="rlist warn">${a.caveats.map(c=>`<li>${c}</li>`).join('')}</ul></div>
+   ${a.ev.length?`<div class="blk"><div class="h">Evidence used</div>${a.ev.map(e=>`<div class="evd"><div class="en">${e.n}<span>${e.m}</span></div><div class="ed">${e.d}</div></div>`).join('')}</div>`:''}`;
+  requestAnimationFrame(()=>{ const r=$('#ringC'); if(r) r.style.strokeDashoffset=C*(1-a.conf.pct/100); });
+}
+
+/* ---------- method map ---------- */
+function renderMethod(){
+  $('#mm').innerHTML=`
+    <div class="eyebrow">How Insights Factory decides</div>
+    <h2 class="sec-h">Three methods, because there are three kinds of question.</h2>
+    <p class="sec-p">The classification is not cosmetic — it changes what actually runs. A Performance question is answered by counting. A Strategic one has no answer in the data at all and has to be modelled. A Hybrid one looks like the first and behaves like the second, which is where the expensive mistakes live.</p>
+    <div class="mmgrid">${Object.values(LANES).map(L=>{
+      const n=Object.values(Q).filter(q=>q.lane===L.key).length;
+      return `<div class="mmc lane-${L.key}">
+        <div class="t"><span class="pill"><i></i>${L.tag}</span><span style="font:400 10.4px/1 var(--mono);color:var(--ink-4)">${n} of 8 · ${L.rt}</span></div>
+        <h3>${L.name}</h3><p>${L.desc}</p>
+        <div class="sig"><b>Signature</b>${L.sig}</div>
+        <div class="sig" style="border:none;padding-top:8px"><b>Runs</b>${L.path.map((p,i)=>`${i+1}. ${p}`).join('<br/>')}</div>
+      </div>`;}).join('')}
+    </div>
+    <h2 class="sec-h" style="font-size:17px;margin-bottom:14px">All 8 questions, classified</h2>
+    <div class="mmt"><table>
+      <thead><tr><th>Question</th><th>Method</th><th>What runs</th><th>Output</th></tr></thead>
+      <tbody>${Object.values(Q).map(q=>`<tr class="lane-${q.lane}" data-q="${q.id}">
+        <td class="qc">${q.text}</td>
+        <td><span class="pill"><i></i>${LANES[q.lane].tag}</span></td>
+        <td class="mc">${q.method}</td>
+        <td class="oc">${q.output}</td></tr>`).join('')}
+      </tbody></table></div>
+    <p class="sec-p" style="margin-top:18px">Every row is clickable — it runs that investigation.</p>`;
+  $$('.mmt tbody tr').forEach(r=>r.onclick=()=>classify(Q[r.dataset.q]));
+}
+
+/* ---------- data view ---------- */
+const DATASETS=[['Store_Master',15],['SKU_Master',20],['Calendar',10],['Employee_Master',75],['POS_Weekly','3,000'],['Shelf_Audit','3,000'],['SKU_Adjacency',600],['Syndicated_Market','3,000'],['Marketing_Investment','3,000'],['Shopper_App_Weekly',150],['People_Productivity',750],['Competition_Pricing','1,000'],['Planogram_Constraints',450]];
+function renderData(){
+  $('#dv').innerHTML=`
+    <div class="eyebrow">Data foundation</div>
+    <h2 class="sec-h">13 tables. 15 stores, 20 SKUs, 10 weeks.</h2>
+    <p class="sec-p">Every number in every investigation is computed from these tables. Nothing is illustrative and nothing is rounded for effect — where a result is weak, the workspace says so.</p>
+    <div class="dgrid">${DATASETS.map(d=>`<div class="ds"><div class="dn">${d[0]}</div><div class="dr">${d[1]} rows</div></div>`).join('')}</div>
+    <h2 class="sec-h" style="font-size:17px">What this prototype is honest about</h2>
+    <div style="display:flex;flex-direction:column;gap:9px;max-width:720px">
+      <div class="note warn"><div class="ic">!</div><div><b>The dataset is synthetic.</b> It was generated for this prototype, so the findings describe a fictional market. The <i>methods</i> — the regression, the distance test, the optimiser, the confidence scoring — are real and would run identically on live data.</div></div>
+      <div class="note info"><div class="ic">i</div><div><b>10 weeks is short.</b> It supports cross-sectional effects like eye-level placement, but not state-level trends. Where the data cannot carry the question — as in the Sensodyne adjacency — the workspace refuses rather than estimates.</div></div>
+      <div class="note info"><div class="ic">i</div><div><b>Everything is observational.</b> Stores chose their own planograms, so placement results describe where SKUs <i>sell</i> best, not proven causation. Two investigations recommend a randomised test to settle it.</div></div>
+      <div class="note info"><div class="ic">i</div><div><b>The reasoning is scripted, the numbers are not.</b> Each investigation replays a pre-computed analysis rather than calling a live model. The figures, tables and coefficients are genuine outputs of that analysis.</div></div>
+    </div>`;
+}
+
+/* ---------- init ---------- */
+renderLanes();
+const inp=$('#ask'), gb=$('#goBtn');
+inp.addEventListener('input',()=>gb.disabled=!inp.value.trim());
+function submit(){
+  const s=inp.value.trim().toLowerCase(); if(!s) return;
+  let k='q1';
+  if(/(correlat|planogram score)/.test(s)) k='q2';
+  else if(/kid/.test(s)) k='q3';
+  else if(/(sensodyne|total sensitive)/.test(s)) k='q4';
+  else if(/(blue|colour|color|block)/.test(s)) k='q5';
+  else if(/(closeup|close up|faster)/.test(s)) k='q6';
+  else if(/(sensorial|lose|2 facings|donor)/.test(s)) k='q7';
+  else if(/(dynamic|bay|planogram|optimi)/.test(s)) k='q8';
+  classify(Q[k]);
+}
+gb.onclick=submit;
+inp.addEventListener('keydown',e=>{if(e.key==='Enter')submit()});
+$$('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.view));
+const fa=$('#fuAsk');
+$('#fuGo').onclick=()=>askFollow(fa.value);
+fa.addEventListener('keydown',e=>{if(e.key==='Enter')askFollow(fa.value)});
+$('#scrim').addEventListener('click',e=>{if(e.target.id==='scrim'){clearT();$('#scrim').classList.remove('on');}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){clearT();$('#scrim').classList.remove('on');}});
+</script>
+</body>
+</html>
